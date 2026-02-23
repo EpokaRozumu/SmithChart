@@ -10,7 +10,7 @@ var canvasHeight = 480;
 ctx.fillStyle = "green";
 ctx.strokeStyle = "green";
 function distance(x1,y1,x2,y2) {
-    return Math.sqrt(Math.pow(140-mx,2)+Math.pow(140-my,2));
+    return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
 }
 function mouseMoveHandler(e) {
     mx = e.clientX - canvas.offsetLeft;
@@ -19,7 +19,8 @@ function mouseMoveHandler(e) {
     ctx.rect(mx,my,10,10);
     ctx.closePath();
     ctx.stroke();
-    radius = Math.sqrt(Math.pow(140-mx,2)+Math.pow(140-my,2));
+    radius = distance(mx,my,canvasHeight/2,canvasHeight/2);
+
     ctx.beginPath()
     ctx.arc(canvasHeight/2,canvasHeight/2,radius,0,Math.PI*2);
     ctx.closePath();
