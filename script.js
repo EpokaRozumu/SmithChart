@@ -1,12 +1,31 @@
+//git commit -am "commit test 2"
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
+canvas.addEventListener("mousemove",mouseMoveHandler);
+var mx = 0;
+var my = 0;
 //
 var canvasWidth = canvas.getAttribute("height");
 var canvasHeight = 480;
 ctx.fillStyle = "green";
 ctx.strokeStyle = "green";
+function distance(x1,y1,x2,y2) {
+    return Math.sqrt(Math.pow(x1-x2)+Math.pow(y1-y2));
+}
+function mouseMoveHandler(e) {
+    mx = e.clientX - canvas.offsetLeft;
+    my = e.clientY - canvas.offsetTop;
+    ctx.beginPath()
+    ctx.rect(mx,my,10,10);
+    ctx.closePath();
+    ctx.stroke();
+    // radius = distance(140,140,mx,my);
+    //     ctx.beginPath()
+    //     ctx.arc(canvasHeight/2,canvasHeight/2,radius,0,Math.PI()*2);
+    //     ctx.closePath();
+    //     ctx.stroke();
 
-
+}
 
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0]
