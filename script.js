@@ -1,7 +1,9 @@
 //git commit -am "commit test 2"
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
+const debugInfo = document.getElementById("debugInfo");
 canvas.addEventListener("mousemove",mouseMoveHandler);
+canvas.addEventListener("mousedown", mouseDownHandler);
 var mx = 0;
 var my = 0;
 //
@@ -9,6 +11,8 @@ var canvasWidth = canvas.getAttribute("width");
 var canvasHeight = canvas.getAttribute("height");
 ctx.fillStyle = "white";
 ctx.strokeStyle = "green";
+var point1 = [0,0];
+var point2 = [0,0];
 function distance(x1,y1,x2,y2) {
     return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
 }
@@ -20,6 +24,13 @@ function angle(x1,y1,x2,y2) {
     }
     return angle;
 
+}
+//todo: make a better way to scale coordinates
+function toComplexCords(realX,realY) {
+    return {u:2*(realX-canvasHeight/2)/canvasHeight,v:2*(canvasHeight/2-realY)/canvasHeight}
+}
+function toXyCords(realU,imaginaryV) {
+    return {x:(realU+1)*canvasHeight/2, y:((1-imaginaryV)*canvasHeight/2)}
 }
 function mouseMoveHandler(e) {
     mx = e.clientX - canvas.offsetLeft;
@@ -36,7 +47,6 @@ function mouseMoveHandler(e) {
     ctx.rect(mx,my,10,10);
     ctx.closePath();
     ctx.stroke();
-
     let radius = distance(mx,my,canvasHeight/2,canvasHeight/2);
     let mouseAngle =angle(canvasHeight/2,canvasHeight/2,mx,my);
     ctx.beginPath()
@@ -46,6 +56,15 @@ function mouseMoveHandler(e) {
 
 
 
+}
+function mouseDownHandler(e) {
+    mx = e.clientX - canvas.offsetLeft;
+    my = e.clientY - canvas.offsetTop;
+    let u = toComplexCords(mx,my).u;
+    let v = toComplexCords(mx,my).v;
+    let x = toXyCords(u,v).x;
+    let y = toXyCords(u,v).y;
+    debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
 
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
