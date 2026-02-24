@@ -7,18 +7,30 @@ var my = 0;
 //
 var canvasWidth = canvas.getAttribute("height");
 var canvasHeight = 480;
-ctx.fillStyle = "green";
+ctx.fillStyle = "white";
 ctx.strokeStyle = "green";
 function distance(x1,y1,x2,y2) {
     return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
 }
+function angle(x1,y1,x2,y2) {
+    //kąt 
+}
 function mouseMoveHandler(e) {
     mx = e.clientX - canvas.offsetLeft;
     my = e.clientY - canvas.offsetTop;
+    //clear canvas
+    ctx.beginPath()
+    ctx.rect(0,0,canvasWidth,canvasHeight);
+    ctx.closePath();
+    ctx.fill();
+
+    drawSmithChart();
+    //show mouse position
     ctx.beginPath()
     ctx.rect(mx,my,10,10);
     ctx.closePath();
     ctx.stroke();
+
     radius = distance(mx,my,canvasHeight/2,canvasHeight/2);
 
     ctx.beginPath()
@@ -32,15 +44,17 @@ function mouseMoveHandler(e) {
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0]
 
-
-for (let i=0; i<wartosciSiatki.length; i++) {
+function drawSmithChart() {
+    for (let i=0; i<wartosciSiatki.length; i++) {
     var r = wartosciSiatki[i];
     rysujIzorezystancje(r);
+    }
+    for (let i=0; i<wartosciSiatki.length; i++) {
+        var x = wartosciSiatki[i];
+        rysujIzoreaktancje(x)
+    }
 }
-for (let i=0; i<wartosciSiatki.length; i++) {
-    var x = wartosciSiatki[i];
-    rysujIzoreaktancje(x)
-}
+drawSmithChart();
 rysujOsie()
 
 function rysujOsie() {//osie pomocnicze, do sprawdzenia czy wykres jest wycentrowany
