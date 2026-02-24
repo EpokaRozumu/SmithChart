@@ -5,15 +5,21 @@ canvas.addEventListener("mousemove",mouseMoveHandler);
 var mx = 0;
 var my = 0;
 //
-var canvasWidth = canvas.getAttribute("height");
-var canvasHeight = 480;
+var canvasWidth = canvas.getAttribute("width");
+var canvasHeight = canvas.getAttribute("height");
 ctx.fillStyle = "white";
 ctx.strokeStyle = "green";
 function distance(x1,y1,x2,y2) {
     return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
 }
 function angle(x1,y1,x2,y2) {
-    //kąt 
+    //kąt lini z punktu 1 do punktu 2 względem 90 stopni
+    let angle = Math.atan((y2-y1)/(x2-x1));
+    if ((x2-y1)<0) {
+        angle += Math.PI
+    }
+    return angle;
+
 }
 function mouseMoveHandler(e) {
     mx = e.clientX - canvas.offsetLeft;
@@ -31,12 +37,13 @@ function mouseMoveHandler(e) {
     ctx.closePath();
     ctx.stroke();
 
-    radius = distance(mx,my,canvasHeight/2,canvasHeight/2);
-
+    let radius = distance(mx,my,canvasHeight/2,canvasHeight/2);
+    let mouseAngle =angle(canvasHeight/2,canvasHeight/2,mx,my);
     ctx.beginPath()
-    ctx.arc(canvasHeight/2,canvasHeight/2,radius,0,Math.PI*2);
+    ctx.arc(canvasHeight/2,canvasHeight/2,radius,Math.PI*2,mouseAngle);
+        ctx.stroke();
     ctx.closePath();
-    ctx.stroke();
+
 
 
 }
