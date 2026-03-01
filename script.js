@@ -25,13 +25,20 @@ function angle(x1,y1,x2,y2) {
     return angle;
 
 }
-//todo: make a better way to scale coordinates
-function toComplexCords(realX,realY) {
-    return {u:2*(realX-canvasHeight/2)/canvasHeight,v:2*(canvasHeight/2-realY)/canvasHeight}
+//Functions for scaling coordinates
+function UfromX(x) {
+    return 2*(x-canvasHeight/2)/canvasHeight;
 }
-function toXyCords(realU,imaginaryV) {
-    return {x:(realU+1)*canvasHeight/2, y:((1-imaginaryV)*canvasHeight/2)}
+function VfromY(y) {
+    return  2*(canvasHeight/2-y)/canvasHeight;
+}   
+function XfromU(u) {
+    return (u+1)*canvasHeight/2;
 }
+function YfromV(v) {
+    return ((1-v)*canvasHeight/2);
+}
+
 function mouseMoveHandler(e) {
     mx = e.clientX - canvas.offsetLeft;
     my = e.clientY - canvas.offsetTop;
@@ -47,11 +54,21 @@ function mouseMoveHandler(e) {
     ctx.rect(mx,my,10,10);
     ctx.closePath();
     ctx.stroke();
-    let radius = distance(mx,my,canvasHeight/2,canvasHeight/2);
-    let mouseAngle =angle(canvasHeight/2,canvasHeight/2,mx,my);
+    //coordinates scaling and rescaling test
+    var u = UfromX(mx)
+    var v = VfromY(my)
+    var x = XfromU(u);
+    var y = YfromV(v);
+
+    debugInfo.innerHTML = ` my:${my} y:${y} \n mx:${mx} x: ${x}`;
+
+    //draw an arc
+    
+    let radius = distance(x,y,canvasHeight/2,canvasHeight/2);
+    let mouseAngle =angle(canvasHeight/2,canvasHeight/2,x,my);
     ctx.beginPath()
     ctx.arc(canvasHeight/2,canvasHeight/2,radius,Math.PI*2,mouseAngle);
-        ctx.stroke();
+    ctx.stroke();
     ctx.closePath();
 
 
@@ -60,10 +77,10 @@ function mouseMoveHandler(e) {
 function mouseDownHandler(e) {
     mx = e.clientX - canvas.offsetLeft;
     my = e.clientY - canvas.offsetTop;
-    let u = toComplexCords(mx,my).u;
-    let v = toComplexCords(mx,my).v;
-    let x = toXyCords(u,v).x;
-    let y = toXyCords(u,v).y;
+    let u = UfromX(mx)
+    let v = VfromY(mx)
+    let x = XfromU(u);
+    let y = YfromV(v);
     debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
 
