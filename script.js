@@ -13,6 +13,32 @@ ctx.fillStyle = "white";
 ctx.strokeStyle = "green";
 var point1 = [0,0];
 var point2 = [0,0];
+
+class Arc {//arc on a complex plane
+    constructor(center, beginning, end) {
+        this.center = center;
+        this.beginning = beginning;
+        this.end = end;
+        this.draw = function() {
+            //draw
+
+            let radius = (canvasHeight/2)*distance(center.u,center.v,beginning.u,beginning.v);
+            //not sure if this is a good place for Math.PI. 
+            let beginAngle = Math.PI + angle(beginning.u,beginning.v,center.u,center.v);
+            let endAngle = Math.PI + angle(center.u,center.v,end.u,end.v);
+            if (endAngle < beginAngle) {
+                [beginAngle,endAngle] = [endAngle,beginAngle];
+            }
+            ctx.strokeStyle = "red";
+            ctx.beginPath()
+            ctx.arc(XfromU(center.u),YfromV(center.v),radius,beginAngle,endAngle);
+            ctx.stroke();
+            ctx.closePath();
+
+        }
+    }
+
+}
 function distance(x1,y1,x2,y2) {
     return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
 }
@@ -49,23 +75,21 @@ function mouseMoveHandler(e) {
     ctx.fill();
 
     drawSmithChart();
+
+    //arc class test
+    myArc = new Arc({u:0,v:0},{u:-0.1,v:0.9}, {u:0.1,v:0.9});
+    myArc.draw();
+    debugInfo.innerHTML = `arc :${myArc.beginning.u}`;
+
     //show mouse position
     ctx.beginPath()
     ctx.rect(mx,my,10,10);
     ctx.closePath();
     ctx.stroke();
-    //coordinates scaling and rescaling test
-    var u = UfromX(mx)
-    var v = VfromY(my)
-    var x = XfromU(u);
-    var y = YfromV(v);
-
-    debugInfo.innerHTML = ` my:${my} y:${y} \n mx:${mx} x: ${x}`;
-
     //draw an arc
     
-    let radius = distance(x,y,canvasHeight/2,canvasHeight/2);
-    let mouseAngle =angle(canvasHeight/2,canvasHeight/2,x,my);
+    let radius = distance(mx,my,canvasHeight/2,canvasHeight/2);
+    let mouseAngle =angle(canvasHeight/2,canvasHeight/2,mx,my);
     ctx.beginPath()
     ctx.arc(canvasHeight/2,canvasHeight/2,radius,Math.PI*2,mouseAngle);
     ctx.stroke();
@@ -74,11 +98,12 @@ function mouseMoveHandler(e) {
 
 
 }
+
 function mouseDownHandler(e) {
     mx = e.clientX - canvas.offsetLeft;
     my = e.clientY - canvas.offsetTop;
-    let u = UfromX(mx)
-    let v = VfromY(mx)
+    let u = UfromX(mx);
+    let v = VfromY(my);
     let x = XfromU(u);
     let y = YfromV(v);
     debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
@@ -88,6 +113,7 @@ function mouseDownHandler(e) {
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0]
 
 function drawSmithChart() {
+    ctx.strokeStyle = "green";
     for (let i=0; i<wartosciSiatki.length; i++) {
     var r = wartosciSiatki[i];
     rysujIzorezystancje(r);
