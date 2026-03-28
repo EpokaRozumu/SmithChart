@@ -7,12 +7,13 @@ canvas.addEventListener("mousedown", mouseDownHandler);
 var mx = 0;
 var my = 0;
 //
-var canvasWidth = canvas.getAttribute("width");
-var canvasHeight = canvas.getAttribute("height");
+var canvasWidth = parseInt(canvas.getAttribute("width"));
+var canvasHeight = parseInt(canvas.getAttribute("height"));
 ctx.fillStyle = "white";
-ctx.strokeStyle = "green";
+ctx.strokeStyle = "red";
 var point1 = [0,0];
 var point2 = [0,0];
+
 
 class Arc {//arc on a complex plane
     constructor(center, beginning, end) {
@@ -39,6 +40,9 @@ class Arc {//arc on a complex plane
     }
 
 }
+var testArc1 = new Arc({u:0,v:0},{u:-0.58,v:0.3}, {u:0.4,v:0.2});
+var testArc2 = new Arc({u:-0.1,v:0},{u:0.4,v:0.2}, {u:0.9,v:0.1});
+var arrayOfArcs = [testArc1, testArc2];
 function distance(x1,y1,x2,y2) {
     return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
 }
@@ -65,6 +69,7 @@ function YfromV(v) {
     return ((1-v)*canvasHeight/2);
 }
 
+//A <<DRAW>> function
 function mouseMoveHandler(e) {
     mx = e.clientX - canvas.offsetLeft;
     my = e.clientY - canvas.offsetTop;
@@ -77,16 +82,20 @@ function mouseMoveHandler(e) {
     drawSmithChart();
 
     //arc class test
-    myArc = new Arc({u:0,v:0},{u:-0.1,v:0.9}, {u:0.1,v:0.9});
-    myArc.draw();
-    debugInfo.innerHTML = `arc :${myArc.beginning.u}`;
+    //myArc = new Arc({u:0,v:0},{u:-0.1,v:0.9}, {u:0.1,v:0.9});
+    arrayOfArcs.forEach((element) => {
+        element.draw();
+    })
 
-    //show mouse position
+    //debugInfo.innerHTML = `mpos :${mx + " " + my}`;
+
+    //small square on mouse position
     ctx.beginPath()
     ctx.rect(mx,my,10,10);
     ctx.closePath();
     ctx.stroke();
-    //draw an arc
+
+    //draw an arc from the mouse position
     
     let radius = distance(mx,my,canvasHeight/2,canvasHeight/2);
     let mouseAngle =angle(canvasHeight/2,canvasHeight/2,mx,my);
@@ -94,9 +103,6 @@ function mouseMoveHandler(e) {
     ctx.arc(canvasHeight/2,canvasHeight/2,radius,Math.PI*2,mouseAngle);
     ctx.stroke();
     ctx.closePath();
-
-
-
 }
 
 function mouseDownHandler(e) {
@@ -106,7 +112,11 @@ function mouseDownHandler(e) {
     let v = VfromY(my);
     let x = XfromU(u);
     let y = YfromV(v);
-    debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
+    debugInfo.innerHTML = ` click :${arrayOfArcs.length}\n`;
+    //TODO: ADD ADDING NEW ARCS TO ARRAY OF ARCS
+    let beginning = arrayOfArcs[arrayOfArcs.length-1].end;
+    let newArc = new Arc({u: 0, v: 0}, {u: u, v: v}, beginning);
+    arrayOfArcs.push(newArc);
 }
 
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
@@ -145,17 +155,17 @@ function rysujIzorezystancje(r) {//rysuje jedną izorezystancję
     var u = r/(r+1)
     var v = 0
     var radius = 1/(r+1)
-    drawCircle(u,v,radius)
+    drawComplexCircle(u,v,radius)
 }
 function rysujIzoreaktancje(x) {
     var u = 1;
     var v = 1/x;
     var radius = 1/x;
-    drawCircle(u,v,radius);
+    drawComplexCircle(u,v,radius);
     var v = -1/x;
-    drawCircle(u,v,radius);
+    drawComplexCircle(u,v,radius);
 }
-function drawCircle(u,v,radius) {//rysuje podany okrąg z płaszczyzny zespolonej na elemencie canvas
+function drawComplexCircle(u,v,radius) {//rysuje podany okrąg z płaszczyzny zespolonej na elemencie canvas
     let relativeX = (u+1)*canvasHeight/2
     let relativeY = (v+1)*canvasHeight/2
     let relativeRadius = radius*canvasHeight/2
