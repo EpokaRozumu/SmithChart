@@ -3,6 +3,7 @@
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 const debugInfo = document.getElementById("debugInfo");
+const uiText = document.getElementById("uiText");
 canvas.addEventListener("mousemove",mouseMoveHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
 var mx = 0;
@@ -29,9 +30,11 @@ function drawArc(a) {
     ctx.strokeStyle = "green";
 }
 
-
+var states = ["CENTER", "BEGINNING", "END", "IDLE"]
 var myArc = new Arc(0,0,0.5,0,Math.PI)
-
+//an arc that shows what you are about to draw
+var mouseArc = new Arc(0,0,0.5,Math.PI*2,Math.PI);
+var arrayOfArcs = [myArc];
 var canvasWidth = canvas.getAttribute("width");
 var canvasHeight = canvas.getAttribute("height");
 ctx.fillStyle = "white";
@@ -88,16 +91,18 @@ function mouseMoveHandler(e) {
     debugInfo.innerHTML = ` my:${my} y:${y} \n mx:${mx} x: ${x}`;
 
     //draw an arc
-    drawArc(myArc);
+    for (i=0; i<arrayOfArcs.length; i++) {
+        drawArc(arrayOfArcs[i]);
+    }
 
     let radius = distance(x,y,canvasHeight/2,canvasHeight/2);
     let mouseAngle =angle(canvasHeight/2,canvasHeight/2,x,my);
-    let mouseArc = new Arc(0,0,2*radius/canvasHeight,Math.PI*2,mouseAngle);
+    mouseArc = new Arc(0,0,2*radius/canvasHeight,Math.PI*2,mouseAngle);
     drawArc(mouseArc);
-    ctx.beginPath()
-    ctx.arc(canvasHeight/2,canvasHeight/2,radius,Math.PI*2,mouseAngle);
-    ctx.stroke();
-    ctx.closePath();
+    // ctx.beginPath()
+    // ctx.arc(canvasHeight/2,canvasHeight/2,radius,Math.PI*2,mouseAngle);
+    // ctx.stroke();
+    // ctx.closePath();
 
 
 
@@ -109,6 +114,7 @@ function mouseDownHandler(e) {
     let v = VfromY(mx)
     let x = XfromU(u);
     let y = YfromV(v);
+    arrayOfArcs.push(mouseArc);
     debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
 
