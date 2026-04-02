@@ -30,7 +30,12 @@ function drawArc(a) {
     ctx.strokeStyle = "green";
 }
 
-var states = ["CENTER", "BEGINNING", "END", "IDLE"]
+var beginningIsChosen = false;
+var angleOfBeginning = 0;
+var radiusOfBeginning = 0;//in uv coords
+var drawMode = "Izorezystancja"
+
+
 var myArc = new Arc(0,0,0.5,0,Math.PI)
 //an arc that shows what you are about to draw
 var mouseArc = new Arc(0,0,0.5,Math.PI*2,Math.PI);
@@ -88,21 +93,23 @@ function mouseMoveHandler(e) {
     var x = XfromU(u);
     var y = YfromV(v);
 
-    debugInfo.innerHTML = ` my:${my} y:${y} \n mx:${mx} x: ${x}`;
+    //debugInfo.innerHTML = ` my:${my} y:${y} \n mx:${mx} x: ${x}`;
 
-    //draw an arc
     for (i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
     }
 
     let radius = distance(x,y,canvasHeight/2,canvasHeight/2);
     let mouseAngle =angle(canvasHeight/2,canvasHeight/2,x,my);
+    ctx.strokeStyle = "blue";
+    let mu = UfromX(mx);
+    let mv = VfromY(my);
+    rysujIzorezystancje(znajdzIzorezystancje(mu,mv));
+    debugInfo.innnerHTML = znajdzIzorezystancje(mu,mv);
+    ctx.strokeStyle = "blue";
+
     mouseArc = new Arc(0,0,2*radius/canvasHeight,Math.PI*2,mouseAngle);
     drawArc(mouseArc);
-    // ctx.beginPath()
-    // ctx.arc(canvasHeight/2,canvasHeight/2,radius,Math.PI*2,mouseAngle);
-    // ctx.stroke();
-    // ctx.closePath();
 
 
 
@@ -115,7 +122,7 @@ function mouseDownHandler(e) {
     let x = XfromU(u);
     let y = YfromV(v);
     arrayOfArcs.push(mouseArc);
-    debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
+    //debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
 
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
@@ -148,6 +155,11 @@ function rysujOsie() {//osie pomocnicze, do sprawdzenia czy wykres jest wycentro
     ctx.lineTo(canvasWidth/2,canvasHeight);
     ctx.closePath();
     ctx.stroke();
+}
+function znajdzIzorezystancje(u,v) {
+    let ans = (1-(u**2-v**2))/((1-u)**2 + v**2);
+    console.log(ans);
+    return ans;
 }
 function rysujIzorezystancje(r) {//rysuje jedną izorezystancję
     var u = r/(r+1)
