@@ -71,10 +71,15 @@ function XfromU(u) {
 function YfromV(v) {
     return ((1-v)*canvasHeight/2);
 }
+function drawMousePosition(x, y, color) {
+    ctx.strokeStyle =color;
+    ctx.beginPath();
+    ctx.rect(x,y,10,10);
+    ctx.closePath();
+    ctx.stroke();
+}
 
 function mouseMoveHandler(e) {
-    mx = e.clientX - canvas.offsetLeft;
-    my = e.clientY - canvas.offsetTop;
     //clear canvas
     ctx.beginPath()
     ctx.rect(0,0,canvasWidth,canvasHeight);
@@ -82,20 +87,18 @@ function mouseMoveHandler(e) {
     ctx.fill();
     rysujOsie();
     drawSmithChart();
-    //show mouse position
-    ctx.beginPath()
-    ctx.rect(mx,my,10,10);
-    ctx.closePath();
-    ctx.stroke();
+    //user input
+    mx = e.clientX - canvas.offsetLeft;
+    my = e.clientY - canvas.offsetTop;
     //coordinates scaling and rescaling test
     var u = UfromX(mx)
     var v = VfromY(my)
     var x = XfromU(u);
     var y = YfromV(v);
+    drawMousePosition(x,y,"blue")    //show rescaled mouse position
+    drawMousePosition(mx,my,"red")      //show original mouse position
 
-    //debugInfo.innerHTML = ` my:${my} y:${y} \n mx:${mx} x: ${x}`;
-
-    for (i=0; i<arrayOfArcs.length; i++) {
+    for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
     }
 
@@ -172,7 +175,7 @@ function rysujIzoreaktancje(x) {
     var v = 1/x;
     var radius = 1/x;
     drawCircle(u,v,radius);
-    var v = -1/x;
+    v = -1/x;
     drawCircle(u,v,radius);
 }
 function drawCircle(u,v,radius) {//rysuje podany okrąg z płaszczyzny zespolonej na elemencie canvas
