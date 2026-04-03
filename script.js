@@ -78,7 +78,16 @@ function drawMousePosition(x, y, color) {
     ctx.closePath();
     ctx.stroke();
 }
-
+function drawCoords(u,v) {
+    let x = XfromU(u);
+    let y = YfromV(v);
+    let dx = 100;
+    let dy = 20;
+    ctx.clearRect(x-dx,y-dy,dx,dy);
+    ctx.fillStyle = "black";
+    ctx.fillText("u: " + u + " v: " + v ,x-dx+5,y-dy+10);
+    ctx.fillStyle = "white";
+}
 function mouseMoveHandler(e) {
     //clear canvas
     ctx.beginPath()
@@ -97,6 +106,7 @@ function mouseMoveHandler(e) {
     var y = YfromV(v);
     drawMousePosition(x,y,"blue")    //show rescaled mouse position
     drawMousePosition(mx,my,"red")      //show original mouse position
+    drawCoords(u,v);
 
     for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
@@ -105,10 +115,9 @@ function mouseMoveHandler(e) {
     let radius = distance(x,y,canvasHeight/2,canvasHeight/2);
     let mouseAngle =angle(canvasHeight/2,canvasHeight/2,x,my);
     ctx.strokeStyle = "blue";
-    let mu = UfromX(mx);
-    let mv = VfromY(my);
-    rysujIzorezystancje(znajdzIzorezystancje(mu,mv));
-    debugInfo.innnerHTML = znajdzIzorezystancje(mu,mv);
+    //FIX:
+    rysujIzorezystancje(znajdzIzorezystancje(u,v));
+    debugInfo.innnerHTML = znajdzIzorezystancje(u,v);
     ctx.strokeStyle = "blue";
 
     mouseArc = new Arc(0,0,2*radius/canvasHeight,Math.PI*2,mouseAngle);
