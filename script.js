@@ -117,11 +117,12 @@ function mouseMoveHandler(e) {
     ctx.strokeStyle = "blue";
     //FIX:
     rysujIzorezystancje(znajdzIzorezystancje(u,v));
-    debugInfo.innnerHTML = znajdzIzorezystancje(u,v);
 
     ctx.strokeStyle = "blue";
+    let r = znajdzIzorezystancje(u,v);
+    mouseArc = new Arc(r/(r+1),0,1/(r+1),0,mouseAngle);
+    //mouseArc = new Arc(0,0,2*radius/canvasHeight,Math.PI*2,mouseAngle);
 
-    mouseArc = new Arc(0,0,2*radius/canvasHeight,Math.PI*2,mouseAngle);
     drawArc(mouseArc);
 
 
