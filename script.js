@@ -118,6 +118,7 @@ function mouseMoveHandler(e) {
     //FIX:
     rysujIzorezystancje(znajdzIzorezystancje(u,v));
     debugInfo.innnerHTML = znajdzIzorezystancje(u,v);
+
     ctx.strokeStyle = "blue";
 
     mouseArc = new Arc(0,0,2*radius/canvasHeight,Math.PI*2,mouseAngle);
@@ -134,6 +135,7 @@ function mouseDownHandler(e) {
     let x = XfromU(u);
     let y = YfromV(v);
     arrayOfArcs.push(mouseArc);
+    console.log(znajdzIzoreaktancje(u,v));
     //debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
 
@@ -169,9 +171,11 @@ function rysujOsie() {//osie pomocnicze, do sprawdzenia czy wykres jest wycentro
     ctx.stroke();
 }
 function znajdzIzorezystancje(u,v) {
-    let ans = (1-(u**2-v**2))/((1-u)**2 + v**2);
-    console.log(ans);
+    let ans = -(u**2+v**2-1)/(u**2-2*u+v**2+1)//chyba działa
     return ans;
+}
+function znajdzIzoreaktancje(u,v) {
+    return (2*v)/((1-u)**2+v^2);
 }
 function rysujIzorezystancje(r) {//rysuje jedną izorezystancję
     var u = r/(r+1)
