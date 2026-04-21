@@ -52,12 +52,7 @@ function distance(x1,y1,x2,y2) {
     return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
 }
 function angle(x1,y1,x2,y2) {
-    //kąt lini z punktu 1 do punktu 2 względem 90 stopni
-    let angle = Math.atan((y2-y1)/(x2-x1));
-    if ((x2-y1)<0) {
-        angle += Math.PI
-    }
-    return angle;
+    return Math.atan2(y1-y2,x2-x1);
 
 }
 //Functions for scaling coordinates
@@ -73,7 +68,7 @@ function XfromU(u) {
 function YfromV(v) {
     return ((1-v)*canvasHeight/2);
 }
-function drawMousePosition(x, y, color) {
+function drawLittleSquare(x, y, color) {
     ctx.strokeStyle =color;
     ctx.beginPath();
     ctx.rect(x,y,10,10);
@@ -106,25 +101,32 @@ function mouseMoveHandler(e) {
     var v = VfromY(my)
     var x = XfromU(u);
     var y = YfromV(v);
-    drawMousePosition(x,y,"blue")    //show rescaled mouse position
-    drawMousePosition(mx,my,"red")      //show original mouse position
+    drawLittleSquare(x,y,"blue")    //show rescaled mouse position
+    drawLittleSquare(mx,my,"red")      //show original mouse position
     drawCoords(u,v);
 
     for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
     }
-    let mouseAngle =angle(canvasHeight/2,canvasHeight/2,x,my);
-    ctx.strokeStyle = "blue";
-    //FIX:
-    rysujIzorezystancje(znajdzIzorezystancje(u,v));
 
-    ctx.strokeStyle = "green";
     let r = znajdzIzorezystancje(u,v);
-    mouseArc = new Arc(r/(r+1),0,1/(r+1),0,mouseAngle);
-    //mouseArc = new Arc(0,0,2*radius/canvasHeight,Math.PI*2,mouseAngle);
-
+    let mouseAngle =angle(r/(r+1),0,u,v);
+    let centerU = r/(r+1);
+    let centerV = 0;
+    let centerX = XfromU(centerU);
+    let centerY = YfromV(centerV);
+    mouseArc = new Arc(centerU,centerV,1/(r+1),mouseAngle,0);
+    ctx.strokeStyle = "red";
     drawArc(mouseArc);
 
+    drawLittleSquare(centerX,centerY, "red")
+    ctx.beginPath();
+    ctx.moveTo(centerX,centerY);
+    ctx.lineTo(mx,my);
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.strokeStyle = "green";
 
 
 }
