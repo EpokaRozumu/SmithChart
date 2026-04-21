@@ -20,14 +20,16 @@ class Arc {//complex arc class
     }
 }
 function drawArc(a) {
-    ctx.strokeStyle = "red";
+    //ctx.arc(XfromU(a.centerU), YfromV(a.centerV),
+     //   a.radius*canvasWidth/2,a.start_angle,a.end_angle);
+    let relativeX = (a.centerU+1)*canvasHeight/2
+    let relativeY = (a.centerV+1)*canvasHeight/2
+    let relativeRadius = a.radius*canvasHeight/2
     ctx.beginPath();
-    ctx.arc(XfromU(a.centerU), YfromV(a.centerV),
-        a.radius*canvasWidth/2,a.start_angle,a.end_angle);
-
+    ctx.arc(relativeX, relativeY, relativeRadius,
+        a.start_angle,a.end_angle)
     ctx.stroke();
     ctx.closePath();
-    ctx.strokeStyle = "green";
 }
 
 var beginningIsChosen = false;
@@ -111,14 +113,12 @@ function mouseMoveHandler(e) {
     for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
     }
-
-    let radius = distance(x,y,canvasHeight/2,canvasHeight/2);
     let mouseAngle =angle(canvasHeight/2,canvasHeight/2,x,my);
     ctx.strokeStyle = "blue";
     //FIX:
     rysujIzorezystancje(znajdzIzorezystancje(u,v));
 
-    ctx.strokeStyle = "blue";
+    ctx.strokeStyle = "green";
     let r = znajdzIzorezystancje(u,v);
     mouseArc = new Arc(r/(r+1),0,1/(r+1),0,mouseAngle);
     //mouseArc = new Arc(0,0,2*radius/canvasHeight,Math.PI*2,mouseAngle);
