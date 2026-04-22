@@ -1,16 +1,34 @@
 //git commit -am "commit test 2"
 
-const canvas = document.getElementById("myCanvas");
-const ctx = canvas.getContext("2d");
+
 const debugInfo = document.getElementById("debugInfo");
 const uiText = document.getElementById("uiText");
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d");
 canvas.addEventListener("mousemove",mouseMoveHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
+var canvasWidth = canvas.getAttribute("width");
+var canvasHeight = canvas.getAttribute("height");
+ctx.fillStyle = "white";
+ctx.strokeStyle = "green";
 var mx = 0;
 var my = 0;
+//TODO: state machine for drawing isoresistance arc
+const CHOOSING_CENTER = "Choosing Center";
+const CHOOSING_FIRST_POINT = "Choosing first point";
+var currentState = CHOOSING_CENTER;
+var center = [0,0];
+var point1 = [0,0];
+var point2 = [0,0];
+//wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
+var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
+drawSmithChart();
+rysujOsie();
 
 
-class Arc {//complex arc class
+class Arc {
+    //complex arc class
+    //todo: add information about meaning
     constructor(centerU,centerV,radius,start_angle,end_angle) {
         this.centerU = centerU;
         this.centerV = centerV;
@@ -20,8 +38,7 @@ class Arc {//complex arc class
     }
 }
 function drawArc(a) {
-    //ctx.arc(XfromU(a.centerU), YfromV(a.centerV),
-     //   a.radius*canvasWidth/2,a.start_angle,a.end_angle);
+    //draws and arc given in u and v coordinates
     let relativeX = (a.centerU+1)*canvasHeight/2
     let relativeY = (a.centerV+1)*canvasHeight/2
     let relativeRadius = a.radius*canvasHeight/2
@@ -31,29 +48,14 @@ function drawArc(a) {
     ctx.stroke();
     ctx.closePath();
 }
-
-var beginningIsChosen = false;
-var angleOfBeginning = 0;
-var radiusOfBeginning = 0;//in uv coords
-var drawMode = "Izorezystancja"
-
-
-var myArc = new Arc(0,0,0.5,0,Math.PI)
-//an arc that shows what you are about to draw
-var mouseArc = new Arc(0,0,0.5,Math.PI*2,Math.PI);
-var arrayOfArcs = [myArc];
-var canvasWidth = canvas.getAttribute("width");
-var canvasHeight = canvas.getAttribute("height");
-ctx.fillStyle = "white";
-ctx.strokeStyle = "green";
-var point1 = [0,0];
-var point2 = [0,0];
+var mouseArc = new Arc(0,0,0.5,Math.PI*2,Math.PI);//temporary arc that changes on every mouse move
+var arrayOfArcs = [];
+//analitycal geometry functions
 function distance(x1,y1,x2,y2) {
     return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
 }
 function angle(x1,y1,x2,y2) {
     return Math.atan2(y1-y2,x2-x1);
-
 }
 //Functions for scaling coordinates
 function UfromX(x) {
@@ -68,6 +70,7 @@ function XfromU(u) {
 function YfromV(v) {
     return ((1-v)*canvasHeight/2);
 }
+
 function drawLittleSquare(x, y, color) {
     ctx.strokeStyle =color;
     ctx.beginPath();
@@ -76,6 +79,7 @@ function drawLittleSquare(x, y, color) {
     ctx.stroke();
 }
 function drawCoords(u,v) {
+    //draws a little rectangle labeling specific coords on screem
     let x = XfromU(u);
     let y = YfromV(v);
     let dx = 100;
@@ -84,6 +88,24 @@ function drawCoords(u,v) {
     ctx.fillStyle = "black";
     ctx.fillText("u: " + u + " v: " + v ,x-dx+5,y-dy+10);
     ctx.fillStyle = "white";
+}
+function drawCurrentMouseArc(u,v) {
+    let r = znajdzIzorezystancje(u,v);
+    let mouseAngle =angle(r/(r+1),0,u,v);
+    let centerU = r/(r+1);
+    let centerV = 0;
+    let centerX = XfromU(centerU);
+    let centerY = YfromV(centerV);
+    mouseArc = new Arc(centerU,centerV,1/(r+1),mouseAngle,0);
+    ctx.strokeStyle = "red";
+    drawArc(mouseArc);
+    //an angle indicator to help with debugging:
+    drawLittleSquare(centerX,centerY, "red")
+    ctx.beginPath();
+    ctx.moveTo(centerX,centerY);
+    ctx.lineTo(mx,my);
+    ctx.closePath();
+    ctx.stroke();
 }
 function mouseMoveHandler(e) {
     //clear canvas
@@ -101,51 +123,24 @@ function mouseMoveHandler(e) {
     var v = VfromY(my)
     var x = XfromU(u);
     var y = YfromV(v);
+    //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     drawLittleSquare(mx,my,"red")      //show original mouse position
-    drawCoords(u,v);
 
+    drawCoords(u,v);
+    drawCurrentMouseArc(u,v);
     for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
     }
-
-    let r = znajdzIzorezystancje(u,v);
-    let mouseAngle =angle(r/(r+1),0,u,v);
-    let centerU = r/(r+1);
-    let centerV = 0;
-    let centerX = XfromU(centerU);
-    let centerY = YfromV(centerV);
-    mouseArc = new Arc(centerU,centerV,1/(r+1),mouseAngle,0);
-    ctx.strokeStyle = "red";
-    drawArc(mouseArc);
-
-    drawLittleSquare(centerX,centerY, "red")
-    ctx.beginPath();
-    ctx.moveTo(centerX,centerY);
-    ctx.lineTo(mx,my);
-    ctx.closePath();
-    ctx.stroke();
-
-    ctx.strokeStyle = "green";
-
-
 }
 function mouseDownHandler(e) {
-    mx = e.clientX - canvas.offsetLeft;
-    my = e.clientY - canvas.offsetTop;
-    let u = UfromX(mx)
-    let v = VfromY(mx)
-    let x = XfromU(u);
-    let y = YfromV(v);
     arrayOfArcs.push(mouseArc);
-    console.log(znajdzIzoreaktancje(u,v));
     //debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
 
-//wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
-var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0]
 
 function drawSmithChart() {
+    ctx.strokeStyle = "green";
     for (let i=0; i<wartosciSiatki.length; i++) {
         var r = wartosciSiatki[i];
         rysujIzorezystancje(r);
@@ -155,11 +150,10 @@ function drawSmithChart() {
         rysujIzoreaktancje(x)
     }
 }
-drawSmithChart();
-rysujOsie()
-
-function rysujOsie() {//osie pomocnicze, do sprawdzenia czy wykres jest wycentrowany
+function rysujOsie() {
+    //osie pomocnicze, do sprawdzenia czy wykres jest wycentrowany
     //oś pozioma
+    ctx.strokeStyle = "green";
     ctx.beginPath();
     ctx.moveTo(0, canvasHeight/2);
     ctx.lineTo(canvasWidth,canvasHeight/2);
