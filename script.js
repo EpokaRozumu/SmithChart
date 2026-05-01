@@ -19,6 +19,8 @@ var chosen_r = 0.5;
 var r = 0.5; //wartość zmieniena przy każdym ruchu myszą
 var chosen_beginning = 0;
 var chosen_end = 0;
+var ending = 0.5;
+var beginning = 0;
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
 drawSmithChart();
@@ -41,11 +43,13 @@ function drawArc(a) {
     let relativeX = (a.centerU+1)*canvasHeight/2
     let relativeY = (a.centerV+1)*canvasHeight/2
     let relativeRadius = a.radius*canvasHeight/2
+    ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.arc(relativeX, relativeY, relativeRadius,
         a.start_angle,a.end_angle)
     ctx.stroke();
     ctx.closePath();
+    ctx.lineWidth = 1;
     //todo: somehow indicate beginning and end of the angle
 }
 var mouseArc = new Arc(0,0,0.5,Math.PI*2,0);//temporary arc that changes on every mouse move
@@ -96,13 +100,12 @@ function drawCurrentMouseArc(u,v) {
     } else {
         r = chosen_r
     }
-    let beginning = 0;
     if (drawing_state == "choosing beginning") {
         beginning = angle(r/(r+1),0,u,v);
     } else {
         beginning = chosen_beginning;
     }
-    let ending = 0.5;
+
     if (drawing_state == "choosing end") {
         ending = angle(r/(r+1),0,u,v);
     } else {
@@ -146,7 +149,7 @@ function mouseMoveHandler(e) {
     drawLittleSquare(mx,my,"red")      //show original mouse position
 
     drawCoords(u,v);
-    debugInfo.innerText = chosen_beginning + " " + mouseArc.end_angle;
+    debugInfo.innerText = "beginning: " +beginning + "end: " + mouseArc.end_angle;
     drawCurrentMouseArc(u,v);
     for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
@@ -157,11 +160,10 @@ function mouseDownHandler(e) {
         chosen_r = r;
         drawing_state = "choosing beginning"
     } else if (drawing_state == "choosing beginning"){
-        chosen_beginning = mouseArc.start_angle + 2*Math.PI;
+        chosen_beginning = mouseArc.start_angle ;
         drawing_state = "choosing end"
 
     } else if (drawing_state == "choosing end"){
-        mouseArc.end_angle = chosen_end;
         arrayOfArcs.push(mouseArc);
         drawing_state = "confirm"
     } else if (drawing_state == "confirm"){
