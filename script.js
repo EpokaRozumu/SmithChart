@@ -14,12 +14,11 @@ ctx.strokeStyle = "green";
 var mx = 0;
 var my = 0;
 //TODO: state machine for drawing isoresistance arc
-const CHOOSING_CENTER = "Choosing Center";
-const CHOOSING_FIRST_POINT = "Choosing first point";
-var currentState = CHOOSING_CENTER;
-var center = [0,0];
-var point1 = [0,0];
-var point2 = [0,0];
+var drawing_state = "choosing r" //"choosing beginning", "choosing end";
+var chosen_r = 0.5;
+var r = 0.5; //wartość zmieniena przy każdym ruchu myszą
+var chosen_beginning = 0;
+var chosen_end = 0;
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
 drawSmithChart();
@@ -47,8 +46,10 @@ function drawArc(a) {
         a.start_angle,a.end_angle)
     ctx.stroke();
     ctx.closePath();
+    //todo: somehow indicate beginning and end of the angle
 }
-var mouseArc = new Arc(0,0,0.5,Math.PI*2,Math.PI);//temporary arc that changes on every mouse move
+var mouseArc = new Arc(0,0,0.5,Math.PI*2,0);//temporary arc that changes on every mouse move
+//when only the first point is chosen, start angle will be equal to end angle;
 var arrayOfArcs = [];
 //analitycal geometry functions
 function distance(x1,y1,x2,y2) {
@@ -90,13 +91,29 @@ function drawCoords(u,v) {
     ctx.fillStyle = "white";
 }
 function drawCurrentMouseArc(u,v) {
-    let r = znajdzIzorezystancje(u,v);
-    let mouseAngle =angle(r/(r+1),0,u,v);
+    if (drawing_state == "choosing r") {
+        r = znajdzIzorezystancje(u,v);
+    } else {
+        r = chosen_r
+    }
+    let beginning = 0;
+    if (drawing_state == "choosing beginning") {
+        beginning = angle(r/(r+1),0,u,v);
+    } else {
+        beginning = chosen_beginning;
+    }
+    let ending = 0.5;
+    if (drawing_state == "choosing end") {
+        ending = angle(r/(r+1),0,u,v);
+    } else {
+        ending = chosen_end;
+    }
+    //let mouseAngle =angle(r/(r+1),0,u,v);
     let centerU = r/(r+1);
     let centerV = 0;
     let centerX = XfromU(centerU);
     let centerY = YfromV(centerV);
-    mouseArc = new Arc(centerU,centerV,1/(r+1),mouseAngle,0);
+    mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending);
     ctx.strokeStyle = "red";
     drawArc(mouseArc);
     //an angle indicator to help with debugging:
@@ -108,6 +125,7 @@ function drawCurrentMouseArc(u,v) {
     ctx.stroke();
 }
 function mouseMoveHandler(e) {
+    uiText.innerText = drawing_state;
     //clear canvas
     ctx.beginPath()
     ctx.rect(0,0,canvasWidth,canvasHeight);
@@ -128,13 +146,30 @@ function mouseMoveHandler(e) {
     drawLittleSquare(mx,my,"red")      //show original mouse position
 
     drawCoords(u,v);
+    debugInfo.innerText = chosen_beginning + " " + mouseArc.end_angle;
     drawCurrentMouseArc(u,v);
     for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
     }
 }
 function mouseDownHandler(e) {
-    arrayOfArcs.push(mouseArc);
+    if(drawing_state == "choosing r"){
+        chosen_r = r;
+        drawing_state = "choosing beginning"
+    } else if (drawing_state == "choosing beginning"){
+        chosen_beginning = mouseArc.start_angle + 2*Math.PI;
+        drawing_state = "choosing end"
+
+    } else if (drawing_state == "choosing end"){
+        mouseArc.end_angle = chosen_end;
+        arrayOfArcs.push(mouseArc);
+        drawing_state = "confirm"
+    } else if (drawing_state == "confirm"){
+        chosen_r = 0;
+        chosen_beginning = 0;
+        chosen_end = 0;
+        drawing_state = "choosing r"
+    }
     //debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
 
