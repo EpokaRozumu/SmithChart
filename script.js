@@ -13,7 +13,6 @@ ctx.fillStyle = "white";
 ctx.strokeStyle = "green";
 var mx = 0;
 var my = 0;
-//TODO: state machine for drawing isoresistance arc
 var drawing_state = "choosing r" //"choosing beginning", "choosing end";
 var chosen_r = 0.5;
 var r = 0.5; //wartość zmieniena przy każdym ruchu myszą
@@ -46,10 +45,11 @@ function drawArc(a) {
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.arc(relativeX, relativeY, relativeRadius,
-        a.start_angle,a.end_angle,(a.start_angle>a.end_angle))
+        a.start_angle,a.end_angle)
     ctx.stroke();
     ctx.closePath();
     ctx.lineWidth = 1;
+    //todo: skąd mam wiedzieć czy rysować w prawo czy w lewo??
     //todo: somehow indicate beginning and end of the angle
 }
 var mouseArc = new Arc(0,0,0.5,Math.PI*2,0);//temporary arc that changes on every mouse move
