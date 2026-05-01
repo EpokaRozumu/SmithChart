@@ -46,7 +46,7 @@ function drawArc(a) {
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.arc(relativeX, relativeY, relativeRadius,
-        a.start_angle,a.end_angle)
+        a.start_angle,a.end_angle,(a.start_angle>a.end_angle))
     ctx.stroke();
     ctx.closePath();
     ctx.lineWidth = 1;
@@ -100,25 +100,31 @@ function drawCurrentMouseArc(u,v) {
     } else {
         r = chosen_r
     }
-    if (drawing_state == "choosing beginning") {
-        beginning = angle(r/(r+1),0,u,v);
-    } else {
-        beginning = chosen_beginning;
-    }
 
     if (drawing_state == "choosing end") {
         ending = angle(r/(r+1),0,u,v);
     } else {
         ending = chosen_end;
     }
+    if (drawing_state == "choosing beginning") {
+        beginning = angle(r/(r+1),0,u,v);
+        ending = beginning+0.01;
+    } else {
+        beginning = chosen_beginning;
+    }
+
     //let mouseAngle =angle(r/(r+1),0,u,v);
     let centerU = r/(r+1);
     let centerV = 0;
     let centerX = XfromU(centerU);
     let centerY = YfromV(centerV);
+    drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle
     mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending);
     ctx.strokeStyle = "red";
-    drawArc(mouseArc);
+    if (drawing_state != "choosing r") {
+        drawArc(mouseArc);
+    }
+
     //an angle indicator to help with debugging:
     drawLittleSquare(centerX,centerY, "red")
     ctx.beginPath();
@@ -160,13 +166,11 @@ function mouseDownHandler(e) {
         chosen_r = r;
         drawing_state = "choosing beginning"
     } else if (drawing_state == "choosing beginning"){
-        chosen_beginning = mouseArc.start_angle ;
+        chosen_beginning = beginning ;
         drawing_state = "choosing end"
 
     } else if (drawing_state == "choosing end"){
         arrayOfArcs.push(mouseArc);
-        drawing_state = "confirm"
-    } else if (drawing_state == "confirm"){
         chosen_r = 0;
         chosen_beginning = 0;
         chosen_end = 0;
