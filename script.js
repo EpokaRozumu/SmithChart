@@ -4,6 +4,9 @@
 const debugInfo = document.getElementById("debugInfo");
 const uiText = document.getElementById("uiText");
 const canvas = document.getElementById("myCanvas");
+const przyciskIzorezystancji = document.getElementById("Izorezystancja");
+const przyciskIzoreaktancji = document.getElementById("Izoreaktancja");
+const przyciskWydluzenia = document.getElementById("Wydłużenie");
 const ctx = canvas.getContext("2d");
 canvas.addEventListener("mousemove",mouseMoveHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
@@ -13,7 +16,10 @@ ctx.fillStyle = "white";
 ctx.strokeStyle = "green";
 var mx = 0;
 var my = 0;
-var drawing_state = "choosing r" //"choosing beginning", "choosing end";
+const CHOOSING_R = "choosing r";
+const CHOOSING_BEGINNING = "choosing beginning";
+const CHOOSING_END = "choosing end";
+var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
 var chosen_r = 0.5;
 var r = 0.5; //wartość zmieniena przy każdym ruchu myszą
 var chosen_beginning = 0;
@@ -95,18 +101,18 @@ function drawCoords(u,v) {
     ctx.fillStyle = "white";
 }
 function drawCurrentMouseArc(u,v) {
-    if (drawing_state == "choosing r") {
+    if (drawing_state == CHOOSING_R) {
         r = znajdzIzorezystancje(u,v);
     } else {
         r = chosen_r
     }
 
-    if (drawing_state == "choosing end") {
+    if (drawing_state == CHOOSING_END) {
         ending = angle(r/(r+1),0,u,v);
     } else {
         ending = chosen_end;
     }
-    if (drawing_state == "choosing beginning") {
+    if (drawing_state == CHOOSING_BEGINNING) {
         beginning = angle(r/(r+1),0,u,v);
         ending = beginning+0.01;
     } else {
@@ -162,19 +168,19 @@ function mouseMoveHandler(e) {
     }
 }
 function mouseDownHandler(e) {
-    if(drawing_state == "choosing r"){
+    if(drawing_state == CHOOSING_R){
         chosen_r = r;
-        drawing_state = "choosing beginning"
-    } else if (drawing_state == "choosing beginning"){
+        drawing_state = CHOOSING_BEGINNING
+    } else if (drawing_state == CHOOSING_BEGINNING){
         chosen_beginning = beginning ;
-        drawing_state = "choosing end"
+        drawing_state = CHOOSING_END
 
-    } else if (drawing_state == "choosing end"){
+    } else if (drawing_state == CHOOSING_END){
         arrayOfArcs.push(mouseArc);
         chosen_r = 0;
         chosen_beginning = 0;
         chosen_end = 0;
-        drawing_state = "choosing r"
+        drawing_state = CHOOSING_R
     }
     //debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
