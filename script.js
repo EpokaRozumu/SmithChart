@@ -1,4 +1,5 @@
 //git commit -am "commit test 2"
+//commit test on a new laptop
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 const debugInfo = document.getElementById("debugInfo");
