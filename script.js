@@ -21,7 +21,7 @@ const CHOOSING_BEGINNING = "choosing beginning";
 const CHOOSING_END = "choosing end";
 var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
 var chosen_r = 0.5;
-var r = 0.5; //wartość zmieniena przy każdym ruchu myszą
+var r = 0.5; //wartość zmieniena przy ruchu myszą
 var chosen_beginning = 0;
 var chosen_end = 0;
 var ending = 0.5;
@@ -58,7 +58,6 @@ function drawArc(a) {
     ctx.stroke();
     ctx.closePath();
     ctx.lineWidth = 1;
-    //todo: skąd mam wiedzieć czy rysować w prawo czy w lewo??
     //todo: somehow indicate beginning and end of the angle
 }
 var mouseArc = new Arc(0,0,0.5,Math.PI*2,0,true);//temporary arc that changes on every mouse move
@@ -100,7 +99,7 @@ function drawCoords(u,v) {
     let dy = 20;
     ctx.clearRect(x-dx,y-dy,dx,dy);
     ctx.fillStyle = "black";
-    ctx.fillText("u: " + u + " v: " + v ,x-dx+5,y-dy+10);
+    ctx.fillText("u: " + u.toFixed(3) + " v: " + v.toFixed(3) ,x-dx+5,y-dy+10);
     ctx.fillStyle = "white";
 }
 function drawCurrentMouseArc(u,v) {
