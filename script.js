@@ -108,7 +108,6 @@ function drawCurrentMouseArc(u,v) {
     } else {
         r = chosen_r
     }
-
     if (drawing_state == CHOOSING_END) {
         ending = angle(r/(r+1),0,u,v);
         if ((ending<beginning && lastEnding>beginning) || (ending>beginning && lastEnding<beginning)) {
