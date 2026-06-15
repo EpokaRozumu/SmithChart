@@ -26,6 +26,8 @@ var chosen_beginning = 0;
 var chosen_end = 0;
 var ending = 0.5;
 var beginning = 0;
+var clockwise = false; //or counterclockwise
+var lastEnding = 0;
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
 drawSmithChart();
@@ -35,12 +37,13 @@ rysujOsie();
 class Arc {
     //complex arc class
     //todo: add information about meaning
-    constructor(centerU,centerV,radius,start_angle,end_angle) {
+    constructor(centerU,centerV,radius,start_angle,end_angle,isClockwise) {
         this.centerU = centerU;
         this.centerV = centerV;
         this.radius = radius;
         this.start_angle = start_angle;
         this.end_angle = end_angle;
+        this.isClockwise = isClockwise;
     }
 }
 function drawArc(a) {
@@ -51,14 +54,14 @@ function drawArc(a) {
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.arc(relativeX, relativeY, relativeRadius,
-        a.start_angle,a.end_angle)
+        a.start_angle,a.end_angle, a.isClockwise);
     ctx.stroke();
     ctx.closePath();
     ctx.lineWidth = 1;
     //todo: skąd mam wiedzieć czy rysować w prawo czy w lewo??
     //todo: somehow indicate beginning and end of the angle
 }
-var mouseArc = new Arc(0,0,0.5,Math.PI*2,0);//temporary arc that changes on every mouse move
+var mouseArc = new Arc(0,0,0.5,Math.PI*2,0,true);//temporary arc that changes on every mouse move
 //when only the first point is chosen, start angle will be equal to end angle;
 var arrayOfArcs = [];
 //analitycal geometry functions
@@ -109,12 +112,19 @@ function drawCurrentMouseArc(u,v) {
 
     if (drawing_state == CHOOSING_END) {
         ending = angle(r/(r+1),0,u,v);
+        if ((ending<beginning && lastEnding>beginning) || (ending>beginning && lastEnding<beginning)) {
+            //if (Math.abs(ending-beginning) < 250) {
+                clockwise = !clockwise;
+            //}
+        }
+        lastEnding = ending;
     } else {
         ending = chosen_end;
     }
     if (drawing_state == CHOOSING_BEGINNING) {
         beginning = angle(r/(r+1),0,u,v);
-        ending = beginning+0.01;
+        ending = beginning;
+        clockwise = false;
     } else {
         beginning = chosen_beginning;
     }
@@ -125,7 +135,7 @@ function drawCurrentMouseArc(u,v) {
     let centerX = XfromU(centerU);
     let centerY = YfromV(centerV);
     drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle
-    mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending);
+    mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending,clockwise);
     ctx.strokeStyle = "red";
     if (drawing_state != "choosing r") {
         drawArc(mouseArc);
@@ -161,7 +171,7 @@ function mouseMoveHandler(e) {
     drawLittleSquare(mx,my,"red")      //show original mouse position
 
     drawCoords(u,v);
-    debugInfo.innerText = "beginning: " +beginning + "end: " + mouseArc.end_angle;
+    debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
     drawCurrentMouseArc(u,v);
     for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
