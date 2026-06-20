@@ -102,7 +102,16 @@ function drawCoords(u,v) {
     ctx.fillText("u: " + u.toFixed(3) + " v: " + v.toFixed(3) ,x-dx+5,y-dy+10);
     ctx.fillStyle = "white";
 }
+function angleWrap() {
+    if (lastEnding-ending>2*Math.PI) {//jeśli przyrost kąta jest większy niż 360 stopni
+        lastEnding -= 2*Math.PI;
+    }
+    if (ending-lastEnding<(-1*2*Math.PI)) {//jeśli przyrost kąta jest mniejszy niż -360 stopni
+        lastEnding += 2*Math.PI;
+    }
+}
 function drawCurrentMouseArc(u,v) {
+    angleWrap();
     if (drawing_state == CHOOSING_R) {
         r = znajdzIzorezystancje(u,v);
     } else {
@@ -114,6 +123,10 @@ function drawCurrentMouseArc(u,v) {
             //if (Math.abs(ending-beginning) < 250) {
                 clockwise = !clockwise;
             //}
+        }
+        //skoro wtedy się zmienia to jak zmienię jeszcze raz to się zmieni z powrotem
+        if (Math.abs(ending-lastEnding) > 180) {
+            clockwise = !clockwise;
         }
         lastEnding = ending;
     } else {
