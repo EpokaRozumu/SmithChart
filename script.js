@@ -18,6 +18,7 @@ var mx = 0;
 var my = 0;
 const CHOOSING_R = "choosing r";
 const CHOOSING_BEGINNING = "choosing beginning";
+const CHOOSING_DIRECTION = "choosing direction";
 const CHOOSING_END = "choosing end";
 var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
 var chosen_r = 0.5;
@@ -110,6 +111,7 @@ function angleWrap() {
         lastEnding += 2*Math.PI;
     }
 }
+
 function drawCurrentMouseArc(u,v) {
     angleWrap();
     if (drawing_state == CHOOSING_R) {
@@ -119,15 +121,6 @@ function drawCurrentMouseArc(u,v) {
     }
     if (drawing_state == CHOOSING_END) {
         ending = angle(r/(r+1),0,u,v);
-        if ((ending<beginning && lastEnding>beginning) || (ending>beginning && lastEnding<beginning)) {
-            //if (Math.abs(ending-beginning) < 250) {
-                clockwise = !clockwise;
-            //}
-        }
-        //skoro wtedy się zmienia to jak zmienię jeszcze raz to się zmieni z powrotem
-        if (Math.abs(ending-lastEnding) > 180) {
-            clockwise = !clockwise;
-        }
         lastEnding = ending;
     } else {
         ending = chosen_end;
@@ -138,6 +131,14 @@ function drawCurrentMouseArc(u,v) {
         clockwise = false;
     } else {
         beginning = chosen_beginning;
+    }
+    if (drawing_state == CHOOSING_DIRECTION) {
+        ending = angle(r/(r+1),0,u,v);
+        if (angle(r/(r+1),0,u,v)  < beginning) {
+            clockwise = true;
+        } else {
+            clockwise = false;
+        }
     }
 
     //let mouseAngle =angle(r/(r+1),0,u,v);
@@ -192,9 +193,11 @@ function mouseDownHandler(e) {
     if(drawing_state == CHOOSING_R){
         chosen_r = r;
         drawing_state = CHOOSING_BEGINNING
+    } else if (drawing_state == CHOOSING_DIRECTION){
+        drawing_state = CHOOSING_END
     } else if (drawing_state == CHOOSING_BEGINNING){
         chosen_beginning = beginning ;
-        drawing_state = CHOOSING_END
+        drawing_state = CHOOSING_DIRECTION
 
     } else if (drawing_state == CHOOSING_END){
         arrayOfArcs.push(mouseArc);
