@@ -1,8 +1,4 @@
 //git commit -am "commit test 2"
-
-
-const debugInfo = document.getElementById("debugInfo");
-const uiText = document.getElementById("uiText");
 const canvas = document.getElementById("myCanvas");
 const przyciskIzorezystancji = document.getElementById("Izorezystancja");
 const przyciskIzoreaktancji = document.getElementById("Izoreaktancja");
