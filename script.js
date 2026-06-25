@@ -3,6 +3,7 @@ const canvas = document.getElementById("myCanvas");
 const przyciskIzorezystancji = document.getElementById("Izorezystancja");
 const przyciskIzoreaktancji = document.getElementById("Izoreaktancja");
 const przyciskWydluzenia = document.getElementById("Wydłużenie");
+const przyciskOdczyt = document.getElementById("Odczyt");
 const ctx = canvas.getContext("2d");
 canvas.addEventListener("mousemove",mouseMoveHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
@@ -12,12 +13,19 @@ ctx.fillStyle = "white";
 ctx.strokeStyle = "green";
 var mx = 0;
 var my = 0;
+
+const EDYCJA_IZOREZYSTANCJI = "edycja izorezystancji";
+const EDYCJA_IZOREAKTANCJI = "edycja izoreaktancji";
+const EDYCJA_WYDLUZANIA = "edycja wydłużania";
+const ODCZYT = "odczyt";
+var narzedzie_edycji = ODCZYT;
+
 const CHOOSING_R = "choosing r";
 const CHOOSING_BEGINNING = "choosing beginning";
 const CHOOSING_DIRECTION = "choosing direction";
 const CHOOSING_END = "choosing end";
 var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
-var chosen_r = 0.5;
+
 var r = 0.5; //wartość zmieniena przy ruchu myszą
 var ending = 0.5;
 var beginning = 0;
@@ -29,7 +37,18 @@ var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4
 drawSmithChart();
 rysujOsie();
 
+function ustawNarzedzieEdycji(narzedzie) {
+    narzedzie_edycji = narzedzie;
+    if (narzedzie == EDYCJA_IZOREZYSTANCJI) {
+        r = 0;
+        beginning = 0;
+        end = 0;
+        drawing_state = CHOOSING_R
+    }
 
+    
+
+}
 class Arc {
     //complex arc class
     //todo: add information about meaning
@@ -98,19 +117,11 @@ function drawCoords(u,v) {
     ctx.fillText("u: " + u.toFixed(3) + " v: " + v.toFixed(3) ,x-dx+5,y-dy+10);
     ctx.fillStyle = "white";
 }
-function angleWrap() {
-    if (lastEnding-ending>2*Math.PI) {//jeśli przyrost kąta jest większy niż 360 stopni
-        lastEnding -= 2*Math.PI;
-    }
-    if (ending-lastEnding<(-1*2*Math.PI)) {//jeśli przyrost kąta jest mniejszy niż -360 stopni
-        lastEnding += 2*Math.PI;
-    }
-}
+
 function handleArcDrawing(mu, mv) {
     if (drawing_state == CHOOSING_R) {
         r = znajdzIzorezystancje(mu,mv);
         if (mouseDown) {
-            chosen_r = r;
             drawing_state = CHOOSING_BEGINNING
             mouseDown = false;
         }
@@ -151,7 +162,6 @@ function handleArcDrawing(mu, mv) {
 }
 
 function drawCurrentMouseArc(u,v) {
-
     //let mouseAngle =angle(r/(r+1),0,u,v);
     let centerU = r/(r+1);
     let centerV = 0;
@@ -173,7 +183,7 @@ function drawCurrentMouseArc(u,v) {
     ctx.stroke();
 }
 function mouseMoveHandler(e) {
-    uiText.innerText = drawing_state;
+    uiText2.innerText = narzedzie_edycji;
     //clear canvas
     ctx.beginPath()
     ctx.rect(0,0,canvasWidth,canvasHeight);
@@ -193,12 +203,18 @@ function mouseMoveHandler(e) {
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     drawLittleSquare(mx,my,"red")      //show original mouse position
     drawCoords(u,v);
-    handleArcDrawing(u,v);
-    drawCurrentMouseArc(u,v);
+    if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
+        //todo: error pojawia sie gdy zmieniam narzędzie z odczytu na edycję izorezystancji.
+        uiText.innerText = drawing_state;
+        handleArcDrawing(u,v);
+        drawCurrentMouseArc(u,v);
+        
+    } else {
+        uiText.innerText = '';
+    }
     for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
     }
-    ;
     debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
 function mouseDownHandler(e) {
