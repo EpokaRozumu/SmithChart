@@ -19,8 +19,6 @@ const CHOOSING_END = "choosing end";
 var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
 var chosen_r = 0.5;
 var r = 0.5; //wartość zmieniena przy ruchu myszą
-var chosen_beginning = 0;
-var chosen_end = 0;
 var ending = 0.5;
 var beginning = 0;
 var clockwise = false; //or counterclockwise
@@ -118,34 +116,27 @@ function drawCurrentMouseArc(u,v) {
             drawing_state = CHOOSING_BEGINNING
             mouseDown = false;
         }
-    } else {
-        r = chosen_r //r is not flexible, if it is chosen
     }
     if (drawing_state == CHOOSING_END) {
         ending = angle(r/(r+1),0,u,v);
         //lastEnding = ending;
         if (mouseDown) {
             arrayOfArcs.push(mouseArc);
-            chosen_r = 0;
-            chosen_beginning = 0;
-            chosen_end = 0;
+            r = 0;
+            beginning = 0;
+            end = 0;
             drawing_state = CHOOSING_R
             mouseDown = false;
         }
-    } else {
-        ending = chosen_end;
     }
     if (drawing_state == CHOOSING_BEGINNING) {
         beginning = angle(r/(r+1),0,u,v);
         ending = beginning;
         clockwise = false;
         if (mouseDown) {
-            chosen_beginning = beginning;
             drawing_state = CHOOSING_DIRECTION
             mouseDown = false;
         }
-    } else {
-        beginning = chosen_beginning;
     }
     if (drawing_state == CHOOSING_DIRECTION) {
         ending = angle(r/(r+1),0,u,v);
