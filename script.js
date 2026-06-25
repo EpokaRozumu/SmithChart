@@ -106,11 +106,9 @@ function angleWrap() {
         lastEnding += 2*Math.PI;
     }
 }
-
-function drawCurrentMouseArc(u,v) {
-    angleWrap();
+function handleArcDrawing(mu, mv) {
     if (drawing_state == CHOOSING_R) {
-        r = znajdzIzorezystancje(u,v);
+        r = znajdzIzorezystancje(mu,mv);
         if (mouseDown) {
             chosen_r = r;
             drawing_state = CHOOSING_BEGINNING
@@ -118,7 +116,7 @@ function drawCurrentMouseArc(u,v) {
         }
     }
     if (drawing_state == CHOOSING_END) {
-        ending = angle(r/(r+1),0,u,v);
+        ending = angle(r/(r+1),0,mu,mv);
         //lastEnding = ending;
         if (mouseDown) {
             arrayOfArcs.push(mouseArc);
@@ -130,7 +128,7 @@ function drawCurrentMouseArc(u,v) {
         }
     }
     if (drawing_state == CHOOSING_BEGINNING) {
-        beginning = angle(r/(r+1),0,u,v);
+        beginning = angle(r/(r+1),0,mu,mv);
         ending = beginning;
         clockwise = false;
         if (mouseDown) {
@@ -139,8 +137,8 @@ function drawCurrentMouseArc(u,v) {
         }
     }
     if (drawing_state == CHOOSING_DIRECTION) {
-        ending = angle(r/(r+1),0,u,v);
-        if (angle(r/(r+1),0,u,v)  < beginning) {
+        ending = angle(r/(r+1),0,mu,mv);
+        if (angle(r/(r+1),0,mu,mv)  < beginning) {
             clockwise = true;
         } else {
             clockwise = false;
@@ -150,6 +148,9 @@ function drawCurrentMouseArc(u,v) {
             mouseDown = false;
         }
     }
+}
+
+function drawCurrentMouseArc(u,v) {
 
     //let mouseAngle =angle(r/(r+1),0,u,v);
     let centerU = r/(r+1);
@@ -191,13 +192,14 @@ function mouseMoveHandler(e) {
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     drawLittleSquare(mx,my,"red")      //show original mouse position
-
     drawCoords(u,v);
-    debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
+    handleArcDrawing(u,v);
     drawCurrentMouseArc(u,v);
     for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
     }
+    ;
+    debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
 function mouseDownHandler(e) {
     mouseDown = true;
