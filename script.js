@@ -25,6 +25,7 @@ var ending = 0.5;
 var beginning = 0;
 var clockwise = false; //or counterclockwise
 var lastEnding = 0;
+var mouseDown = false;
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
 drawSmithChart();
@@ -112,12 +113,25 @@ function drawCurrentMouseArc(u,v) {
     angleWrap();
     if (drawing_state == CHOOSING_R) {
         r = znajdzIzorezystancje(u,v);
+        if (mouseDown) {
+            chosen_r = r;
+            drawing_state = CHOOSING_BEGINNING
+            mouseDown = false;
+        }
     } else {
-        r = chosen_r
+        r = chosen_r //r is not flexible, if it is chosen
     }
     if (drawing_state == CHOOSING_END) {
         ending = angle(r/(r+1),0,u,v);
-        lastEnding = ending;
+        //lastEnding = ending;
+        if (mouseDown) {
+            arrayOfArcs.push(mouseArc);
+            chosen_r = 0;
+            chosen_beginning = 0;
+            chosen_end = 0;
+            drawing_state = CHOOSING_R
+            mouseDown = false;
+        }
     } else {
         ending = chosen_end;
     }
@@ -125,6 +139,11 @@ function drawCurrentMouseArc(u,v) {
         beginning = angle(r/(r+1),0,u,v);
         ending = beginning;
         clockwise = false;
+        if (mouseDown) {
+            chosen_beginning = beginning;
+            drawing_state = CHOOSING_DIRECTION
+            mouseDown = false;
+        }
     } else {
         beginning = chosen_beginning;
     }
@@ -134,6 +153,10 @@ function drawCurrentMouseArc(u,v) {
             clockwise = true;
         } else {
             clockwise = false;
+        }
+        if (mouseDown) {
+            drawing_state = CHOOSING_END;
+            mouseDown = false;
         }
     }
 
@@ -186,22 +209,7 @@ function mouseMoveHandler(e) {
     }
 }
 function mouseDownHandler(e) {
-    if(drawing_state == CHOOSING_R){
-        chosen_r = r;
-        drawing_state = CHOOSING_BEGINNING
-    } else if (drawing_state == CHOOSING_DIRECTION){
-        drawing_state = CHOOSING_END
-    } else if (drawing_state == CHOOSING_BEGINNING){
-        chosen_beginning = beginning ;
-        drawing_state = CHOOSING_DIRECTION
-
-    } else if (drawing_state == CHOOSING_END){
-        arrayOfArcs.push(mouseArc);
-        chosen_r = 0;
-        chosen_beginning = 0;
-        chosen_end = 0;
-        drawing_state = CHOOSING_R
-    }
+    mouseDown = true;
     //debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
 
