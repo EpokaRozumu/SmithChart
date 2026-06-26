@@ -31,6 +31,9 @@
             "request": "launch",
             "reAttach": true,
             "addonPath": "${workspaceFolder}"
-        }
+        },
+        {
+            "outputCapture": "std"
+        }  
     ]
 }

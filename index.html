@@ -16,11 +16,14 @@
     </style>
   </head>
   <body>
+  <h3 id="uiText2" style="text-align: center;">NARZĘDZIE EDYCJI:</h3>
   <h3 id="uiText" style="text-align: center;">BEGIN ARC</h3>
+
   <br/>
-  <button id="Izorezystancja">Izorezystancja</button>
-  <button id="Izoreaktancja">Izoreaktancja</button>
-  <button id="Wydłużenie">Wydłużenie</button>
+  <button id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
+  <button id="Izorezystancja" onclick="ustawNarzedzieEdycji('edycja izorezystancji')">Izorezystancja</button>
+  <button id="Izoreaktancja" onclick="ustawNarzedzieEdycji('edycja izoreaktancji')">Izoreaktancja</button>
+  <button id="Wydłużenie" onclick="ustawNarzedzieEdycji('edycja wydluzenia')">Wydłużenie</button>
   <br/>
     
     <canvas id="myCanvas" width="600" height="600" ></canvas>
