@@ -39,11 +39,14 @@ rysujOsie();
 
 function ustawNarzedzieEdycji(narzedzie) {
     narzedzie_edycji = narzedzie;
+    mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop});//to naprawiło błąd. Nie wiem czemu.
     if (narzedzie == EDYCJA_IZOREZYSTANCJI) {
         r = 0;
         beginning = 0;
         end = 0;
         drawing_state = CHOOSING_R
+        clockwise = false;
+        mouesedown = false;
     }
 
     
@@ -182,6 +185,11 @@ function drawCurrentMouseArc(u,v) {
     ctx.closePath();
     ctx.stroke();
 }
+function isMouseOutsideCanvas() {
+    let isX = (mx < 0 || mx > canvasWidth);
+    let isY = (my < 0 || my > canvasHeight);
+    return isX || isY;
+}
 function mouseMoveHandler(e) {
     uiText2.innerText = narzedzie_edycji;
     //clear canvas
@@ -218,7 +226,9 @@ function mouseMoveHandler(e) {
     debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
 function mouseDownHandler(e) {
-    mouseDown = true;
+    if (canvas.matches(':hover')) {
+        mouseDown = true;
+    }
     //debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
 
