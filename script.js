@@ -36,7 +36,7 @@ var mouseDown = false;
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
 drawSmithChart();
 rysujOsie();
-
+console.log("to dobra wersja")
 function ustawNarzedzieEdycji(narzedzie) {
     narzedzie_edycji = narzedzie;
     mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop});//to naprawiło błąd. Nie wiem czemu.
@@ -72,7 +72,7 @@ function drawArc(a) {
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.arc(relativeX, relativeY, relativeRadius,
-        a.start_angle,a.end_angle, a.isClockwise);
+        a.start_angle,a.end_angle, !a.isClockwise);
     ctx.stroke();
     ctx.closePath();
     ctx.lineWidth = 1;
@@ -87,6 +87,23 @@ function distance(x1,y1,x2,y2) {
 }
 function angle(x1,y1,x2,y2) {
     return Math.atan2(y1-y2,x2-x1);
+}
+function degrees(angle) {
+    angle = angle * 180/Math.PI
+    angle_from_0_to_360 = (angle+360)%360
+    return angle_from_0_to_360
+}
+function getAngleDirection(alpha_radians, beta_radians) {
+    alpha = degrees(alpha_radians)
+    beta = degrees(beta_radians)
+    // z jakiegoś powodu pierwszy kąt jest ujemny???
+    if ((alpha - beta) < (360 - (alpha-beta))) {
+        console.log("clockwise is " + (beta > alpha) +" " +alpha + " " +beta)
+        return (beta > alpha)
+    } else {
+        console.log("clockwise is " + (alpha > beta)+ " " +alpha + " " +beta)
+        return  (alpha > beta)
+    }
 }
 //Functions for scaling coordinates
 function UfromX(x) {
@@ -152,11 +169,7 @@ function handleArcDrawing(mu, mv) {
     }
     if (drawing_state == CHOOSING_DIRECTION) {
         ending = angle(r/(r+1),0,mu,mv);
-        if (angle(r/(r+1),0,mu,mv)  < beginning) {
-            clockwise = true;
-        } else {
-            clockwise = false;
-        }
+        clockwise = getAngleDirection(beginning, ending)
         if (mouseDown) {
             drawing_state = CHOOSING_END;
             mouseDown = false;
