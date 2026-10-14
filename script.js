@@ -53,7 +53,7 @@ function ustawNarzedzieEdycji(narzedzie) {
     }
     if (narzedzie == EDYCJA_IZOREAKTANCJI) {
         //todo: poczytaj o tym dlaczego są dwie linie
-        x = 0;
+        x = 0.1;
         beginning = 0;
         end = 0;
         drawing_state = CHOOSING_X
@@ -188,30 +188,62 @@ function handleIsoresistanceUI(mu,mv) {
     }
 
 }
+function handleIsoreactanceUI(mu, mv) {
+    if (drawing_state == CHOOSING_X) {
+        x = znajdzIzoreaktancje(mu,mv);
+        if (mouseDown) {
+            drawing_state = CHOOSING_BEGINNING
+            mouseDown = false;
+        }
+    }
+}
 function handleArcDrawingUI(mu, mv) {
+    switch (narzedzie_edycji) {
+        case EDYCJA_IZOREAKTANCJI:
+            handleIsoreactanceUI(mu,mv)
+            break;
+        case EDYCJA_IZOREZYSTANCJI:
+            handleIsoresistanceUI(mu,mv)
+            break;
+        default:
+            console.log("nieznane narzędzie edycji")
+
+    }
     handleIsoresistanceUI(mu,mv)
 }
-
-function drawCurrentMouseArc(u,v) {
-    //let mouseAngle =angle(r/(r+1),0,u,v);
-    let centerU = r/(r+1);
-    let centerV = 0;
-    let centerX = XfromU(centerU);
-    let centerY = YfromV(centerV);
-    drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle
-    mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending,clockwise);
-    ctx.strokeStyle = "red";
-    if (drawing_state != "choosing r") {
-        drawArc(mouseArc);
-    }
-
+function angleIndicator(x,y) {
     //an angle indicator to help with debugging:
-    drawLittleSquare(centerX,centerY, "red")
+
+    drawLittleSquare(x,y, "red")
     ctx.beginPath();
-    ctx.moveTo(centerX,centerY);
+    ctx.moveTo(x,y);
     ctx.lineTo(mx,my);
     ctx.closePath();
     ctx.stroke();
+}
+function drawCurrentMouseArc(u,v) {
+    //let mouseAngle =angle(r/(r+1),0,u,v);
+    ctx.strokeStyle = "red";
+    if (narzedzie_edycji==ODCZYT) {
+        return;
+    } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
+        let centerU = r/(r+1);
+        let centerV = 0;
+        let centerX = XfromU(centerU);
+        let centerY = YfromV(centerV);
+        drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle
+        mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending,clockwise);
+        if (drawing_state != "choosing r") {
+            drawArc(mouseArc);
+        }
+        angleIndicator(centerX,centerY)
+    } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
+        reactance = znajdzIzoreaktancje(u,v)
+        
+        mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
+        rysujIzoreaktancje(reactance)
+    }
+
 }
 function isMouseOutsideCanvas() {
     let isX = (mx < 0 || mx > canvasWidth);
@@ -239,15 +271,10 @@ function mouseMoveHandler(e) {
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     drawLittleSquare(mx,my,"red")      //show original mouse position
     drawCoords(u,v);
-    if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
-        //todo: error pojawia sie gdy zmieniam narzędzie z odczytu na edycję izorezystancji.
-        uiText.innerText = drawing_state;
-        handleArcDrawingUI(u,v);
-        drawCurrentMouseArc(u,v);
-        
-    } else {
-        uiText.innerText = '';
-    }
+    uiText.innerText = drawing_state;
+    handleArcDrawingUI(u,v);
+    drawCurrentMouseArc(u,v);
+
     for (let i=0; i<arrayOfArcs.length; i++) {
         drawArc(arrayOfArcs[i]);
     }
@@ -295,7 +322,8 @@ function znajdzIzorezystancje(u,v) {
     return ans;
 }
 function znajdzIzoreaktancje(u,v) {
-    return (2*v)/((1-u)**2+v^2);
+    //(1-u)**2 = 1-2u + u**2
+    return -1* (2*v)/((1-u)**2+v**2);//dlaczego razy -1?
 }
 function rysujIzorezystancje(r) {//rysuje jedną izorezystancję
     var u = r/(r+1)
