@@ -149,8 +149,7 @@ function drawCoords(u,v) {
     ctx.fillText("u: " + u.toFixed(3) + " v: " + v.toFixed(3) ,x-dx+5,y-dy+10);
     ctx.fillStyle = "white";
 }
-
-function handleArcDrawing(mu, mv) {
+function handleIsoresistanceUI(mu,mv) {
     if (drawing_state == CHOOSING_R) {
         r = znajdzIzorezystancje(mu,mv);
         if (mouseDown) {
@@ -187,6 +186,10 @@ function handleArcDrawing(mu, mv) {
             mouseDown = false;
         }
     }
+
+}
+function handleArcDrawingUI(mu, mv) {
+    handleIsoresistanceUI(mu,mv)
 }
 
 function drawCurrentMouseArc(u,v) {
@@ -239,7 +242,7 @@ function mouseMoveHandler(e) {
     if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
         //todo: error pojawia sie gdy zmieniam narzędzie z odczytu na edycję izorezystancji.
         uiText.innerText = drawing_state;
-        handleArcDrawing(u,v);
+        handleArcDrawingUI(u,v);
         drawCurrentMouseArc(u,v);
         
     } else {
