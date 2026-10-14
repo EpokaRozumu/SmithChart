@@ -30,6 +30,7 @@ const CHOOSING_X = "choosing x"
 var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
 
 var r = 0.5; //wartość zmieniena przy ruchu myszą
+var reactance = 0.5; //wartość zmieniana podczas ruchu myszą
 var ending = 0.5;
 var beginning = 0;
 var clockwise = false; //or counterclockwise
@@ -54,7 +55,7 @@ function ustawNarzedzieEdycji(narzedzie) {
     if (narzedzie == EDYCJA_IZOREAKTANCJI) {
         //todo: poczytaj o tym dlaczego są dwie linie
         x = 0.1;
-        beginning = 0;
+        beginning = 0.05;
         end = 0;
         drawing_state = CHOOSING_X
 
@@ -190,9 +191,16 @@ function handleIsoresistanceUI(mu,mv) {
 }
 function handleIsoreactanceUI(mu, mv) {
     if (drawing_state == CHOOSING_X) {
-        x = znajdzIzoreaktancje(mu,mv);
+        reactance = znajdzIzoreaktancje(mu,mv);
         if (mouseDown) {
             drawing_state = CHOOSING_BEGINNING
+            mouseDown = false;
+        }
+    }
+    if (drawing_state == CHOOSING_BEGINNING) {//fixme: does not work???
+        beginning = angle(1, -1/reactance,mu,mv)//fixme: may cause divide by zero error
+        if (mouseDown) {
+            drawing_state = CHOOSING_DIRECTION
             mouseDown = false;
         }
     }
@@ -209,7 +217,6 @@ function handleArcDrawingUI(mu, mv) {
             console.log("nieznane narzędzie edycji")
 
     }
-    handleIsoresistanceUI(mu,mv)
 }
 function angleIndicator(x,y) {
     //an angle indicator to help with debugging:
@@ -238,10 +245,13 @@ function drawCurrentMouseArc(u,v) {
         }
         angleIndicator(centerX,centerY)
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
-        reactance = znajdzIzoreaktancje(u,v)
-        
+        if (drawing_state == CHOOSING_X) {
+            reactance = znajdzIzoreaktancje(u,v)
+
+        }
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
-        rysujIzoreaktancje(reactance)
+        drawArc(mouseArc)
+        // rysujIzoreaktancje(reactance)
     }
 
 }
