@@ -24,6 +24,7 @@ const CHOOSING_R = "choosing r";
 const CHOOSING_BEGINNING = "choosing beginning";
 const CHOOSING_DIRECTION = "choosing direction";
 const CHOOSING_END = "choosing end";
+const CHOOSING_X = "choosing x"
 var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
 
 var r = 0.5; //wartość zmieniena przy ruchu myszą
@@ -47,6 +48,15 @@ function ustawNarzedzieEdycji(narzedzie) {
         drawing_state = CHOOSING_R
         clockwise = false;
         mouesedown = false;
+    }
+    if (narzedzie == EDYCJA_IZOREAKTANCJI) {
+        //todo: poczytaj o tym dlaczego są dwie linie
+        x = 0;
+        beginning = 0;
+        end = 0;
+        drawing_state = CHOOSING_X
+
+        
     }
 
     
