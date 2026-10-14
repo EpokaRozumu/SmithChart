@@ -1,3 +1,5 @@
+
+
 //git commit -am "commit test 2"
 const canvas = document.getElementById("myCanvas");
 const przyciskIzorezystancji = document.getElementById("Izorezystancja");
@@ -265,6 +267,7 @@ function drawSmithChart() {
     for (let i=0; i<wartosciSiatki.length; i++) {
         var x = wartosciSiatki[i];
         rysujIzoreaktancje(x)
+        rysujIzoreaktancje(-1*x)
     }
 }
 function rysujOsie() {
@@ -300,9 +303,8 @@ function rysujIzorezystancje(r) {//rysuje jedną izorezystancję
 function rysujIzoreaktancje(x) {
     var u = 1;
     var v = 1/x;
-    var radius = 1/x;
-    drawCircle(u,v,radius);
-    v = -1/x;
+    Math.abs(-2)
+    var radius = 1/Math.abs(x);
     drawCircle(u,v,radius);
 }
 function drawCircle(u,v,radius) {//rysuje podany okrąg z płaszczyzny zespolonej na elemencie canvas
