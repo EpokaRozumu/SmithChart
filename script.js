@@ -193,11 +193,9 @@ function handleIsoresistanceUI(mu,mv) {
 function handleIsoreactanceUI(mu, mv) {
     if (drawing_state == CHOOSING_X) {
         reactance = znajdzIzoreaktancje(mu,mv);
-        if (mv<0) {
-            clockwise = true
-        } else {
-            clockwise = false;
-        }
+        beginning = 1;
+        ending = 0.999;
+        clockwise = true;
         if (mouseDown) {
             drawing_state = CHOOSING_BEGINNING
             mouseDown = false;
