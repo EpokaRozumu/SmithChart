@@ -192,12 +192,17 @@ function handleIsoresistanceUI(mu,mv) {
 function handleIsoreactanceUI(mu, mv) {
     if (drawing_state == CHOOSING_X) {
         reactance = znajdzIzoreaktancje(mu,mv);
+        if (mv<0) {
+            clockwise = true
+        } else {
+            clockwise = false;
+        }
         if (mouseDown) {
             drawing_state = CHOOSING_BEGINNING
             mouseDown = false;
         }
     }
-    if (drawing_state == CHOOSING_BEGINNING) {//fixme: does not work???
+    if (drawing_state == CHOOSING_BEGINNING) {
         beginning = angle(1, -1/reactance,mu,mv)//fixme: may cause divide by zero error
         if (mouseDown) {
             drawing_state = CHOOSING_DIRECTION
@@ -229,6 +234,8 @@ function angleIndicator(x,y) {
     ctx.stroke();
 }
 function drawCurrentMouseArc(u,v) {
+    //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
+    //nie zmienia tych danych.
     //let mouseAngle =angle(r/(r+1),0,u,v);
     ctx.strokeStyle = "red";
     if (narzedzie_edycji==ODCZYT) {
@@ -245,10 +252,6 @@ function drawCurrentMouseArc(u,v) {
         }
         angleIndicator(centerX,centerY)
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
-        if (drawing_state == CHOOSING_X) {
-            reactance = znajdzIzoreaktancje(u,v)
-
-        }
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
         drawArc(mouseArc)
         // rysujIzoreaktancje(reactance)
