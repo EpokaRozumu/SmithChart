@@ -151,6 +151,7 @@ function drawCoords(u,v) {
     ctx.fillStyle = "white";
 }
 function handleIsoresistanceUI(mu,mv) {
+    //NIE ZMIENIAĆ!!!
     if (drawing_state == CHOOSING_R) {
         r = znajdzIzorezystancje(mu,mv);
         if (mouseDown) {
@@ -205,7 +206,20 @@ function handleIsoreactanceUI(mu, mv) {
     if (drawing_state == CHOOSING_BEGINNING) {
         beginning = angle(1, -1/reactance,mu,mv)//fixme: may cause divide by zero error
         if (mouseDown) {
-            drawing_state = CHOOSING_DIRECTION
+            drawing_state = CHOOSING_END
+            mouseDown = false;
+        }
+    }
+    if (drawing_state == CHOOSING_END) {
+        //UWAGA, dla izoREAktancji nie ma etapu wybierania kierunku
+        ending = angle(1, -1/reactance,mu,mv);
+        clockwise = getAngleDirection(beginning,ending)
+        if (mouseDown) {
+            arrayOfArcs.push(mouseArc);
+            r = 0;
+            beginning = 0;
+            end = 0;
+            drawing_state = CHOOSING_X
             mouseDown = false;
         }
     }
