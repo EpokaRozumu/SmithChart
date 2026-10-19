@@ -236,7 +236,7 @@ function handleArcDrawingUI(mu, mv) {
             g = 0;
             s = 0;
             beginning = 0;
-            end = 0;
+            ending = 0;
             if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
                 drawing_state = CHOOSING_R
             } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
