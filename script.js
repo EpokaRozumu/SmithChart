@@ -27,7 +27,7 @@ var narzedzie_edycji = ODCZYT;
 const CHOOSING_R = "choosing r";
 const CHOOSING_X = "choosing x"
 const CHOOSING_G = "choosing g"
-const CHOOSING_S = "choosing s"
+const CHOOSING_B = "choosing b"
 const CHOOSING_BEGINNING = "choosing beginning";
 const CHOOSING_DIRECTION = "choosing direction";
 const CHOOSING_END = "choosing end";
@@ -37,7 +37,7 @@ var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
 var r = 0.5; //wartość zmieniena przy ruchu myszą
 var reactance = 0.5; //wartość zmieniana podczas ruchu myszą
 var g = 0.5;
-var s = 0.5;
+var b = 0.5;
 var ending = 0.5;
 var beginning = 0;
 var clockwise = false; //or counterclockwise
@@ -66,10 +66,10 @@ function ustawNarzedzieEdycji(narzedzie) {
         drawing_state = CHOOSING_X
     }
     if (narzedzie == EDYCJA_IZOSUSCEPTANCJI) {
-        s = 0.1;
+        b = 0.1;
         beginning = 0.05;
         ending = 0;
-        drawing_state = CHOOSING_S        
+        drawing_state = CHOOSING_B        
     }
     if (narzedzie == EDYCJA_IZOKONDUKTANCJI) {
         g = 0.1;
@@ -203,6 +203,13 @@ function handleArcDrawingUI(mu, mv) {
             mouseDown = false;
         }
     }
+    if (drawing_state == CHOOSING_B) {
+        b = znajdzIzosusceptancje(mu,mv)
+        if (mouseDown) {
+            drawing_state = CHOOSING_BEGINNING
+            mouseDown = false;
+        }
+    }
     if (drawing_state == CHOOSING_BEGINNING) {
         beginning = get_angle(mu,mv,narzedzie_edycji)
         if (mouseDown) {
@@ -234,7 +241,7 @@ function handleArcDrawingUI(mu, mv) {
             r = 0;
             reactance = 0;
             g = 0;
-            s = 0;
+            b = 0;
             beginning = 0;
             ending = 0;
             if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
@@ -244,7 +251,7 @@ function handleArcDrawingUI(mu, mv) {
             }else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
                 drawing_state = CHOOSING_G
             }else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
-                drawing_state = CHOOSING_S
+                drawing_state = CHOOSING_B
             }
             mouseDown = false;
         }
@@ -283,13 +290,17 @@ function drawCurrentMouseArc(u,v) {
         //todo: rysowanie jakiegoś pomocniczego łuku 
         // rysujIzoreaktancje(reactance)
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
-        
         var r = 1/g
         var u = -r/(r+1)
         var v = 0
         var radius = 1/(r+1)
         drawCircle(u,v,radius)
         mouseArc = new Arc(u,v,radius,beginning,ending,clockwise)
+        drawArc(mouseArc)
+    } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
+        //może nie działać???
+        rysujIzosusceptancje(b)
+        mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
         drawArc(mouseArc)
     }
 
@@ -398,6 +409,10 @@ function rysujIzosusceptancje(b) {
     var radius = Math.abs(b);
     drawCircle(u,v,radius);
 
+}
+function znajdzIzosusceptancje(u,v) {
+    x = znajdzIzoreaktancje(-1*u,v)
+    return 1/x
 }
 function rysujIzoreaktancje(x) {
     var u = 1;
