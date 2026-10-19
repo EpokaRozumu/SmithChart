@@ -18,6 +18,8 @@ var my = 0;
 
 const EDYCJA_IZOREZYSTANCJI = "edycja izorezystancji";
 const EDYCJA_IZOREAKTANCJI = "edycja izoreaktancji";
+const EDYCJA_IZOKONDUKTANCJI = "edycja izokonduktancji";
+const EDYCJA_IZOSUSCEPTANCJI = "edycja izosusceptancji";
 const EDYCJA_WYDLUZANIA = "edycja wydłużania";
 const ODCZYT = "odczyt";
 var narzedzie_edycji = ODCZYT;
@@ -230,6 +232,11 @@ function handleArcDrawingUI(mu, mv) {
         case EDYCJA_IZOREZYSTANCJI:
             handleIsoresistanceUI(mu,mv)
             break;
+        case EDYCJA_IZOKONDUKTANCJI:
+            handleIsoconductance(mu,mv)
+            break;
+        case EDYCJA_IZOSUSCEPTANCJI:
+            handleIsosusceptance(mu,mv)
         default:
             console.log("nieznane narzędzie edycji")
 
@@ -363,6 +370,10 @@ function rysujIzokonduktancje(g) {
     var v = 0
     var radius = 1/(r+1)
     drawCircle(u,v,radius)
+}
+function znajdzIzokonduktancje(u,v) {
+    r = znajdzIzorezystancje(-1*u,v)
+    return 1/r;
 }
 function rysujIzosusceptancje(b) {
     //znak dobry
