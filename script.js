@@ -171,6 +171,11 @@ function get_angle(mu,mv,narzedzie_edycji){
         return angle(1, -1/reactance,mu,mv)
     } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
         return angle(r/(r+1),0,mu,mv)
+    } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI) {
+        let r =1/g
+        return angle(-r/(r+1),0,mu,mv)
+    } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
+        return angle(-1,b,mu,mv)
     }
 }
 function handleArcDrawingUI(mu, mv) {
@@ -228,13 +233,15 @@ function handleArcDrawingUI(mu, mv) {
             arrayOfArcs.push(mouseArc);
             r = 0;
             reactance = 0;
+            g = 0;
+            s = 0;
             beginning = 0;
             end = 0;
             if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
                 drawing_state = CHOOSING_R
             } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
                 drawing_state = CHOOSING_X
-            }else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
+            }else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
                 drawing_state = CHOOSING_G
             }else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
                 drawing_state = CHOOSING_S
