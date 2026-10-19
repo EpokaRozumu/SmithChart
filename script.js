@@ -266,6 +266,7 @@ function drawCurrentMouseArc(u,v) {
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
         drawArc(mouseArc)
+        //todo: rysowanie jakiegoś pomocniczego łuku 
         // rysujIzoreaktancje(reactance)
     }
 
@@ -318,6 +319,7 @@ function drawSmithChart() {
     for (let i=0; i<wartosciSiatki.length; i++) {
         var r = wartosciSiatki[i];
         rysujIzorezystancje(r);
+        rysujIzokonduktancje(r);
     }
     for (let i=0; i<wartosciSiatki.length; i++) {
         var x = wartosciSiatki[i];
@@ -355,6 +357,14 @@ function rysujIzorezystancje(r) {//rysuje jedną izorezystancję
     var v = 0
     var radius = 1/(r+1)
     drawCircle(u,v,radius)
+}
+function rysujIzokonduktancje(g) {
+    var r = 1/g
+    var u = -r/(r+1)
+    var v = 0
+    var radius = 1/(r+1)
+    drawCircle(u,v,radius)
+
 }
 function rysujIzoreaktancje(x) {
     var u = 1;
