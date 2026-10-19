@@ -319,7 +319,6 @@ function drawSmithChart() {
     for (let i=0; i<wartosciSiatki.length; i++) {
         var r = wartosciSiatki[i];
         rysujIzorezystancje(r);
-        rysujIzokonduktancje(r);
     }
     for (let i=0; i<wartosciSiatki.length; i++) {
         var x = wartosciSiatki[i];
@@ -364,12 +363,18 @@ function rysujIzokonduktancje(g) {
     var v = 0
     var radius = 1/(r+1)
     drawCircle(u,v,radius)
+}
+function rysujIzosusceptancje(b) {
+    //znak dobry
+    var u = -1;
+    var v = b;
+    var radius = Math.abs(b);
+    drawCircle(u,v,radius);
 
 }
 function rysujIzoreaktancje(x) {
     var u = 1;
     var v = 1/x;
-    Math.abs(-2)
     var radius = 1/Math.abs(x);
     drawCircle(u,v,radius);
 }
