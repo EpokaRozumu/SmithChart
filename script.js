@@ -25,14 +25,19 @@ const ODCZYT = "odczyt";
 var narzedzie_edycji = ODCZYT;
 
 const CHOOSING_R = "choosing r";
+const CHOOSING_X = "choosing x"
+const CHOOSING_G = "choosing g"
+const CHOOSING_S = "choosing s"
 const CHOOSING_BEGINNING = "choosing beginning";
 const CHOOSING_DIRECTION = "choosing direction";
 const CHOOSING_END = "choosing end";
-const CHOOSING_X = "choosing x"
+
 var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
 
 var r = 0.5; //wartość zmieniena przy ruchu myszą
 var reactance = 0.5; //wartość zmieniana podczas ruchu myszą
+var g = 0.5;
+var s = 0.5;
 var ending = 0.5;
 var beginning = 0;
 var clockwise = false; //or counterclockwise
@@ -55,15 +60,23 @@ function ustawNarzedzieEdycji(narzedzie) {
         mouesedown = false;
     }
     if (narzedzie == EDYCJA_IZOREAKTANCJI) {
-        //todo: poczytaj o tym dlaczego są dwie linie
         x = 0.1;
         beginning = 0.05;
         end = 0;
         drawing_state = CHOOSING_X
-
-        
     }
-
+    if (narzedzie == EDYCJA_IZOSUSCEPTANCJI) {
+        s = 0.1;
+        beginning = 0.05;
+        end = 0;
+        drawing_state = CHOOSING_S        
+    }
+    if (narzedzie == EDYCJA_IZOKONDUKTANCJI) {
+        g = 0.1;
+        beginning = 0.05;
+        end = 0;
+        drawing_state = CHOOSING_G        
+    }
     
 
 }
@@ -178,6 +191,13 @@ function handleArcDrawingUI(mu, mv) {
             mouseDown = false;
         }
     }
+    if (drawing_state == CHOOSING_G) {
+        g = znajdzIzokonduktancje(mu,mv)
+        if (mouseDown) {
+            drawing_state = CHOOSING_BEGINNING
+            mouseDown = false;
+        }
+    }
     if (drawing_state == CHOOSING_BEGINNING) {
         beginning = get_angle(mu,mv,narzedzie_edycji)
         if (mouseDown) {
@@ -244,19 +264,22 @@ function drawCurrentMouseArc(u,v) {
     } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
         let centerU = r/(r+1);
         let centerV = 0;
-        let centerX = XfromU(centerU);
-        let centerY = YfromV(centerV);
         drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle
         mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending,clockwise);
         if (drawing_state != "choosing r") {
             drawArc(mouseArc);
         }
-        angleIndicator(centerX,centerY)
+        angleIndicator(XfromU(centerU),YfromV(centerV))
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
         drawArc(mouseArc)
         //todo: rysowanie jakiegoś pomocniczego łuku 
         // rysujIzoreaktancje(reactance)
+    } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
+        g = znajdzIzokonduktancje(UfromX(mx),VfromY(my))
+
+        rysujIzokonduktancje(g)
+        // drawArc(mouseArc)
     }
 
 }
