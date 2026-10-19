@@ -54,7 +54,7 @@ function ustawNarzedzieEdycji(narzedzie) {
     if (narzedzie == EDYCJA_IZOREZYSTANCJI) {
         r = 0;
         beginning = 0;
-        end = 0;
+        ending = 0;
         drawing_state = CHOOSING_R
         clockwise = false;
         mouesedown = false;
@@ -62,19 +62,19 @@ function ustawNarzedzieEdycji(narzedzie) {
     if (narzedzie == EDYCJA_IZOREAKTANCJI) {
         x = 0.1;
         beginning = 0.05;
-        end = 0;
+        ending = 0;
         drawing_state = CHOOSING_X
     }
     if (narzedzie == EDYCJA_IZOSUSCEPTANCJI) {
         s = 0.1;
         beginning = 0.05;
-        end = 0;
+        ending = 0;
         drawing_state = CHOOSING_S        
     }
     if (narzedzie == EDYCJA_IZOKONDUKTANCJI) {
         g = 0.1;
         beginning = 0.05;
-        end = 0;
+        ending = 0;
         drawing_state = CHOOSING_G        
     }
     
@@ -276,10 +276,14 @@ function drawCurrentMouseArc(u,v) {
         //todo: rysowanie jakiegoś pomocniczego łuku 
         // rysujIzoreaktancje(reactance)
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
-        g = znajdzIzokonduktancje(UfromX(mx),VfromY(my))
-
-        rysujIzokonduktancje(g)
-        // drawArc(mouseArc)
+        
+        var r = 1/g
+        var u = -r/(r+1)
+        var v = 0
+        var radius = 1/(r+1)
+        drawCircle(u,v,radius)
+        mouseArc = new Arc(u,v,radius,beginning,ending,clockwise)
+        drawArc(mouseArc)
     }
 
 }
