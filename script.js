@@ -152,8 +152,15 @@ function drawCoords(u,v) {
     ctx.fillText("u: " + u.toFixed(3) + " v: " + v.toFixed(3) ,x-dx+5,y-dy+10);
     ctx.fillStyle = "white";
 }
-function handleIsoresistanceUI(mu,mv) {
-    //NIE ZMIENIAĆ!!!
+
+function get_angle(mu,mv,narzedzie_edycji){
+    if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
+        return angle(1, -1/reactance,mu,mv)
+    } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
+        return angle(r/(r+1),0,mu,mv)
+    }
+}
+function handleArcDrawingUI(mu, mv) {
     if (drawing_state == CHOOSING_R) {
         r = znajdzIzorezystancje(mu,mv);
         if (mouseDown) {
@@ -161,38 +168,6 @@ function handleIsoresistanceUI(mu,mv) {
             mouseDown = false;
         }
     }
-    if (drawing_state == CHOOSING_END) {
-        ending = angle(r/(r+1),0,mu,mv);
-        //lastEnding = ending;
-        if (mouseDown) {
-            arrayOfArcs.push(mouseArc);
-            r = 0;
-            beginning = 0;
-            end = 0;
-            drawing_state = CHOOSING_R
-            mouseDown = false;
-        }
-    }
-    if (drawing_state == CHOOSING_BEGINNING) {
-        beginning = angle(r/(r+1),0,mu,mv);
-        ending = beginning;
-        clockwise = false;
-        if (mouseDown) {
-            drawing_state = CHOOSING_DIRECTION
-            mouseDown = false;
-        }
-    }
-    if (drawing_state == CHOOSING_DIRECTION) {
-        ending = angle(r/(r+1),0,mu,mv);
-        clockwise = getAngleDirection(beginning, ending)
-        if (mouseDown) {
-            drawing_state = CHOOSING_END;
-            mouseDown = false;
-        }
-    }
-
-}
-function handleIsoreactanceUI(mu, mv) {
     if (drawing_state == CHOOSING_X) {
         reactance = znajdzIzoreaktancje(mu,mv);
         beginning = 1;
@@ -204,44 +179,51 @@ function handleIsoreactanceUI(mu, mv) {
         }
     }
     if (drawing_state == CHOOSING_BEGINNING) {
-        beginning = angle(1, -1/reactance,mu,mv)//fixme: may cause divide by zero error
+        beginning = get_angle(mu,mv,narzedzie_edycji)
         if (mouseDown) {
-            drawing_state = CHOOSING_END
+            if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI){
+                drawing_state = CHOOSING_END
+            } else {
+                drawing_state = CHOOSING_DIRECTION
+            }
+            
+            mouseDown = false;
+        }
+    }
+    if (drawing_state == CHOOSING_DIRECTION) {
+        ending = get_angle(mu,mv,narzedzie_edycji)
+        clockwise = getAngleDirection(beginning, ending)
+        if (mouseDown) {
+            drawing_state = CHOOSING_END;
             mouseDown = false;
         }
     }
     if (drawing_state == CHOOSING_END) {
         //UWAGA, dla izoREAktancji nie ma etapu wybierania kierunku
-        ending = angle(1, -1/reactance,mu,mv);
-        clockwise = getAngleDirection(beginning,ending)
+        ending = get_angle(mu,mv, narzedzie_edycji);
+        if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
+            clockwise = getAngleDirection(beginning,ending)
+        }
         if (mouseDown) {
             arrayOfArcs.push(mouseArc);
             r = 0;
+            reactance = 0;
             beginning = 0;
             end = 0;
-            drawing_state = CHOOSING_X
+            if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
+                drawing_state = CHOOSING_R
+            } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
+                drawing_state = CHOOSING_X
+            }else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
+                drawing_state = CHOOSING_G
+            }else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
+                drawing_state = CHOOSING_S
+            }
             mouseDown = false;
         }
     }
 }
-function handleArcDrawingUI(mu, mv) {
-    switch (narzedzie_edycji) {
-        case EDYCJA_IZOREAKTANCJI:
-            handleIsoreactanceUI(mu,mv)
-            break;
-        case EDYCJA_IZOREZYSTANCJI:
-            handleIsoresistanceUI(mu,mv)
-            break;
-        case EDYCJA_IZOKONDUKTANCJI:
-            handleIsoconductance(mu,mv)
-            break;
-        case EDYCJA_IZOSUSCEPTANCJI:
-            handleIsosusceptance(mu,mv)
-        default:
-            console.log("nieznane narzędzie edycji")
 
-    }
-}
 function angleIndicator(x,y) {
     //an angle indicator to help with debugging:
 
