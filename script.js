@@ -69,6 +69,7 @@ function ustawNarzedzieEdycji(narzedzie) {
         b = 0.1;
         beginning = 0.05;
         ending = 0;
+        clockwise = true;
         drawing_state = CHOOSING_B        
     }
     if (narzedzie == EDYCJA_IZOKONDUKTANCJI) {
@@ -175,7 +176,8 @@ function get_angle(mu,mv,narzedzie_edycji){
         let r =1/g
         return angle(-r/(r+1),0,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
-        return angle(-1,b,mu,mv)
+        let reactance = 1/b
+        return angle(-1, -1/reactance,mu,mv)
     }
 }
 function handleArcDrawingUI(mu, mv) {
@@ -238,7 +240,7 @@ function handleArcDrawingUI(mu, mv) {
     if (drawing_state == CHOOSING_END) {
         //UWAGA, dla izoREAktancji nie ma etapu wybierania kierunku
         ending = get_angle(mu,mv, narzedzie_edycji);
-        if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
+        if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
             clockwise = getAngleDirection(beginning,ending)
         }
         if (mouseDown) {
@@ -275,13 +277,11 @@ function angleIndicator(x,y) {
 }
 function drawCurrentMouseArc(u,v) {
     //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
-    //nie zmienia tych danych.
     //let mouseAngle =angle(r/(r+1),0,u,v);
     ctx.strokeStyle = "red";
     if (narzedzie_edycji==ODCZYT) {
         return;
     } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
-        // z jakiegoś powodu to miejsce nie ma dstępu do dobrego r
         let centerU = r/(r+1);
         let centerV = 0;
         drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle //
@@ -294,14 +294,12 @@ function drawCurrentMouseArc(u,v) {
         arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
-        
         guideArc = new Arc(1,1/reactance,1/Math.abs(reactance),0.05, 0,true);
         drawArc(guideArc,1)
         if (drawing_state!= CHOOSING_BEGINNING) {
           drawArc(mouseArc)
         }
-        //todo: rysowanie jakiegoś pomocniczego łuku 
-        // rysujIzoreaktancje(reactance)
+        //todo: arcdot
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
         let r = 1/g
         var u = -r/(r+1)
@@ -312,6 +310,7 @@ function drawCurrentMouseArc(u,v) {
         drawArc(mouseArc)
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
         //może nie działać???
+        //fixme: niepoprawne beginning oraz ending
         rysujIzosusceptancje(b)
         mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
         drawArc(mouseArc)
