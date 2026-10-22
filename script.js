@@ -286,10 +286,12 @@ function drawCurrentMouseArc(u,v) {
         let centerV = 0;
         drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle //
         mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending,clockwise);
+
         if (drawing_state != "choosing r") {
             drawArc(mouseArc);
         }
         angleIndicator(XfromU(centerU),YfromV(centerV))
+        arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
         drawArc(mouseArc)
@@ -434,4 +436,18 @@ function drawCircle(u,v,radius) {//rysuje podany okrąg z płaszczyzny zespolone
     ctx.arc(relativeX, relativeY, relativeRadius,0,Math.PI*2)
     ctx.stroke();
     ctx.closePath();
+}
+function arcDot(centerU,centerV, radius, angle) {
+    let previous_fillstyle = ctx.fillStyle
+    center_y = YfromV(centerV)
+    center_x = XfromU(centerU)
+    radius = radius * (canvasHeight/2)
+    y = Math.sin(angle) * radius + center_y
+    x = Math.cos(angle) * radius + center_x
+    ctx.beginPath();
+    ctx.arc(x,y,8,0,2*Math.PI);
+    ctx.fillStyle = "red";
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = previous_fillstyle
 }
