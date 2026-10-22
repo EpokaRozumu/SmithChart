@@ -92,12 +92,12 @@ class Arc {
         this.isClockwise = isClockwise;
     }
 }
-function drawArc(a) {
+function drawArc(a, lineWidth=3) {
     //draws and arc given in u and v coordinates
     let relativeX = (a.centerU+1)*canvasHeight/2
     let relativeY = (a.centerV+1)*canvasHeight/2
     let relativeRadius = a.radius*canvasHeight/2
-    ctx.lineWidth = 3;
+    ctx.lineWidth = lineWidth;
     ctx.beginPath();
     ctx.arc(relativeX, relativeY, relativeRadius,
         a.start_angle,a.end_angle, !a.isClockwise);
@@ -287,14 +287,19 @@ function drawCurrentMouseArc(u,v) {
         drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle //
         mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending,clockwise);
 
-        if (drawing_state != "choosing r") {
+        if (drawing_state==CHOOSING_DIRECTION || drawing_state==CHOOSING_END) {
             drawArc(mouseArc);
         }
         angleIndicator(XfromU(centerU),YfromV(centerV))
         arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
-        drawArc(mouseArc)
+        
+        guideArc = new Arc(1,1/reactance,1/Math.abs(reactance),0.05, 0,true);
+        drawArc(guideArc,1)
+        if (drawing_state!= CHOOSING_BEGINNING) {
+          drawArc(mouseArc)
+        }
         //todo: rysowanie jakiegoś pomocniczego łuku 
         // rysujIzoreaktancje(reactance)
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
@@ -445,7 +450,7 @@ function arcDot(centerU,centerV, radius, angle) {
     y = Math.sin(angle) * radius + center_y
     x = Math.cos(angle) * radius + center_x
     ctx.beginPath();
-    ctx.arc(x,y,8,0,2*Math.PI);
+    ctx.arc(x,y,4,0,2*Math.PI);
     ctx.fillStyle = "red";
     ctx.fill();
     ctx.stroke();
