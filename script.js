@@ -52,7 +52,7 @@ function ustawNarzedzieEdycji(narzedzie) {
     narzedzie_edycji = narzedzie;
     mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop});//to naprawiło błąd. Nie wiem czemu.
     if (narzedzie == EDYCJA_IZOREZYSTANCJI) {
-        r = 0;
+        r = 0.5;
         beginning = 0;
         ending = 0;
         drawing_state = CHOOSING_R
@@ -180,6 +180,9 @@ function get_angle(mu,mv,narzedzie_edycji){
 }
 function handleArcDrawingUI(mu, mv) {
     if (drawing_state == CHOOSING_R) {
+        //FIXME: izorezystancja mi się wykszaczyła :C
+        //mouseArc jest Undefined?
+        //gdzie jest definiowany mouseArc dla izo-R ?
         r = znajdzIzorezystancje(mu,mv);
         if (mouseDown) {
             drawing_state = CHOOSING_BEGINNING
@@ -212,6 +215,8 @@ function handleArcDrawingUI(mu, mv) {
     }
     if (drawing_state == CHOOSING_BEGINNING) {
         beginning = get_angle(mu,mv,narzedzie_edycji)
+        //fixme: nie da się wybierać początku i końca dla izosusceptancji
+        
         if (mouseDown) {
             if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI){
                 drawing_state = CHOOSING_END
@@ -276,9 +281,10 @@ function drawCurrentMouseArc(u,v) {
     if (narzedzie_edycji==ODCZYT) {
         return;
     } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
+        // z jakiegoś powodu to miejsce nie ma dstępu do dobrego r
         let centerU = r/(r+1);
         let centerV = 0;
-        drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle
+        drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle //
         mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending,clockwise);
         if (drawing_state != "choosing r") {
             drawArc(mouseArc);
@@ -290,7 +296,7 @@ function drawCurrentMouseArc(u,v) {
         //todo: rysowanie jakiegoś pomocniczego łuku 
         // rysujIzoreaktancje(reactance)
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
-        var r = 1/g
+        let r = 1/g
         var u = -r/(r+1)
         var v = 0
         var radius = 1/(r+1)
@@ -351,7 +357,7 @@ function mouseDownHandler(e) {
 function drawSmithChart() {
     ctx.strokeStyle = "green";
     for (let i=0; i<wartosciSiatki.length; i++) {
-        var r = wartosciSiatki[i];
+        let r = wartosciSiatki[i];
         rysujIzorezystancje(r);
     }
     for (let i=0; i<wartosciSiatki.length; i++) {
@@ -392,14 +398,14 @@ function rysujIzorezystancje(r) {//rysuje jedną izorezystancję
     drawCircle(u,v,radius)
 }
 function rysujIzokonduktancje(g) {
-    var r = 1/g
+    let r = 1/g
     var u = -r/(r+1)
     var v = 0
     var radius = 1/(r+1)
     drawCircle(u,v,radius)
 }
 function znajdzIzokonduktancje(u,v) {
-    r = znajdzIzorezystancje(-1*u,v)
+    let r = znajdzIzorezystancje(-1*u,v)
     return 1/r;
 }
 function rysujIzosusceptancje(b) {
