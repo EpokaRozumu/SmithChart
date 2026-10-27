@@ -13,6 +13,10 @@
         display: block;
         margin: 0 auto;
       }
+      button {
+        margin:auto;
+        align-self: center;
+      }
     </style>
   </head>
   <body>
@@ -20,12 +24,15 @@
   <h3 id="uiText" style="text-align: center;">BEGIN ARC</h3>
 
   <br/>
-  <button id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
-  <button id="Izorezystancja" onclick="ustawNarzedzieEdycji('edycja izorezystancji')">Izorezystancja</button>
-  <button id="Izoreaktancja" onclick="ustawNarzedzieEdycji('edycja izoreaktancji')">Izoreaktancja</button>
-  <button id="Wydłużenie" onclick="ustawNarzedzieEdycji('edycja wydluzenia')">Wydłużenie</button>
-  <button id="Izokonduktancja" onclick="ustawNarzedzieEdycji('edycja izokonduktancji')">Izokonduktancja</button>
-  <button id="Izosusceptancja" onclick="ustawNarzedzieEdycji('edycja izosusceptancji')">Izosusceptancja</button>
+  <div>
+    <button id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
+    <button id="Izorezystancja" onclick="ustawNarzedzieEdycji('edycja izorezystancji')">Izorezystancja</button>
+    <button id="Izoreaktancja" onclick="ustawNarzedzieEdycji('edycja izoreaktancji')">Izoreaktancja</button>
+    <button id="Wydłużenie" onclick="ustawNarzedzieEdycji('edycja wydluzenia')">Wydłużenie</button>
+    <button id="Izokonduktancja" onclick="ustawNarzedzieEdycji('edycja izokonduktancji')">Izokonduktancja</button>
+    <button id="Izosusceptancja" onclick="ustawNarzedzieEdycji('edycja izosusceptancji')">Izosusceptancja</button>
+  </div>
+
   <br/>
     <canvas id="myCanvas" width="600" height="600" ></canvas>
     <p id="debugInfo">debug info</p>

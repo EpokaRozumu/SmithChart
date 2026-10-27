@@ -181,10 +181,8 @@ function get_angle(mu,mv,narzedzie_edycji){
     }
 }
 function handleArcDrawingUI(mu, mv) {
+    
     if (drawing_state == CHOOSING_R) {
-        //FIXME: izorezystancja mi się wykszaczyła :C
-        //mouseArc jest Undefined?
-        //gdzie jest definiowany mouseArc dla izo-R ?
         r = znajdzIzorezystancje(mu,mv);
         if (mouseDown) {
             drawing_state = CHOOSING_BEGINNING
@@ -217,7 +215,7 @@ function handleArcDrawingUI(mu, mv) {
     }
     if (drawing_state == CHOOSING_BEGINNING) {
         beginning = get_angle(mu,mv,narzedzie_edycji)
-        //fixme: nie da się wybierać początku i końca dla izosusceptancji
+        
         
         if (mouseDown) {
             if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI){
@@ -231,7 +229,13 @@ function handleArcDrawingUI(mu, mv) {
     }
     if (drawing_state == CHOOSING_DIRECTION) {
         ending = get_angle(mu,mv,narzedzie_edycji)
+        if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
         clockwise = getAngleDirection(beginning, ending)
+
+        } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI) {
+            clockwise = getAngleDirection(beginning+Math.PI, ending+Math.PI)
+
+        }
         if (mouseDown) {
             drawing_state = CHOOSING_END;
             mouseDown = false;
@@ -249,7 +253,7 @@ function handleArcDrawingUI(mu, mv) {
             reactance = 0;
             g = 0;
             b = 0;
-            beginning = 0;
+            beginning = Math.PI*2;
             ending = 0;
             if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
                 drawing_state = CHOOSING_R
@@ -275,9 +279,11 @@ function angleIndicator(x,y) {
     ctx.closePath();
     ctx.stroke();
 }
-function drawCurrentMouseArc(u,v) {
+function drawCurrentMouseArc(mu,mv) {
     //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
     //let mouseAngle =angle(r/(r+1),0,u,v);
+
+    //todo: wymyśl, czy nie dałoby się skrócić tej funkcji
     ctx.strokeStyle = "red";
     if (narzedzie_edycji==ODCZYT) {
         return;
@@ -291,7 +297,8 @@ function drawCurrentMouseArc(u,v) {
             drawArc(mouseArc);
         }
         angleIndicator(XfromU(centerU),YfromV(centerV))
-        arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
+        // arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
+        mouseArcDot(mu,mv)
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
         guideArc = new Arc(1,1/reactance,1/Math.abs(reactance),0.05, 0,true);
@@ -299,21 +306,23 @@ function drawCurrentMouseArc(u,v) {
         if (drawing_state!= CHOOSING_BEGINNING) {
           drawArc(mouseArc)
         }
+        mouseArcDot(mu,-mv)
         //todo: arcdot
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
         let r = 1/g
-        var u = -r/(r+1)
-        var v = 0
-        var radius = 1/(r+1)
+        let u = -r/(r+1)
+        let v = 0
+        let radius = 1/(r+1)
         drawCircle(u,v,radius)
         mouseArc = new Arc(u,v,radius,beginning,ending,clockwise)
         drawArc(mouseArc)
+        mouseArcDot(mu,mv)
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
         //może nie działać???
-        //fixme: niepoprawne beginning oraz ending
-        rysujIzosusceptancje(b)
+        // rysujIzosusceptancje(b)
         mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
         drawArc(mouseArc)
+        //mouseArcDot(mu,mv)
     }
 
 }
@@ -454,4 +463,11 @@ function arcDot(centerU,centerV, radius, angle) {
     ctx.fill();
     ctx.stroke();
     ctx.fillStyle = previous_fillstyle
+}
+function mouseArcDot(mu,mv) {
+    //FIXME
+    alpha = angle(mouseArc.centerU,mouseArc.centerV,mu,mv)
+    //arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
+    drawCircle(mouseArc.centerU,mouseArc.centerV,mouseArc.radius)
+    arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha)
 }
