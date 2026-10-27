@@ -181,7 +181,10 @@ function get_angle(mu,mv,narzedzie_edycji){
     }
 }
 function handleArcDrawingUI(mu, mv) {
-    
+    if (narzedzie_edycji==ODCZYT) {
+        drawing_state = ""
+        return 0;
+    }
     if (drawing_state == CHOOSING_R) {
         r = znajdzIzorezystancje(mu,mv);
         if (mouseDown) {
