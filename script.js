@@ -210,6 +210,8 @@ function handleArcDrawingUI(mu, mv) {
         }
     }
     if (drawing_state == CHOOSING_B) {
+        beginning = Math.PI
+        ending = Math.PI - 0.001
         b = znajdzIzosusceptancje(mu,mv)
         if (mouseDown) {
             drawing_state = CHOOSING_BEGINNING
@@ -234,10 +236,8 @@ function handleArcDrawingUI(mu, mv) {
         ending = get_angle(mu,mv,narzedzie_edycji)
         if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
         clockwise = getAngleDirection(beginning, ending)
-
         } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI) {
             clockwise = getAngleDirection(beginning+Math.PI, ending+Math.PI)
-
         }
         if (mouseDown) {
             drawing_state = CHOOSING_END;
@@ -247,8 +247,10 @@ function handleArcDrawingUI(mu, mv) {
     if (drawing_state == CHOOSING_END) {
         //UWAGA, dla izoREAktancji nie ma etapu wybierania kierunku
         ending = get_angle(mu,mv, narzedzie_edycji);
-        if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
+        if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
             clockwise = getAngleDirection(beginning,ending)
+        } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
+            clockwise = getAngleDirection(beginning+Math.PI,ending+Math.PI)
         }
         if (mouseDown) {
             arrayOfArcs.push(mouseArc);
@@ -468,9 +470,28 @@ function arcDot(centerU,centerV, radius, angle) {
     ctx.fillStyle = previous_fillstyle
 }
 function mouseArcDot(mu,mv) {
-    //FIXME
-    alpha = angle(mouseArc.centerU,mouseArc.centerV,mu,mv)
-    //arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
-    drawCircle(mouseArc.centerU,mouseArc.centerV,mouseArc.radius)
-    arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha)
+    drawMouseDot(mu,mv)
+    // //FIXME
+    // alpha = angle(mouseArc.centerU,mouseArc.centerV,mu,mv)
+    // //arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
+    // // drawCircle(mouseArc.centerU,mouseArc.centerV,mouseArc.radius)
+    // arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha)
 }
+
+function drawMouseDot(mu,mv) {
+    let d = Math.sqrt((mu-mouseArc.centerU)**2 + (mv-mouseArc.centerV)**2)
+    if (d==0) {
+        let u = mouseArc.centerU
+        let v = mouseArc.centerV
+    }
+    let u = mouseArc.centerU + mouseArc.radius * (mu - mouseArc.centerU)/d
+    let v = mouseArc.centerV + mouseArc.radius * (mv - mouseArc.centerV)/d
+    let previous_fillstyle = ctx.fillStyle
+
+    ctx.beginPath();
+    ctx.arc(XfromU(u),YfromV(v),4,0,2*Math.PI);
+    ctx.fillStyle = "red";
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = previous_fillstyle
+}   
