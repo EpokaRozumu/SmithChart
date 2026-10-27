@@ -96,7 +96,7 @@ class Arc {
 function drawArc(a, lineWidth=3) {
     //draws and arc given in u and v coordinates
     let relativeX = (a.centerU+1)*canvasHeight/2
-    let relativeY = (a.centerV+1)*canvasHeight/2
+    let relativeY = (-1*a.centerV+1)*canvasHeight/2    //Chyba odbija Y lustrzanie
     let relativeRadius = a.radius*canvasHeight/2
     ctx.lineWidth = lineWidth;
     ctx.beginPath();
@@ -409,7 +409,15 @@ function znajdzIzorezystancje(u,v) {
 }
 function znajdzIzoreaktancje(u,v) {
     //(1-u)**2 = 1-2u + u**2
-    return -1* (2*v)/((1-u)**2+v**2);//dlaczego razy -1?
+    return (2*v)/((1-u)**2+v**2);
+}
+function znajdzIzosusceptancje(u,v) {
+    x = znajdzIzoreaktancje(-1*u,v)
+    return 1/x
+}
+function znajdzIzokonduktancje(u,v) {
+    let r = znajdzIzorezystancje(-1*u,v)
+    return 1/r;
 }
 function rysujIzorezystancje(r) {//rysuje jedną izorezystancję
     var u = r/(r+1)
@@ -424,10 +432,7 @@ function rysujIzokonduktancje(g) {
     var radius = 1/(r+1)
     drawCircle(u,v,radius)
 }
-function znajdzIzokonduktancje(u,v) {
-    let r = znajdzIzorezystancje(-1*u,v)
-    return 1/r;
-}
+
 function rysujIzosusceptancje(b) {
     //znak dobry
     var u = -1;
@@ -436,10 +441,7 @@ function rysujIzosusceptancje(b) {
     drawCircle(u,v,radius);
 
 }
-function znajdzIzosusceptancje(u,v) {
-    x = znajdzIzoreaktancje(-1*u,v)
-    return 1/x
-}
+
 function rysujIzoreaktancje(x) {
     var u = 1;
     var v = 1/x;
@@ -470,12 +472,12 @@ function arcDot(centerU,centerV, radius, angle) {
     ctx.fillStyle = previous_fillstyle
 }
 function mouseArcDot(mu,mv) {
-    drawMouseDot(mu,mv)
+    // drawMouseDot(mu,mv)
     // //FIXME
-    // alpha = angle(mouseArc.centerU,mouseArc.centerV,mu,mv)
+    alpha = angle(mouseArc.centerU,mouseArc.centerV,mu,mv)
     // //arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
     // // drawCircle(mouseArc.centerU,mouseArc.centerV,mouseArc.radius)
-    // arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha)
+    arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha)
 }
 
 function drawMouseDot(mu,mv) {
