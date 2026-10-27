@@ -31,7 +31,7 @@ const CHOOSING_B = "choosing b"
 const CHOOSING_BEGINNING = "choosing beginning";
 const CHOOSING_DIRECTION = "choosing direction";
 const CHOOSING_END = "choosing end";
-
+const CHOOSING_RADIUS = "choosing radius" //chodzi o promień okręgu dla wydłużenia
 var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
 
 var r = 0.5; //wartość zmieniena przy ruchu myszą
@@ -178,12 +178,17 @@ function get_angle(mu,mv,narzedzie_edycji){
     } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
         let reactance = 1/b
         return angle(-1, -1/reactance,mu,mv)
+    } else if (narzedzie_edycji == EDYCJA_WYDLUZANIA) {
+        return angle(0,0,mu,mv)
     }
 }
 function handleArcDrawingUI(mu, mv) {
     if (narzedzie_edycji==ODCZYT) {
         drawing_state = ""
         return 0;
+    }
+    if (drawing_state == CHOOSING_RADIUS) {
+        radius = Math.sqrt(mu**2 + mv**2)
     }
     if (drawing_state == CHOOSING_R) {
         r = znajdzIzorezystancje(mu,mv);
@@ -471,10 +476,14 @@ function arcDot(centerU,centerV, radius, angle) {
     ctx.stroke();
     ctx.fillStyle = previous_fillstyle
 }
+function rad2degrees(radians) {
+    return radians * 180/Math.PI
+}
 function mouseArcDot(mu,mv) {
     // drawMouseDot(mu,mv)
     // //FIXME
     alpha = angle(mouseArc.centerU,mouseArc.centerV,mu,mv)
+    print(rad2degrees(alpha))
     // //arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
     // // drawCircle(mouseArc.centerU,mouseArc.centerV,mouseArc.radius)
     arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha)
