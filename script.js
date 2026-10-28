@@ -417,8 +417,8 @@ function znajdzIzoreaktancje(u,v) {
     return (2*v)/((1-u)**2+v**2);
 }
 function znajdzIzosusceptancje(u,v) {
-    x = znajdzIzoreaktancje(-1*u,v)
-    return 1/x
+    x = znajdzIzoreaktancje(-1*u,-1*v)
+    return -1/x
 }
 function znajdzIzokonduktancje(u,v) {
     let r = znajdzIzorezystancje(-1*u,v)
@@ -483,7 +483,7 @@ function mouseArcDot(mu,mv) {
     // drawMouseDot(mu,mv)
     // //FIXME
     alpha = angle(mouseArc.centerU,mouseArc.centerV,mu,mv)
-    print(rad2degrees(alpha))
+    console.log(rad2degrees(alpha))
     // //arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
     // // drawCircle(mouseArc.centerU,mouseArc.centerV,mouseArc.radius)
     arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha)
