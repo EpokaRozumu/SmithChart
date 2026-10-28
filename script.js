@@ -328,11 +328,9 @@ function drawCurrentMouseArc(mu,mv) {
         drawArc(mouseArc)
         mouseArcDot(mu,mv)
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
-        //może nie działać???
-        // rysujIzosusceptancje(b)
         mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
         drawArc(mouseArc)
-        //mouseArcDot(mu,mv)
+        mouseArcDot(mu,mv)
     }
 
 }
