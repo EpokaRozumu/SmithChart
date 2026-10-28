@@ -49,6 +49,8 @@ drawSmithChart();
 rysujOsie();
 console.log("to dobra wersja")
 function ustawNarzedzieEdycji(narzedzie) {
+    //FIXME: duża część tej funkcji jest niepotrzebna
+    //Przypisania beginning, ending powinny być w innym miejscu
     narzedzie_edycji = narzedzie;
     mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop});//to naprawiło błąd. Nie wiem czemu.
     if (narzedzie == EDYCJA_IZOREZYSTANCJI) {
@@ -66,10 +68,6 @@ function ustawNarzedzieEdycji(narzedzie) {
         drawing_state = CHOOSING_X
     }
     if (narzedzie == EDYCJA_IZOSUSCEPTANCJI) {
-        b = 0.1;
-        beginning = 0.05;
-        ending = 0;
-        clockwise = true;
         drawing_state = CHOOSING_B        
     }
     if (narzedzie == EDYCJA_IZOKONDUKTANCJI) {
@@ -177,7 +175,7 @@ function get_angle(mu,mv,narzedzie_edycji){
         return angle(-r/(r+1),0,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
         let reactance = 1/b
-        return angle(-1, -1/reactance,mu,mv)
+        return angle(-1, 1/reactance,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_WYDLUZANIA) {
         return angle(0,0,mu,mv)
     }
@@ -215,8 +213,10 @@ function handleArcDrawingUI(mu, mv) {
         }
     }
     if (drawing_state == CHOOSING_B) {
+        //FIXME
         beginning = Math.PI
         ending = Math.PI - 0.001
+        clockwise = true
         b = znajdzIzosusceptancje(mu,mv)
         if (mouseDown) {
             drawing_state = CHOOSING_BEGINNING
@@ -414,7 +414,7 @@ function znajdzIzorezystancje(u,v) {
 }
 function znajdzIzoreaktancje(u,v) {
     //(1-u)**2 = 1-2u + u**2
-    return (2*v)/((1-u)**2+v**2);
+    return (2*v)/((u-1)**2+v**2);
 }
 function znajdzIzosusceptancje(u,v) {
     x = znajdzIzoreaktancje(-1*u,-1*v)
