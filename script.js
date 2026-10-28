@@ -106,6 +106,7 @@ function drawArc(a, lineWidth=3) {
     //todo: somehow indicate beginning and end of the angle
 }
 var mouseArc = new Arc(0,0,0.5,Math.PI*2,0,true);//temporary arc that changes on every mouse move
+//TODO: przydałaby się zmienna circleGuide klasy arc, żeby co chwile tego nie definiować i rysować.
 //when only the first point is chosen, start angle will be equal to end angle;
 var arrayOfArcs = [];
 //analitycal geometry functions
@@ -291,8 +292,6 @@ function angleIndicator(x,y) {
 }
 function drawCurrentMouseArc(mu,mv) {
     //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
-    //let mouseAngle =angle(r/(r+1),0,u,v);
-
     //todo: wymyśl, czy nie dałoby się skrócić tej funkcji
     ctx.strokeStyle = "red";
     if (narzedzie_edycji==ODCZYT) {
@@ -302,22 +301,11 @@ function drawCurrentMouseArc(mu,mv) {
         let centerV = 0;
         drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle //
         mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending,clockwise);
-
-        if (drawing_state==CHOOSING_DIRECTION || drawing_state==CHOOSING_END) {
-            drawArc(mouseArc);
-        }
         angleIndicator(XfromU(centerU),YfromV(centerV))
-        // arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
-        mouseArcDot(mu,mv)
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
         guideArc = new Arc(1,1/reactance,1/Math.abs(reactance),0.05, 0,true);
         drawArc(guideArc,1)
-        if (drawing_state!= CHOOSING_BEGINNING) {
-          drawArc(mouseArc)
-        }
-        mouseArcDot(mu,mv)
-        //todo: arcdot
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
         let r = 1/g
         let u = -r/(r+1)
@@ -325,12 +313,14 @@ function drawCurrentMouseArc(mu,mv) {
         let radius = 1/(r+1)
         drawCircle(u,v,radius)
         mouseArc = new Arc(u,v,radius,beginning,ending,clockwise)
-        drawArc(mouseArc)
-        mouseArcDot(mu,mv)
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
         mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
-        drawArc(mouseArc)
+    }
+
+    if (drawing_state != CHOOSING_BEGINNING) {
         mouseArcDot(mu,mv)
+    } else {
+        drawArc(mouseArc)
     }
 
 }
