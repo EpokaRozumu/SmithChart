@@ -349,7 +349,7 @@ function DrawGuideArc(arc) {
 function drawCurrentMouseArc(mu,mv) {
     //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
     ctx.strokeStyle = "red";
-    if (narzedzie_edycji==ODCZYT) {
+    if (narzedzie_edycji==ODCZYT || narzedzie_edycji==DODAWANIE_PUNKTU) {
         return;
     }
     else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
