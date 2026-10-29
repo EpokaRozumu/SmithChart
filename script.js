@@ -88,18 +88,35 @@ function ustawNarzedzieEdycji(narzedzie) {
     
 
 }
-class Arc {
+class Shape {
+    constructor(centerU,centerV) {
+        this.centerU = centerU
+        this.centerV = centerV
+    }
+}
+class Arc extends Shape{
     //complex arc class
     //todo: add information about meaning
     constructor(centerU,centerV,radius,start_angle,end_angle,isClockwise) {
-        this.centerU = centerU;
-        this.centerV = centerV;
+        super(centerU,centerV)
         this.radius = radius;
         this.start_angle = start_angle;
         this.end_angle = end_angle;
         this.isClockwise = isClockwise;
     }
+    draw(lineWidth=3) {
+        drawArc(this,lineWidth)
+    }
 }
+class Dot extends Shape {
+    constructor(u,v) {
+        super(u,v)
+    }
+    draw() {
+        draw_dot(this.u,this.v)
+    }
+}
+
 function drawArc(a, lineWidth=3) {
     //draws and arc given in u and v coordinates
     let relativeX = (a.centerU+1)*canvasHeight/2
@@ -257,10 +274,11 @@ function handleArcDrawingUI(mu, mv) {
     if (drawing_state == CHOOSING_DIRECTION) {
         ending = get_angle(mu,mv,narzedzie_edycji)
         //fixme: zawijanie inne dla każdego
+        //ups - jednak każdy ma słaby punkt zawijania...
         //na pewno działa beginning=0, ending=0, getAngleDirection(beginning,ending)
-        if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI || narzedzie_edycji == EDYCJA_WYDLUZANIA) {
+        if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI ) {
             clockwise = getAngleDirection(beginning, ending)
-        } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI) {
+        } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI || narzedzie_edycji == EDYCJA_WYDLUZANIA) {
             clockwise = getAngleDirection(beginning+Math.PI, ending+Math.PI)
         }
         if (mouseDown) {
@@ -320,7 +338,7 @@ function drawCurrentMouseArc(mu,mv) {
     if (narzedzie_edycji==ODCZYT) {
         return;
     } else if (narzedzie_edycji == DODAWANIE_PUNKTU) {
-
+        
     }
     else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
 
@@ -475,7 +493,7 @@ function drawCircle(u,v,radius) {//rysuje podany okrąg z płaszczyzny zespolone
     ctx.stroke();
     ctx.closePath();
 }
-function dot(u,v) {
+function draw_dot(u,v) {
     let previous_fillstyle = ctx.fillStyle
     ctx.beginPath();
     ctx.arc(XfromU(u),YfromV(v),4,0,2*Math.PI);
@@ -487,7 +505,7 @@ function dot(u,v) {
 function arcDot(centerU,centerV, radius, angle) {
     u = Math.cos(angle) * radius + centerU
     v = -1*Math.sin(angle) * radius + centerV
-    dot(u,v)
+    draw_dot(u,v)
 }
 function rad2degrees(radians) {
     return radians * 180/Math.PI
