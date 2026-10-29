@@ -15,6 +15,7 @@
       * {
         padding: 0;
         margin: 0;
+        text-align: center;
       }
       canvas {
         background: #eeeeee;
@@ -32,8 +33,9 @@
   <h3 id="uiText" style="text-align: center;">BEGIN ARC</h3>
 
   <br/>
-  <div class="col-sm">
+  <div id="button-container" class="col-sm">
     <button type="button" class="btn" id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
+    <button type="button" class="btn" id="Punkt" onclick="ustawNarzedzieEdycji('punkt')">Punkt</button>
     <button type="button" class="btn" id="Izorezystancja" onclick="ustawNarzedzieEdycji('edycja izorezystancji')">Izorezystancja</button>
     <button type="button" class="btn" id="Izoreaktancja" onclick="ustawNarzedzieEdycji('edycja izoreaktancji')">Izoreaktancja</button>
     <button type="button" class="btn" id="Wydłużenie" onclick="ustawNarzedzieEdycji('edycja wydluzania')">Wydłużenie</button>
@@ -42,8 +44,8 @@
   </div>
 
   <br/>
-  <div class="col-lg">
-        <canvas id="myCanvas" width="600" height="600" ></canvas>
+  <div>
+    <canvas id="myCanvas" width="600" height="600" ></canvas>
     <p id="debugInfo">debug info</p>
   </div>
 

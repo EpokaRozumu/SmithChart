@@ -16,6 +16,7 @@ ctx.strokeStyle = "green";
 var mx = 0;
 var my = 0;
 
+const DODAWANIE_PUNKTU = "punkt"
 const EDYCJA_IZOREZYSTANCJI = "edycja izorezystancji";
 const EDYCJA_IZOREAKTANCJI = "edycja izoreaktancji";
 const EDYCJA_IZOKONDUKTANCJI = "edycja izokonduktancji";
@@ -54,6 +55,9 @@ function ustawNarzedzieEdycji(narzedzie) {
     //Przypisania beginning, ending powinny być w innym miejscu
     narzedzie_edycji = narzedzie;
     mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop});//to naprawiło błąd. Nie wiem czemu.
+    if (narzedzie == DODAWANIE_PUNKTU) {
+      //chyba nic nie trzeba  
+    }
     if (narzedzie == EDYCJA_IZOREZYSTANCJI) {
         r = 0.5;
         beginning = 0;
@@ -315,7 +319,10 @@ function drawCurrentMouseArc(mu,mv) {
     ctx.strokeStyle = "red";
     if (narzedzie_edycji==ODCZYT) {
         return;
-    } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
+    } else if (narzedzie_edycji == DODAWANIE_PUNKTU) {
+
+    }
+    else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
 
         mouseArc = new Arc(r/(r+1),0,1/(r+1),beginning, ending,clockwise);
 
@@ -468,19 +475,19 @@ function drawCircle(u,v,radius) {//rysuje podany okrąg z płaszczyzny zespolone
     ctx.stroke();
     ctx.closePath();
 }
-function arcDot(centerU,centerV, radius, angle) {
+function dot(u,v) {
     let previous_fillstyle = ctx.fillStyle
-    center_y = YfromV(centerV)
-    center_x = XfromU(centerU)
-    radius = radius * (canvasHeight/2)
-    y = Math.sin(angle) * radius + center_y
-    x = Math.cos(angle) * radius + center_x
     ctx.beginPath();
-    ctx.arc(x,y,4,0,2*Math.PI);
+    ctx.arc(XfromU(u),YfromV(v),4,0,2*Math.PI);
     ctx.fillStyle = "red";
     ctx.fill();
     ctx.stroke();
     ctx.fillStyle = previous_fillstyle
+}
+function arcDot(centerU,centerV, radius, angle) {
+    u = Math.cos(angle) * radius + centerU
+    v = -1*Math.sin(angle) * radius + centerV
+    dot(u,v)
 }
 function rad2degrees(radians) {
     return radians * 180/Math.PI
