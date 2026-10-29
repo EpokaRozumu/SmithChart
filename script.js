@@ -291,24 +291,29 @@ function angleIndicator(x,y) {
     ctx.stroke();
 }
 function DrawGuideArc(arc) {
-    //TODO: ZMIENIĆ, tak aby zwracało koło pomocnicze gdy dany jest łuk.
-        guideArc = new Arc(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,0, 2 * Math.PI,false);//rózni się tylko początkiem i końcem
-        drawArc(guideArc, 0.5)
+    guideArc = new Arc(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,0, 2 * Math.PI,false);//rózni się tylko początkiem i końcem
+    drawArc(guideArc, 0.5)
 }
 function drawCurrentMouseArc(mu,mv) {
     //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
-    //todo: wymyśl, czy nie dałoby się skrócić tej funkcji
     ctx.strokeStyle = "red";
     if (narzedzie_edycji==ODCZYT) {
         return;
     } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
+
         mouseArc = new Arc(r/(r+1),0,1/(r+1),beginning, ending,clockwise);
+
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
+
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
+
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
+
         let r = 1/g
         mouseArc = new Arc(-r/(r+1),0,1/(r+1),beginning,ending,clockwise)
+
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
+
         mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
     }
     DrawGuideArc(mouseArc)
@@ -463,12 +468,6 @@ function rad2degrees(radians) {
     return radians * 180/Math.PI
 }
 function mouseArcDot(mu,mv) {
-    // drawMouseDot(mu,mv)
-    // //FIXME
-    //alpha = angle(mouseArc.centerU,mouseArc.centerV,mu,mv)
     alpha = get_angle(mu,mv,narzedzie_edycji)
-    console.log(rad2degrees(alpha))
-    // //arcDot(centerU,centerV,1/(r+1),angle(centerU,centerV,u,v))
-    // // drawCircle(mouseArc.centerU,mouseArc.centerV,mouseArc.radius)
     arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha)
 }
