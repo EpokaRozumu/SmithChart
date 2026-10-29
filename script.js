@@ -20,7 +20,7 @@ const EDYCJA_IZOREZYSTANCJI = "edycja izorezystancji";
 const EDYCJA_IZOREAKTANCJI = "edycja izoreaktancji";
 const EDYCJA_IZOKONDUKTANCJI = "edycja izokonduktancji";
 const EDYCJA_IZOSUSCEPTANCJI = "edycja izosusceptancji";
-const EDYCJA_WYDLUZANIA = "edycja wydłużania";
+const EDYCJA_WYDLUZANIA = "edycja wydluzania";
 const ODCZYT = "odczyt";
 var narzedzie_edycji = ODCZYT;
 
@@ -38,6 +38,7 @@ var r = 0.5; //wartość zmieniena przy ruchu myszą
 var reactance = 0.5; //wartość zmieniana podczas ruchu myszą
 var g = 0.5;
 var b = 0.5;
+var radius = 0.5;
 var ending = 0.5;
 var beginning = 0;
 var clockwise = false; //or counterclockwise
@@ -75,6 +76,10 @@ function ustawNarzedzieEdycji(narzedzie) {
         beginning = 0.05;
         ending = 0;
         drawing_state = CHOOSING_G        
+    }
+    if (narzedzie == EDYCJA_WYDLUZANIA) {
+        drawing_state= CHOOSING_RADIUS
+        console.log("radius")
     }
     
 
@@ -187,7 +192,14 @@ function handleArcDrawingUI(mu, mv) {
         return 0;
     }
     if (drawing_state == CHOOSING_RADIUS) {
+        beginning =  Math.PI*2
+        ending = 0
+        clockwise = true
         radius = Math.sqrt(mu**2 + mv**2)
+        if (mouseDown) {
+            drawing_state = CHOOSING_BEGINNING
+            mouseDown = false;
+        }
     }
     if (drawing_state == CHOOSING_R) {
         r = znajdzIzorezystancje(mu,mv);
@@ -240,9 +252,9 @@ function handleArcDrawingUI(mu, mv) {
     }
     if (drawing_state == CHOOSING_DIRECTION) {
         ending = get_angle(mu,mv,narzedzie_edycji)
-        if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
-        clockwise = getAngleDirection(beginning, ending)
-        } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI) {
+        if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI ) {
+            clockwise = getAngleDirection(beginning, ending)
+        } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI || narzedzie_edycji == EDYCJA_WYDLUZANIA) {
             clockwise = getAngleDirection(beginning+Math.PI, ending+Math.PI)
         }
         if (mouseDown) {
@@ -274,6 +286,8 @@ function handleArcDrawingUI(mu, mv) {
                 drawing_state = CHOOSING_G
             }else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
                 drawing_state = CHOOSING_B
+            } else if (narzedzie_edycji==EDYCJA_WYDLUZANIA) {
+                drawing_state = CHOOSING_RADIUS
             }
             mouseDown = false;
         }
@@ -315,6 +329,8 @@ function drawCurrentMouseArc(mu,mv) {
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
 
         mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
+    } else if (narzedzie_edycji==EDYCJA_WYDLUZANIA) {
+        mouseArc = new Arc(0,0,radius,beginning,ending,clockwise)
     }
     DrawGuideArc(mouseArc)
     mouseArcDot(mu,mv)
