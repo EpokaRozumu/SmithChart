@@ -3,6 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <title>Smith Chart prototype</title>
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
       * {
         padding: 0;
@@ -24,18 +32,21 @@
   <h3 id="uiText" style="text-align: center;">BEGIN ARC</h3>
 
   <br/>
-  <div>
-    <button id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
-    <button id="Izorezystancja" onclick="ustawNarzedzieEdycji('edycja izorezystancji')">Izorezystancja</button>
-    <button id="Izoreaktancja" onclick="ustawNarzedzieEdycji('edycja izoreaktancji')">Izoreaktancja</button>
-    <button id="Wydłużenie" onclick="ustawNarzedzieEdycji('edycja wydluzania')">Wydłużenie</button>
-    <button id="Izokonduktancja" onclick="ustawNarzedzieEdycji('edycja izokonduktancji')">Izokonduktancja</button>
-    <button id="Izosusceptancja" onclick="ustawNarzedzieEdycji('edycja izosusceptancji')">Izosusceptancja</button>
+  <div class="col-sm">
+    <button type="button" class="btn" id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
+    <button type="button" class="btn" id="Izorezystancja" onclick="ustawNarzedzieEdycji('edycja izorezystancji')">Izorezystancja</button>
+    <button type="button" class="btn" id="Izoreaktancja" onclick="ustawNarzedzieEdycji('edycja izoreaktancji')">Izoreaktancja</button>
+    <button type="button" class="btn" id="Wydłużenie" onclick="ustawNarzedzieEdycji('edycja wydluzania')">Wydłużenie</button>
+    <button type="button" class="btn" id="Izokonduktancja" onclick="ustawNarzedzieEdycji('edycja izokonduktancji')">Izokonduktancja</button>
+    <button type="button" class="btn" id="Izosusceptancja" onclick="ustawNarzedzieEdycji('edycja izosusceptancji')">Izosusceptancja</button>
   </div>
 
   <br/>
-    <canvas id="myCanvas" width="600" height="600" ></canvas>
+  <div class="col-lg">
+        <canvas id="myCanvas" width="600" height="600" ></canvas>
     <p id="debugInfo">debug info</p>
+  </div>
+
     <script src="script.js">
       
     </script>
