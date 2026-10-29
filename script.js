@@ -9,6 +9,13 @@ const przyciskOdczyt = document.getElementById("Odczyt");
 const ctx = canvas.getContext("2d");
 canvas.addEventListener("mousemove",mouseMoveHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
+document.addEventListener("keydown", function(event) {
+    if (event.ctrlKey && event.key.toLowerCase() === "z") {
+        event.preventDefault();
+        arrayOfArcs.pop()
+        mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop})
+    }
+});
 var canvasWidth = canvas.getAttribute("width");
 var canvasHeight = canvas.getAttribute("height");
 ctx.fillStyle = "white";
@@ -113,7 +120,7 @@ class Dot extends Shape {
         super(u,v)
     }
     draw() {
-        draw_dot(this.u,this.v)
+        draw_dot(this.centerU,this.centerV)
     }
 }
 
@@ -211,6 +218,13 @@ function handleArcDrawingUI(mu, mv) {
     if (narzedzie_edycji==ODCZYT) {
         drawing_state = ""
         return 0;
+    }
+    if (narzedzie_edycji==DODAWANIE_PUNKTU) {
+        drawing_state = ""
+        if (mouseDown) {
+            arrayOfArcs.push(new Dot(mu,mv))
+            mouseDown = false
+        }
     }
     if (drawing_state == CHOOSING_RADIUS) {
         beginning =  0
@@ -337,8 +351,6 @@ function drawCurrentMouseArc(mu,mv) {
     ctx.strokeStyle = "red";
     if (narzedzie_edycji==ODCZYT) {
         return;
-    } else if (narzedzie_edycji == DODAWANIE_PUNKTU) {
-        
     }
     else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
 
@@ -398,7 +410,8 @@ function mouseMoveHandler(e) {
     drawCurrentMouseArc(u,v);
 
     for (let i=0; i<arrayOfArcs.length; i++) {
-        drawArc(arrayOfArcs[i]);
+        
+        arrayOfArcs[i].draw();
     }
     debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
