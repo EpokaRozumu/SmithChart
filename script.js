@@ -30,6 +30,7 @@ const EDYCJA_IZOKONDUKTANCJI = "edycja izokonduktancji";
 const EDYCJA_IZOSUSCEPTANCJI = "edycja izosusceptancji";
 const EDYCJA_WYDLUZANIA = "edycja wydluzania";
 const ODCZYT = "odczyt";
+const ODBICIE = "odbicie"
 var narzedzie_edycji = ODCZYT;
 
 const CHOOSING_R = "choosing r";
@@ -226,6 +227,15 @@ function handleArcDrawingUI(mu, mv) {
             mouseDown = false
         }
     }
+    if (narzedzie_edycji==ODBICIE) {
+        drawing_state = ""
+        if (mouseDown) {
+            arrayOfArcs.push(new Dot(-mu,-mv))
+            arrayOfArcs.push(new Dot(mu,mv))
+            //ewentualnie możesz dodać między nimi linię przerywaną
+            mouseDown = false
+        }
+    }
     if (drawing_state == CHOOSING_RADIUS) {
         beginning =  0
         ending = 0
@@ -351,6 +361,11 @@ function drawCurrentMouseArc(mu,mv) {
     ctx.strokeStyle = "red";
     if (narzedzie_edycji==ODCZYT || narzedzie_edycji==DODAWANIE_PUNKTU) {
         return;
+    }
+    if (narzedzie_edycji==ODBICIE) {
+        draw_dot(mu,mv)
+        draw_dot(-mu,-mv)
+        return
     }
     else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
 
