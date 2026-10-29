@@ -192,7 +192,7 @@ function handleArcDrawingUI(mu, mv) {
         return 0;
     }
     if (drawing_state == CHOOSING_RADIUS) {
-        beginning =  Math.PI*2
+        beginning =  0
         ending = 0
         clockwise = true
         radius = Math.sqrt(mu**2 + mv**2)
@@ -252,9 +252,11 @@ function handleArcDrawingUI(mu, mv) {
     }
     if (drawing_state == CHOOSING_DIRECTION) {
         ending = get_angle(mu,mv,narzedzie_edycji)
-        if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI ) {
+        //fixme: zawijanie inne dla każdego
+        //na pewno działa beginning=0, ending=0, getAngleDirection(beginning,ending)
+        if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI || narzedzie_edycji == EDYCJA_WYDLUZANIA) {
             clockwise = getAngleDirection(beginning, ending)
-        } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI || narzedzie_edycji == EDYCJA_WYDLUZANIA) {
+        } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI) {
             clockwise = getAngleDirection(beginning+Math.PI, ending+Math.PI)
         }
         if (mouseDown) {
