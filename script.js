@@ -290,6 +290,11 @@ function angleIndicator(x,y) {
     ctx.closePath();
     ctx.stroke();
 }
+function DrawGuideArc(arc) {
+    //TODO: ZMIENIĆ, tak aby zwracało koło pomocnicze gdy dany jest łuk.
+        guideArc = new Arc(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,0, 2 * Math.PI,false);//rózni się tylko początkiem i końcem
+        drawArc(guideArc, 0.5)
+}
 function drawCurrentMouseArc(mu,mv) {
     //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
     //todo: wymyśl, czy nie dałoby się skrócić tej funkcji
@@ -297,30 +302,20 @@ function drawCurrentMouseArc(mu,mv) {
     if (narzedzie_edycji==ODCZYT) {
         return;
     } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
-        let centerU = r/(r+1);
-        let centerV = 0;
-        drawCircle(centerU,centerV,1/(r+1));//isoresistance-circle //
-        mouseArc = new Arc(centerU,centerV,1/(r+1),beginning, ending,clockwise);
-        angleIndicator(XfromU(centerU),YfromV(centerV))
+        mouseArc = new Arc(r/(r+1),0,1/(r+1),beginning, ending,clockwise);
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
         mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
-        guideArc = new Arc(1,1/reactance,1/Math.abs(reactance),0.05, 0,true);
-        drawArc(guideArc,1)
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
         let r = 1/g
-        let u = -r/(r+1)
-        let v = 0
-        let radius = 1/(r+1)
-        drawCircle(u,v,radius)
-        mouseArc = new Arc(u,v,radius,beginning,ending,clockwise)
+        mouseArc = new Arc(-r/(r+1),0,1/(r+1),beginning,ending,clockwise)
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
         mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
     }
-
+    DrawGuideArc(mouseArc)
+    mouseArcDot(mu,mv)
     if (drawing_state != CHOOSING_BEGINNING) {
-        mouseArcDot(mu,mv)
-    } else {
         drawArc(mouseArc)
+        
     }
 
 }
