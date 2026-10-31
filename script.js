@@ -396,7 +396,10 @@ function findClosestListValue(value, list) {
     return answer
 }
 function circleIntersections(u1, v1, r1, u2, v2, r2) {
+    //funkcja znajdująca punkt przecięcia dwóch okręgów
+    //źródło: chatgpt
     //Przypadek poziomej linii y = 0 zamiast okręgu
+    //działa tylko dla PIERWSZEGO okręgu
     if (v1 === Infinity && r1 === Infinity) {
         if (v2 === Infinity && r2 === Infinity) return [];
         const h = Math.sqrt(Math.max(0, r2 * r2 - v2 * v2));
@@ -434,7 +437,13 @@ function snapUVToGrid(u,v) {
     let r = znajdzIzorezystancje(u,v)
     let x = znajdzIzoreaktancje(u,v)
     let snapped_r = findClosestListValue(r,wartosciSiatki)
-    let snapped_x = findClosestListValue(x,wartosciSiatki)
+    let snapped_x
+    if (x > 0) {
+        snapped_x = findClosestListValue(x,wartosciSiatki)
+    } else {
+        snapped_x = -1*findClosestListValue(-1*x,wartosciSiatki)
+    }
+
     //zakładam że problem wynika z tego że czasem snapped_r = 0 lub snapped_x = 0
     //na szczęście jest taka liczba jak Infinty :)
     let r_circle = okragIzorezystancji(snapped_r)
