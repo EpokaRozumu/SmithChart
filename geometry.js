@@ -10,7 +10,7 @@ function circleIntersections(u1, v1, r1, u2, v2, r2) {
     }
 
     const a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
-    const h = Math.sqrt(Math.mau(0, r1 * r1 - a * a));
+    const h = Math.sqrt(Math.max(0, r1 * r1 - a * a));
 
     const u0 = u1 + a * du / d;
     const v0 = v1 + a * dv / d;

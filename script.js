@@ -1,4 +1,4 @@
-import "geometry.js"
+
 //git commit -am "commit test 2"
 const canvas = document.getElementById("myCanvas");
 const przyciskIzorezystancji = document.getElementById("Izorezystancja");
@@ -395,18 +395,18 @@ function findClosestListValue(value, list) {
     }
     return answer
 }
-function snapUVToGrid(u,v) {
-    let r = znajdzIzorezystancje(u,v)
-    let x = znajdzIzoreaktancje(u,v)
-    let snapped_r = findClosestListValue(r,wartosciSiatki)
-    let snapped_x = findClosestListValue(x,wartosciSiatki)
-    //todo: funkcje getcenterR, getcenterX , ... zwracające coś w stylu {u: 0.1, v:0.1}
-    let center_r = 
-    let center_x = 
-    
-    intersections = circleIntersections()
-    return snapped_u , snapped_v
-}
+// function snapUVToGrid(u,v) {
+//     let r = znajdzIzorezystancje(u,v)
+//     let x = znajdzIzoreaktancje(u,v)
+//     let snapped_r = findClosestListValue(r,wartosciSiatki)
+//     let snapped_x = findClosestListValue(x,wartosciSiatki)
+//     //todo: funkcje getcenterR, getcenterX , ... zwracające coś w stylu {u: 0.1, v:0.1}
+//     let center_r = 
+//     let center_x = 
+
+//     intersections = circleIntersections()
+//     return snapped_u , snapped_v
+// }
 function mouseMoveHandler(e) {
 
     //user input
@@ -469,12 +469,16 @@ function drawSmithChart() {
     ctx.strokeStyle = "green";
     for (let i=0; i<wartosciSiatki.length; i++) {
         let r = wartosciSiatki[i];
-        rysujIzorezystancje(r);
+        let circle = okragIzorezystancji(r);
+        drawCircle(circle.u, circle.v, circle.radius)
     }
     for (let i=0; i<wartosciSiatki.length; i++) {
         var x = wartosciSiatki[i];
-        rysujIzoreaktancje(x)
-        rysujIzoreaktancje(-1*x)
+        let circle = okragIzoreaktancji(x)
+        drawCircle(circle.u,circle.v, circle.radius)
+        circle = okragIzoreaktancji(-1*x)
+        drawCircle(circle.u,circle.v, circle.radius)
+
     }
 }
 function rysujOsie() {
@@ -510,11 +514,12 @@ function znajdzIzokonduktancje(u,v) {
     let r = znajdzIzorezystancje(-1*u,v)
     return 1/r;
 }
-function rysujIzorezystancje(r) {//rysuje jedną izorezystancję
+function okragIzorezystancji(r) {//rysuje jedną izorezystancję
     var u = r/(r+1)
     var v = 0
     var radius = 1/(r+1)
-    drawCircle(u,v,radius)
+    return {u:u, v:v, radius:radius}
+    //drawCircle(u,v,radius)
 }
 function rysujIzokonduktancje(g) {
     let r = 1/g
@@ -533,11 +538,11 @@ function rysujIzosusceptancje(b) {
 
 }
 
-function rysujIzoreaktancje(x) {
+function okragIzoreaktancji(x) {
     var u = 1;
     var v = 1/x;
     var radius = 1/Math.abs(x);
-    drawCircle(u,v,radius);
+    return {u:u, v:v, radius:radius}
 }
 function drawCircle(u,v,radius) {//rysuje podany okrąg z płaszczyzny zespolonej na elemencie canvas
     let relativeX = (u+1)*canvasHeight/2
