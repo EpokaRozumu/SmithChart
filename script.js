@@ -248,10 +248,8 @@ function handleArcDrawingUI(mu, mv) {
     //wybieranie punktu - możliwe gdy nie wybieramy czegoś innego
     if (drawing_state!=CHOOSING_DIRECTION && drawing_state != CHOOSING_END ) {
         if (mouseDown) {
-            let dot_was_selected = selectDot(mu,mv)
-            if (dot_was_selected) {
-                mouseDown = false
-            }
+            mouseDown = false
+            selectDot(mu,mv)
             //po wybraniu punktu automatycznie dobierany jest początek i promień łuku, zależnie od wybranego narzędzia edycji
             if (dotIsSelected()) {
                 setAllImpedanceVariables(chosen_point_u,chosen_point_v)
@@ -334,6 +332,7 @@ function DrawGuideArc(arc) {
 }
 function drawCurrentMouseArc(mu,mv) {
     //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
+    //TODO: błąd - możliwe jest narysowanie końca łuku w nieprecyzyjnym miejscu
     ctx.strokeStyle = "red";
     if (narzedzie_edycji==ODCZYT || narzedzie_edycji==DODAWANIE_PUNKTU) {
         return;
@@ -449,7 +448,6 @@ function snapUVToGrid(u,v) {
     let r_circle = okragIzorezystancji(snapped_r)
     let x_circle = okragIzoreaktancji(snapped_x)
     intersections = circleIntersections(r_circle.u, r_circle.v, r_circle.radius, x_circle.u, x_circle.v,x_circle.radius)
-    //TODO: u<0 skutkuje błędem
     if (dist(intersections[0].u, intersections[0].v,u,v) < dist(intersections[1].u, intersections[1].v,u,v) ) {
         return intersections[0]
     } else {
@@ -459,8 +457,11 @@ function snapUVToGrid(u,v) {
 function mouseMoveHandler(e) {
 
     //user input
-    mx = e.clientX - canvas.offsetLeft;
-    my = e.clientY - canvas.offsetTop;
+    const rect = canvas.getBoundingClientRect();
+
+    mx = e.clientX - rect.left;
+    my = e.clientY - rect.top;
+    
     //coordinates scaling and rescaling test
     var u = UfromX(mx)
     var v = VfromY(my)

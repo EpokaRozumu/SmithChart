@@ -13,8 +13,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
       * {
-        padding: 0;
-        margin: 0;
         text-align: center;
       }
       canvas {
@@ -26,30 +24,42 @@
         margin:auto;
         align-self: center;
       }
+      .col-md-2 {
+        background-color: aquamarine;
+        display:flex;
+        flex-direction: column;
+        padding-bottom: 10%;
+      }
+      .row {
+        display: flex;
+      }
     </style>
   </head>
   <body>
-  <h3 id="uiText2" style="text-align: center;">NARZĘDZIE EDYCJI:</h3>
-  <h3 id="uiText" style="text-align: center;">BEGIN ARC</h3>
+  <div class="row">
+  <div class="col-md-2">
 
-  <br/>
-  <div id="button-container" class="col-sm">
-    <button type="button" class="btn" id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
-    <button type="button" class="btn" id="Punkt" onclick="ustawNarzedzieEdycji('punkt')">Punkt</button>
-    <button type="button" class="btn" id="Odbicie względem środka" onclick="ustawNarzedzieEdycji('odbicie')">Odbicie</button>
-    <button type="button" class="btn" id="Izorezystancja" onclick="ustawNarzedzieEdycji('edycja izorezystancji')">Izorezystancja</button>
-    <button type="button" class="btn" id="Izoreaktancja" onclick="ustawNarzedzieEdycji('edycja izoreaktancji')">Izoreaktancja</button>
-    <button type="button" class="btn" id="Wydłużenie" onclick="ustawNarzedzieEdycji('edycja wydluzania')">Wydłużenie</button>
-    <button type="button" class="btn" id="Izokonduktancja" onclick="ustawNarzedzieEdycji('edycja izokonduktancji')">Izokonduktancja</button>
-    <button type="button" class="btn" id="Izosusceptancja" onclick="ustawNarzedzieEdycji('edycja izosusceptancji')">Izosusceptancja</button>
+    </div>
+    <div class="col-md-8">
+        <h3 id="uiText2" style="text-align: center;">NARZĘDZIE EDYCJI:</h3>
+      <h3 id="uiText" style="text-align: center;">BEGIN ARC</h3>
+
+      <canvas id="myCanvas" width="600" height="600" ></canvas>
+      <p id="debugInfo">debug info</p>
+    </div>
+    <div id="button-container" class="col-md-2">
+      <button type="button" class="btn" id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
+      <button type="button" class="btn" id="Punkt" onclick="ustawNarzedzieEdycji('punkt')">Punkt</button>
+      <button type="button" class="btn" id="Odbicie względem środka" onclick="ustawNarzedzieEdycji('odbicie')">Odbicie</button>
+      <button type="button" class="btn" id="Izorezystancja" onclick="ustawNarzedzieEdycji('edycja izorezystancji')">Izorezystancja</button>
+      <button type="button" class="btn" id="Izoreaktancja" onclick="ustawNarzedzieEdycji('edycja izoreaktancji')">Izoreaktancja</button>
+      <button type="button" class="btn" id="Wydłużenie" onclick="ustawNarzedzieEdycji('edycja wydluzania')">Wydłużenie</button>
+      <button type="button" class="btn" id="Izokonduktancja" onclick="ustawNarzedzieEdycji('edycja izokonduktancji')">Izokonduktancja</button>
+      <button type="button" class="btn" id="Izosusceptancja" onclick="ustawNarzedzieEdycji('edycja izosusceptancji')">Izosusceptancja</button>
+    </div>
+
   </div>
-
-  <br/>
-  <div>
-    <canvas id="myCanvas" width="600" height="600" ></canvas>
-    <p id="debugInfo">debug info</p>
-  </div>
-
+ 
     <script src="script.js">
       
     </script>
