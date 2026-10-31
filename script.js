@@ -20,6 +20,7 @@ var canvasWidth = canvas.getAttribute("width");
 var canvasHeight = canvas.getAttribute("height");
 ctx.fillStyle = "white";
 ctx.strokeStyle = "green";
+const SELECTION_DISTANCE = 0.06 //odległość od której można zaznaczyć
 var mx = 0;
 var my = 0;
 
@@ -375,15 +376,16 @@ function isMouseOutsideCanvas() {
     let isY = (my < 0 || my > canvasHeight);
     return isX || isY;
 }
+function drawAllArcs(u,v) {
+    drawCurrentMouseArc(u,v);   //drawing
+
+    for (let i=0; i<arrayOfArcs.length; i++) {
+        
+        arrayOfArcs[i].draw();
+    }
+}
 function mouseMoveHandler(e) {
-    uiText2.innerText = narzedzie_edycji;
-    //clear canvas
-    ctx.beginPath()
-    ctx.rect(0,0,canvasWidth,canvasHeight);
-    ctx.closePath();
-    ctx.fill();
-    rysujOsie();
-    drawSmithChart();
+
     //user input
     mx = e.clientX - canvas.offsetLeft;
     my = e.clientY - canvas.offsetTop;
@@ -392,18 +394,23 @@ function mouseMoveHandler(e) {
     var v = VfromY(my)
     var x = XfromU(u);
     var y = YfromV(v);
+    //#####DRAWING######
+    uiText2.innerText = narzedzie_edycji;
+    //clear canvas
+    ctx.beginPath()
+    ctx.rect(0,0,canvasWidth,canvasHeight);
+    ctx.closePath();
+    ctx.fill();
+    rysujOsie();
+    drawSmithChart();
+
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     drawLittleSquare(mx,my,"red")      //show original mouse position
     drawCoords(u,v);
     uiText.innerText = drawing_state;
-    handleArcDrawingUI(u,v);
-    drawCurrentMouseArc(u,v);
-
-    for (let i=0; i<arrayOfArcs.length; i++) {
-        
-        arrayOfArcs[i].draw();
-    }
+    handleArcDrawingUI(u,v);    // editing
+    drawAllArcs(u,v)
     debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
 function selectDot(mu,mv) {
@@ -411,7 +418,7 @@ function selectDot(mu,mv) {
     let smallest_distance = 99
     let u = null
     let v = null
-    let SELECTION_DISTANCE = 0.06
+
     for (let shape of arrayOfArcs) {
         let distance = dist(shape.centerU, shape.centerV, mu, mv)
         if (shape instanceof Dot &&  distance<= SELECTION_DISTANCE && distance < smallest_distance) {
