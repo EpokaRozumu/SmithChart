@@ -23,6 +23,9 @@ ctx.strokeStyle = "green";
 var mx = 0;
 var my = 0;
 
+var chosen_point_u = 0
+var chosen_point_v = 0
+
 const DODAWANIE_PUNKTU = "punkt"
 const EDYCJA_IZOREZYSTANCJI = "edycja izorezystancji";
 const EDYCJA_IZOREAKTANCJI = "edycja izoreaktancji";
@@ -429,6 +432,19 @@ function mouseMoveHandler(e) {
         arrayOfArcs[i].draw();
     }
     debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
+}
+function selectDot(mu,mv) {
+    let smallest_distance = 99
+    let u = null
+    let v = null
+    let SELECTION_DISTANCE = 0.01
+    for (let shape of arrayOfArcs) {
+        let distance = distance(shape.centerU, shape.centerV, mu, mv)
+        if (shape instanceof Dot &&  distance<= SELECTION_DISTANCE && distance < smallest_distance) {
+            chosen_point_u = shape.centerU //HINT: - może być to równe null!
+            chosen_point_v = shape.centerV
+        }
+    }
 }
 function mouseDownHandler(e) {
     if (canvas.matches(':hover')) {
