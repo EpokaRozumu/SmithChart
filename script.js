@@ -395,18 +395,17 @@ function findClosestListValue(value, list) {
     }
     return answer
 }
-// function snapUVToGrid(u,v) {
-//     let r = znajdzIzorezystancje(u,v)
-//     let x = znajdzIzoreaktancje(u,v)
-//     let snapped_r = findClosestListValue(r,wartosciSiatki)
-//     let snapped_x = findClosestListValue(x,wartosciSiatki)
-//     //todo: funkcje getcenterR, getcenterX , ... zwracające coś w stylu {u: 0.1, v:0.1}
-//     let center_r = 
-//     let center_x = 
-
-//     intersections = circleIntersections()
-//     return snapped_u , snapped_v
-// }
+function snapUVToGrid(u,v) {
+    let r = znajdzIzorezystancje(u,v)
+    let x = znajdzIzoreaktancje(u,v)
+    let snapped_r = findClosestListValue(r,wartosciSiatki)
+    let snapped_x = findClosestListValue(x,wartosciSiatki)
+    //todo: funkcje getcenterR, getcenterX , ... zwracające coś w stylu {u: 0.1, v:0.1}
+    let r_circle = okragIzorezystancji(snapped_r)
+    let x_circle = okragIzoreaktancji(snapped_x)
+    intersections = circleIntersection()
+    return snapped_u , snapped_v
+}
 function mouseMoveHandler(e) {
 
     //user input
@@ -519,31 +518,30 @@ function okragIzorezystancji(r) {//rysuje jedną izorezystancję
     var v = 0
     var radius = 1/(r+1)
     return {u:u, v:v, radius:radius}
-    //drawCircle(u,v,radius)
 }
-function rysujIzokonduktancje(g) {
-    let r = 1/g
-    var u = -r/(r+1)
-    var v = 0
-    var radius = 1/(r+1)
-    drawCircle(u,v,radius)
-}
-
-function rysujIzosusceptancje(b) {
-    //znak dobry
-    var u = -1;
-    var v = b;
-    var radius = Math.abs(b);
-    drawCircle(u,v,radius);
-
-}
-
 function okragIzoreaktancji(x) {
     var u = 1;
     var v = 1/x;
     var radius = 1/Math.abs(x);
     return {u:u, v:v, radius:radius}
 }
+function okragIzokonduktancji(g) {
+    let r = 1/g
+    var u = -r/(r+1)
+    var v = 0
+    var radius = 1/(r+1)
+    return {u:u, v:v, radius:radius}
+}
+
+function okragIzosusceptancji(b) {
+    //znak dobry
+    var u = -1;
+    var v = b;
+    var radius = Math.abs(b);
+    return {u:u, v:v, radius:radius}
+}
+
+
 function drawCircle(u,v,radius) {//rysuje podany okrąg z płaszczyzny zespolonej na elemencie canvas
     let relativeX = (u+1)*canvasHeight/2
     let relativeY = (v+1)*canvasHeight/2
