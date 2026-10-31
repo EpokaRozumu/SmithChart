@@ -23,8 +23,8 @@ ctx.strokeStyle = "green";
 var mx = 0;
 var my = 0;
 
-var chosen_point_u = 0
-var chosen_point_v = 0
+var chosen_point_u = null
+var chosen_point_v = null
 
 const DODAWANIE_PUNKTU = "punkt"
 const EDYCJA_IZOREZYSTANCJI = "edycja izorezystancji";
@@ -225,6 +225,13 @@ function get_angle(mu,mv,narzedzie_edycji){
 function dotIsSelected() {
     return (chosen_point_u!==null && chosen_point_v!==null)
 }
+function setAllImpedanceVariables(u,v) {
+    radius = Math.sqrt(u**2 + v**2)
+    r = znajdzIzorezystancje(u,v)
+    reactance = znajdzIzoreaktancje(u,v);
+    g = znajdzIzokonduktancje(u,v)
+    b = znajdzIzosusceptancje(u,v)
+}
 function handleArcDrawingUI(mu, mv) {
 
     if (narzedzie_edycji==ODCZYT) {
@@ -239,35 +246,27 @@ function handleArcDrawingUI(mu, mv) {
         }
     }
     //wybieranie punktu - możliwe gdy nie wybieramy czegoś innego
-    if (mouseDown && drawing_state!=CHOOSING_DIRECTION && drawing_state != CHOOSING_END ) {
-        let dot_was_selected = selectDot(mu,mv)
-        if (dot_was_selected) {
-            mouseDown = false
-        }
-        //po wybraniu punktu automatycznie dobierany jest początek i promień łuku, zależnie od wybranego narzędzia edycji
-        let u,v
-        if (dotIsSelected()) {
-            u = chosen_point_u
-            v = chosen_point_v
-        } else {
-            u = mu
-            v = mv
-        }
-        radius = Math.sqrt(u**2 + v**2)
-        r = znajdzIzorezystancje(u,v)
-        reactance = znajdzIzoreaktancje(u,v);
-        g = znajdzIzokonduktancje(u,v)
-        b = znajdzIzosusceptancje(u,v)
-        beginning = get_angle(u,v,narzedzie_edycji)
-        if (dotIsSelected()) {
-            if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI){
-                    drawing_state = CHOOSING_END
-                } else {
-                    drawing_state = CHOOSING_DIRECTION
+    //TODO: zapisanie izorezystancji nie powinno być możliwe gdy żaden punkt nie jest wybrany
+    if (drawing_state!=CHOOSING_DIRECTION && drawing_state != CHOOSING_END ) {
+        if (mouseDown) {
+            let dot_was_selected = selectDot(mu,mv)
+            if (dot_was_selected) {
+                mouseDown = false
+            }
+            //po wybraniu punktu automatycznie dobierany jest początek i promień łuku, zależnie od wybranego narzędzia edycji
+            if (dotIsSelected()) {
+                setAllImpedanceVariables(chosen_point_u,chosen_point_v)
+                beginning = get_angle(u,v,narzedzie_edycji)
+                if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI){
+                        drawing_state = CHOOSING_END
+                    } else {
+                        drawing_state = CHOOSING_DIRECTION
+                }
             }
         }
-
-        mouseMoveHandler(mu,mv)
+        if (!dotIsSelected()) {
+            setAllImpedanceVariables(mu,mv)
+        }
     }
 
     if (drawing_state == CHOOSING_DIRECTION) {
@@ -301,6 +300,8 @@ function handleArcDrawingUI(mu, mv) {
             b = 0;
             beginning = Math.PI*2;
             ending = 0;
+            chosen_point_u = null
+            chosen_point_v = null
             if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
                 drawing_state = CHOOSING_R
             } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
