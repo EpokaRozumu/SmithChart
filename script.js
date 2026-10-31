@@ -223,7 +223,15 @@ function get_angle(mu,mv,narzedzie_edycji){
     }
 }
 function handleArcDrawingUI(mu, mv) {
-    selectDot(mu,mv)
+    if (mouseDown) {
+        let dot_was_selected = selectDot(mu,mv)
+        if (dot_was_selected) {
+            mouseDown = false
+            mouseMoveHandler(mu,mv)
+            return
+        }
+    }
+
     if (narzedzie_edycji==ODCZYT) {
         drawing_state = ""
         return 0;
@@ -439,21 +447,24 @@ function mouseMoveHandler(e) {
     debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
 function selectDot(mu,mv) {
+
     let smallest_distance = 99
     let u = null
     let v = null
-    let SELECTION_DISTANCE = 0.01
+    let SELECTION_DISTANCE = 0.06
     for (let shape of arrayOfArcs) {
         let distance = dist(shape.centerU, shape.centerV, mu, mv)
         if (shape instanceof Dot &&  distance<= SELECTION_DISTANCE && distance < smallest_distance) {
-            chosen_point_u = shape.centerU //HINT: - może być to równe null!
-            chosen_point_v = shape.centerV
+            u = shape.centerU //HINT: - może być to równe null!
+            v = shape.centerV
         }
     }
-    if (chosen_point_u === null || chosen_point_v===null) {
-        return false
-    } else {
+    if (u !== null && v!==null) {
+        chosen_point_u = u
+        chosen_point_v = v
         return true
+    } else {
+        return false
     }
 }
 function mouseDownHandler(e) {
