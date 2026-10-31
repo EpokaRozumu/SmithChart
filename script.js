@@ -294,6 +294,7 @@ function handleArcDrawingUI(mu, mv) {
         }
         if (mouseDown) {
             arrayOfArcs.push(mouseArc);
+            arrayOfArcs.push(mouseArcDot(mu,mv))
             r = 0;
             reactance = 0;
             g = 0;
@@ -544,5 +545,7 @@ function rad2degrees(radians) {
 }
 function mouseArcDot(mu,mv) {
     alpha = get_angle(mu,mv,narzedzie_edycji)
-    arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha).draw()
+    let dot = arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha)
+    dot.draw()
+    return dot
 }
