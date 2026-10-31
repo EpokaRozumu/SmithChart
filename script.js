@@ -1,5 +1,4 @@
-
-
+import "geometry.js"
 //git commit -am "commit test 2"
 const canvas = document.getElementById("myCanvas");
 const przyciskIzorezystancji = document.getElementById("Izorezystancja");
@@ -399,7 +398,13 @@ function findClosestListValue(value, list) {
 function snapUVToGrid(u,v) {
     let r = znajdzIzorezystancje(u,v)
     let x = znajdzIzoreaktancje(u,v)
-
+    let snapped_r = findClosestListValue(r,wartosciSiatki)
+    let snapped_x = findClosestListValue(x,wartosciSiatki)
+    //todo: funkcje getcenterR, getcenterX , ... zwracające coś w stylu {u: 0.1, v:0.1}
+    let center_r = 
+    let center_x = 
+    
+    intersections = circleIntersections()
     return snapped_u , snapped_v
 }
 function mouseMoveHandler(e) {
