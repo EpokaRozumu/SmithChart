@@ -222,15 +222,10 @@ function get_angle(mu,mv,narzedzie_edycji){
         return angle(0,0,mu,mv)
     }
 }
+function dotIsSelected() {
+    return (chosen_point_u!==null && chosen_point_v!==null)
+}
 function handleArcDrawingUI(mu, mv) {
-    if (mouseDown) {
-        let dot_was_selected = selectDot(mu,mv)
-        if (dot_was_selected) {
-            mouseDown = false
-            mouseMoveHandler(mu,mv)
-            return
-        }
-    }
 
     if (narzedzie_edycji==ODCZYT) {
         drawing_state = ""
@@ -243,74 +238,38 @@ function handleArcDrawingUI(mu, mv) {
             mouseDown = false
         }
     }
-    if (narzedzie_edycji==ODBICIE) {
-        drawing_state = ""
-        if (mouseDown) {
-            arrayOfArcs.push(new Dot(-mu,-mv))
-            arrayOfArcs.push(new Dot(mu,mv))
-            //ewentualnie możesz dodać między nimi linię przerywaną
+    //wybieranie punktu - możliwe gdy nie wybieramy czegoś innego
+    if (mouseDown && drawing_state!=CHOOSING_DIRECTION && drawing_state != CHOOSING_END ) {
+        let dot_was_selected = selectDot(mu,mv)
+        if (dot_was_selected) {
             mouseDown = false
         }
-    }
-    if (drawing_state == CHOOSING_RADIUS) {
-        beginning =  0
-        ending = 0
-        clockwise = true
-        radius = Math.sqrt(mu**2 + mv**2)
-        if (mouseDown) {
-            drawing_state = CHOOSING_BEGINNING
-            mouseDown = false;
+        //po wybraniu punktu automatycznie dobierany jest początek i promień łuku, zależnie od wybranego narzędzia edycji
+        let u,v
+        if (dotIsSelected()) {
+            u = chosen_point_u
+            v = chosen_point_v
+        } else {
+            u = mu
+            v = mv
         }
-    }
-    if (drawing_state == CHOOSING_R) {
-        r = znajdzIzorezystancje(mu,mv);
-        if (mouseDown) {
-            drawing_state = CHOOSING_BEGINNING
-            mouseDown = false;
-        }
-    }
-    if (drawing_state == CHOOSING_X) {
-        reactance = znajdzIzoreaktancje(mu,mv);
-        beginning = 1;
-        ending = 0.999;
-        clockwise = true;
-        if (mouseDown) {
-            drawing_state = CHOOSING_BEGINNING
-            mouseDown = false;
-        }
-    }
-    if (drawing_state == CHOOSING_G) {
-        g = znajdzIzokonduktancje(mu,mv)
-        if (mouseDown) {
-            drawing_state = CHOOSING_BEGINNING
-            mouseDown = false;
-        }
-    }
-    if (drawing_state == CHOOSING_B) {
-        //FIXME
-        beginning = Math.PI
-        ending = Math.PI - 0.001
-        clockwise = true
-        b = znajdzIzosusceptancje(mu,mv)
-        if (mouseDown) {
-            drawing_state = CHOOSING_BEGINNING
-            mouseDown = false;
-        }
-    }
-    if (drawing_state == CHOOSING_BEGINNING) {
-        beginning = get_angle(mu,mv,narzedzie_edycji)
-        
-        
-        if (mouseDown) {
+        radius = Math.sqrt(u**2 + v**2)
+        r = znajdzIzorezystancje(u,v)
+        reactance = znajdzIzoreaktancje(u,v);
+        g = znajdzIzokonduktancje(u,v)
+        b = znajdzIzosusceptancje(u,v)
+        beginning = get_angle(u,v,narzedzie_edycji)
+        if (dotIsSelected()) {
             if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI){
-                drawing_state = CHOOSING_END
-            } else {
-                drawing_state = CHOOSING_DIRECTION
+                    drawing_state = CHOOSING_END
+                } else {
+                    drawing_state = CHOOSING_DIRECTION
             }
-            
-            mouseDown = false;
         }
+
+        mouseMoveHandler(mu,mv)
     }
+
     if (drawing_state == CHOOSING_DIRECTION) {
         ending = get_angle(mu,mv,narzedzie_edycji)
         //fixme: zawijanie inne dla każdego
