@@ -257,7 +257,7 @@ function handleArcDrawingUI(mu, mv) {
             //po wybraniu punktu automatycznie dobierany jest początek i promień łuku, zależnie od wybranego narzędzia edycji
             if (dotIsSelected()) {
                 setAllImpedanceVariables(chosen_point_u,chosen_point_v)
-                beginning = get_angle(u,v,narzedzie_edycji)
+                beginning = get_angle(chosen_point_u,chosen_point_v,narzedzie_edycji)
                 if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI){
                         drawing_state = CHOOSING_END
                     } else {
