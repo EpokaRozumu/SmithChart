@@ -396,8 +396,19 @@ function findClosestListValue(value, list) {
     return answer
 }
 function circleIntersections(u1, v1, r1, u2, v2, r2) {
-    //Funkcja zwracająca punkty w których dane okręgi się przecinają.
-    //Napisane przez Chatgpt. 
+    //Przypadek poziomej linii y = 0 zamiast okręgu
+    if (v1 === Infinity && r1 === Infinity) {
+        if (v2 === Infinity && r2 === Infinity) return [];
+        const h = Math.sqrt(Math.max(0, r2 * r2 - v2 * v2));
+        if (Math.abs(v2) > r2) return [];
+        if (h === 0) return [{ u: u2, v: 0 }];
+        return [{ u: u2 - h, v: 0 }, { u: u2 + h, v: 0 }];
+    }
+
+    if (v2 === Infinity && r2 === Infinity) {
+        return circleIntersections(u2, v2, r2, u1, v1, r1);
+    }
+
     const du = u2 - u1;
     const dv = v2 - v1;
     const d = Math.sqrt(du * du + dv * dv);
@@ -412,15 +423,8 @@ function circleIntersections(u1, v1, r1, u2, v2, r2) {
     const u0 = u1 + a * du / d;
     const v0 = v1 + a * dv / d;
 
-    const p1 = {
-        u: u0 - h * dv / d,
-        v: v0 + h * du / d
-    };
-
-    const p2 = {
-        u: u0 + h * dv / d,
-        v: v0 - h * du / d
-    };
+    const p1 = { u: u0 - h * dv / d, v: v0 + h * du / d };
+    const p2 = { u: u0 + h * dv / d, v: v0 - h * du / d };
 
     if (h === 0) return [p1];
 
@@ -431,14 +435,16 @@ function snapUVToGrid(u,v) {
     let x = znajdzIzoreaktancje(u,v)
     let snapped_r = findClosestListValue(r,wartosciSiatki)
     let snapped_x = findClosestListValue(x,wartosciSiatki)
-    //todo: funkcje getcenterR, getcenterX , ... zwracające coś w stylu {u: 0.1, v:0.1}
+    //zakładam że problem wynika z tego że czasem snapped_r = 0 lub snapped_x = 0
+    //na szczęście jest taka liczba jak Infinty :)
     let r_circle = okragIzorezystancji(snapped_r)
     let x_circle = okragIzoreaktancji(snapped_x)
     intersections = circleIntersections(r_circle.u, r_circle.v, r_circle.radius, x_circle.u, x_circle.v,x_circle.radius)
+    //TODO: u<0 skutkuje błędem
     if (dist(intersections[0].u, intersections[0].v,u,v) < dist(intersections[1].u, intersections[1].v,u,v) ) {
         return intersections[0]
     } else {
-        return inntersections[1]
+        return intersections[1]
     }
 }
 function mouseMoveHandler(e) {
