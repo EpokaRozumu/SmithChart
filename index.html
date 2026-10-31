@@ -28,58 +28,63 @@
       align-self: center;
     }
 
-    .col-md-2 {
-      background-color: aquamarine;
+    .col-md-3, .col-md-2 {
+      background-color:aliceblue;
       display: flex;
       flex-direction: column;
       padding: 50px;
     }
 
     .row {
-      display: flex;
+      display:flex;
     }
 
     .tight-row {
       padding: 0;
       display: flex;
+      height:60px;
+    }
+    .well {
+      overflow: hidden;
+      height: 60px;
     }
   </style>
 </head>
 
 <body>
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-3">
       <div class="row">
         <div class="col-xs-3" style="padding:0;">
           <div class="well well-sm text-center">
-            <h4>∠Γ :</h4>
+            <h5>∠Γ :</h5>
           </div>
         </div>
         <div class="col-xs-3" style="padding:0;">
           <div class="well well-sm text-center">
-            <h4> 90°</h4>
+            <h5> 90°</h5>
           </div>
         </div>
-        <div class="col-xs-3" style="padding:0; margin-left:10px">
+        <div class="col-xs-3" style="padding:0; margin-left:1%;">
           <div class="well well-sm text-center">
-            <h4>|Γ| :</h4>
+            <h5>|Γ| :</h5>
           </div>
         </div>
         <div class="col-xs-3" style="padding:0;">
           <div class="well well-sm text-center">
-            <h4> 0.388</h4>
+            <h5> 0.388</h5>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-6">
       <h3 id="uiText2" style="text-align: center;">NARZĘDZIE EDYCJI:</h3>
       <h3 id="uiText" style="text-align: center;">BEGIN ARC</h3>
 
       <canvas id="myCanvas" width="600" height="600"></canvas>
       <p id="debugInfo">debug info</p>
     </div>
-    <div id="button-container" class="col-md-2">
+    <div id="button-container" class="col-md-3">
       <button type="button" class="btn" id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
       <button type="button" class="btn" id="Punkt" onclick="ustawNarzedzieEdycji('punkt')">Punkt</button>
       <button type="button" class="btn" id="Odbicie względem środka"
