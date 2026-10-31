@@ -124,7 +124,11 @@ class Dot extends Shape {
         super(u,v)
     }
     draw() {
-        draw_dot(this.centerU,this.centerV)
+        let r = 4
+        if (this.centerU == chosen_point_u && this.centerV == chosen_point_v) {
+            r = 10
+        }
+        draw_dot(this.centerU,this.centerV, r)
     }
 }
 
@@ -147,7 +151,7 @@ var mouseArc = new Arc(0,0,0.5,Math.PI*2,0,true);//temporary arc that changes on
 //when only the first point is chosen, start angle will be equal to end angle;
 var arrayOfArcs = [];
 //analitycal geometry functions
-function distance(x1,y1,x2,y2) {
+function dist(x1,y1,x2,y2) {
     return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
 }
 function angle(x1,y1,x2,y2) {
@@ -219,6 +223,7 @@ function get_angle(mu,mv,narzedzie_edycji){
     }
 }
 function handleArcDrawingUI(mu, mv) {
+    selectDot(mu,mv)
     if (narzedzie_edycji==ODCZYT) {
         drawing_state = ""
         return 0;
@@ -439,11 +444,16 @@ function selectDot(mu,mv) {
     let v = null
     let SELECTION_DISTANCE = 0.01
     for (let shape of arrayOfArcs) {
-        let distance = distance(shape.centerU, shape.centerV, mu, mv)
+        let distance = dist(shape.centerU, shape.centerV, mu, mv)
         if (shape instanceof Dot &&  distance<= SELECTION_DISTANCE && distance < smallest_distance) {
             chosen_point_u = shape.centerU //HINT: - może być to równe null!
             chosen_point_v = shape.centerV
         }
+    }
+    if (chosen_point_u === null || chosen_point_v===null) {
+        return false
+    } else {
+        return true
     }
 }
 function mouseDownHandler(e) {
@@ -537,10 +547,10 @@ function drawCircle(u,v,radius) {//rysuje podany okrąg z płaszczyzny zespolone
     ctx.stroke();
     ctx.closePath();
 }
-function draw_dot(u,v) {
+function draw_dot(u,v,r=4) {
     let previous_fillstyle = ctx.fillStyle
     ctx.beginPath();
-    ctx.arc(XfromU(u),YfromV(v),4,0,2*Math.PI);
+    ctx.arc(XfromU(u),YfromV(v),r,0,2*Math.PI);
     ctx.fillStyle = "red";
     ctx.fill();
     ctx.stroke();
