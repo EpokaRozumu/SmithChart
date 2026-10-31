@@ -461,11 +461,14 @@ function mouseMoveHandler(e) {
 
     mx = e.clientX - rect.left;
     my = e.clientY - rect.top;
-    
+
     //coordinates scaling and rescaling test
     var u = UfromX(mx)
     var v = VfromY(my)
-    let snapped = snapUVToGrid(u,v)
+    let snapped = snapUVToGrid(u,v)//Snappuje do gridu izorezystancji i izoreaktancji
+    //TODO: przyciąganie do siatki wykresu admitancyjnego
+    //TODO:wyświetlanie wykresu admitancyjnego
+    //TODO: przycisk SNAP_TO_GRID on/off
     u = snapped.u
     v = snapped.v
     var x = XfromU(u);
