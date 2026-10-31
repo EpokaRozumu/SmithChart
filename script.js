@@ -384,6 +384,24 @@ function drawAllArcs(u,v) {
         arrayOfArcs[i].draw();
     }
 }
+function findClosestListValue(value, list) {
+    let min_error = 99999999999
+    let answer = null
+    for (let i=0; i< list.length;i++) {
+        error = Math.abs(list[i] - value)
+        if (error < min_error ) {
+            min_error = error
+            answer = list[i]
+        }
+    }
+    return answer
+}
+function snapUVToGrid(u,v) {
+    let r = znajdzIzorezystancje(u,v)
+    let x = znajdzIzoreaktancje(u,v)
+
+    return snapped_u , snapped_v
+}
 function mouseMoveHandler(e) {
 
     //user input
