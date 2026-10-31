@@ -247,7 +247,6 @@ function handleArcDrawingUI(mu, mv) {
         }
     }
     //wybieranie punktu - możliwe gdy nie wybieramy czegoś innego
-    //TODO: zapisanie izorezystancji nie powinno być możliwe gdy żaden punkt nie jest wybrany
     if (drawing_state!=CHOOSING_DIRECTION && drawing_state != CHOOSING_END ) {
         if (mouseDown) {
             let dot_was_selected = selectDot(mu,mv)
@@ -537,12 +536,13 @@ function draw_dot(u,v,r=4) {
 function arcDot(centerU,centerV, radius, angle) {
     u = Math.cos(angle) * radius + centerU
     v = -1*Math.sin(angle) * radius + centerV
-    draw_dot(u,v)
+    let dot = new Dot(u,v)
+    return dot
 }
 function rad2degrees(radians) {
     return radians * 180/Math.PI
 }
 function mouseArcDot(mu,mv) {
     alpha = get_angle(mu,mv,narzedzie_edycji)
-    arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha)
+    arcDot(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,alpha).draw()
 }
