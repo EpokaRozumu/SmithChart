@@ -24,14 +24,14 @@
     }
 
     button {
-      margin: auto;
+      margin: 10px;
       align-self: center;
     }
     .checkbox {
       text-align: left;
     }
     .col-md-3, .col-md-2 {
-      background-color:aliceblue;
+      background-color:whitesmoke;
       display: flex;
       flex-direction: column;
       padding: 50px;
@@ -57,24 +57,40 @@
   <div class="row">
     <div class="col-md-3">
       <div class="row">
-        <div class="col-xs-3" style="padding:0;">
+
+        <div class="col-xs-6" style="padding:0;">
           <div class="well well-sm text-center">
-            <h5>∠Γ :</h5>
+            <h5 id="faza">∠Γ : 90°</h5>
           </div>
         </div>
-        <div class="col-xs-3" style="padding:0;">
+        <div class="col-xs-6" style="padding:0; margin-left:1%;">
           <div class="well well-sm text-center">
-            <h5 id="faza"> 90°</h5>
+            <h5 id="modul">|Γ| : 0.388</h5>
+          </div>
+        
+        </div>
+      </div>
+      <br>
+        <div class="row">
+        <div class="col-xs-12" style="padding:0;">
+          <div class="well well-sm text-center">
+            <h5 id="faza">Z = 0.5 + 0.5i</h5>
           </div>
         </div>
-        <div class="col-xs-3" style="padding:0; margin-left:1%;">
+      </div>
+            <br>
+        <div class="row">
+        <div class="col-xs-12" style="padding:0;">
           <div class="well well-sm text-center">
-            <h5>|Γ| :</h5>
+            <h5 id="faza">Y = 0.5 + 0.5i</h5>
           </div>
         </div>
-        <div class="col-xs-3" style="padding:0;">
+      </div>
+      <br>
+        <div class="row">
+        <div class="col-xs-12" style="padding:0;">
           <div class="well well-sm text-center">
-            <h5 if="modul"> 0.388</h5>
+            <h5 id="faza">WFS = ???</h5>
           </div>
         </div>
       </div>
