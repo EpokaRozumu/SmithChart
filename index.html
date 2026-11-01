@@ -27,7 +27,9 @@
       margin: auto;
       align-self: center;
     }
-
+    .checkbox {
+      text-align: left;
+    }
     .col-md-3, .col-md-2 {
       background-color:aliceblue;
       display: flex;
@@ -62,7 +64,7 @@
         </div>
         <div class="col-xs-3" style="padding:0;">
           <div class="well well-sm text-center">
-            <h5> 90°</h5>
+            <h5 id="faza"> 90°</h5>
           </div>
         </div>
         <div class="col-xs-3" style="padding:0; margin-left:1%;">
@@ -72,7 +74,7 @@
         </div>
         <div class="col-xs-3" style="padding:0;">
           <div class="well well-sm text-center">
-            <h5> 0.388</h5>
+            <h5 if="modul"> 0.388</h5>
           </div>
         </div>
       </div>
@@ -85,6 +87,15 @@
       <p id="debugInfo">debug info</p>
     </div>
     <div id="button-container" class="col-md-3">
+    <div class="checkbox">
+      <label><input type="checkbox" value="">Impedancyjny</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" value="">Admitancyjny</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" value="">Przyciągaj do siatki</label>
+    </div>
       <button type="button" class="btn" id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
       <button type="button" class="btn" id="Punkt" onclick="ustawNarzedzieEdycji('punkt')">Punkt</button>
       <button type="button" class="btn" id="Odbicie względem środka"
