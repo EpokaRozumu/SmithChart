@@ -14,6 +14,7 @@ const okienkoFazaOdbicia = document.getElementById("faza")
 const okienkoModulOdbicia = document.getElementById("modul")
 const okienkoImpedancja = document.getElementById("z")
 const okienkoAdmitancja = document.getElementById("y")
+const okienkoWFS = document.getElementById("WFS")
 
 const ctx = canvas.getContext("2d");
 canvas.addEventListener("mousemove",mouseMoveHandler);
@@ -29,7 +30,7 @@ var canvasWidth = canvas.getAttribute("width");
 var canvasHeight = canvas.getAttribute("height");
 ctx.fillStyle = "white";
 ctx.strokeStyle = "green";
-const SELECTION_DISTANCE = 0.06 //odległość od której można zaznaczyć
+const SELECTION_DISTANCE = 0.06 //odległość od której można zaznaczyć punkt
 var mx = 0;
 var my = 0;
 
@@ -61,16 +62,30 @@ var reactance = 0.5; //wartość zmieniana podczas ruchu myszą
 var g = 0.5;
 var b = 0.5;
 var radius = 0.5;
+
 var ending = 0.5;
 var beginning = 0;
 var clockwise = false; //or counterclockwise
-var lastEnding = 0;
 var mouseDown = false;
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
 drawSmithChart();
 rysujOsie();
 console.log("to dobra wersja")
+function roundTo(number,precision) {
+    return Math.round(number*(10**precision))/(10**precision)
+}
+function updateInfoBoxes(u,v) {
+    round = 3
+    roundNum = 10**round
+    okienkoFazaOdbicia.innerText = get_angle(u,v,0,0)
+    let precision = 3;
+    let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
+    okienkoModulOdbicia.innerText = modulOdbicia
+    okienkoImpedancja.innerText = "Z = " +roundTo(znajdzIzoreaktancje(u,v),precision) + " + " + roundTo(znajdzIzoreaktancje(u,v),precision) +"i"
+    okienkoAdmitancja.innerText = "Y = "+ roundTo(znajdzIzokonduktancje(u,v),precision) + " + " + roundTo(znajdzIzosusceptancje(u,v),precision) + "i"
+    okienkoWFS.innerText = "WFS:  " + roundTo((1+modulOdbicia)/(1-modulOdbicia),precision)
+}
 function ustawNarzedzieEdycji(narzedzie) {
     //FIXME: duża część tej funkcji jest niepotrzebna
     //Przypisania beginning, ending powinny być w innym miejscu
@@ -500,6 +515,7 @@ function mouseMoveHandler(e) {
     uiText.innerText = drawing_state;
     handleArcDrawingUI(u,v);    // editing
     drawAllArcs(u,v)
+    updateInfoBoxes(u,v)
     debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
 function selectDot(mu,mv) {
