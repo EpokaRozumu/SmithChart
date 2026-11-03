@@ -6,10 +6,22 @@ const przyciskIzoreaktancji = document.getElementById("Izoreaktancja");
 const przyciskWydluzenia = document.getElementById("Wydłużenie");
 const przyciskOdczyt = document.getElementById("Odczyt");
 
-const checkboxImpedancyjny = document.getElementById("Impedancyjny")
-const checkboxAdmitancyjny = document.getElementById("Admitancyjny")
-const checkboxSnap = document.getElementById("Snap")
 
+var wybranoImpedancyjny =true
+var wybranoAdmitancyjny =false
+var wybranoSnapping =false
+
+document.querySelector("#Impedancyjny input").addEventListener("change", function() {
+    wybranoImpedancyjny = this.checked;
+});
+
+document.querySelector("#Admitancyjny input").addEventListener("change", function() {
+    wybranoAdmitancyjny = this.checked;
+});
+
+document.querySelector("#Snap input").addEventListener("change", function() {
+    wybranoSnapping = this.checked;
+});
 const okienkoFazaOdbicia = document.getElementById("faza")
 const okienkoModulOdbicia = document.getElementById("modul")
 const okienkoImpedancja = document.getElementById("z")
@@ -73,12 +85,22 @@ drawSmithChart();
 rysujOsie();
 console.log("to dobra wersja")
 function roundTo(number,precision) {
+    if (Math.abs(number) > 297485479973096 ) {
+        number = Infinity
+    }
     return Math.round(number*(10**precision))/(10**precision)
 }
 function updateInfoBoxes(u,v) {
+    //todo: upewnij się czy dobrze działa
+    //todo: nie wiem czy admitancja dobrze się liczy dla najbardziej prawego punktu
+    //nie wiem czy Y nie jest odbite w pionie
+    //todo: przyciąganie nie działa tuż pod poziomą linią
+    //todo: Z = 0 + 0i powinno dać Y = infinity + infinity i
+    //todo: Y = 0 + 0i powinno dać Z = infinity + infinity i
+    //zamiast bardzo dużych wartości dla u - 1, v = 0 powinno być Infinity.
     round = 3
     roundNum = 10**round
-    okienkoFazaOdbicia.innerText = get_angle(u,v,0,0)
+    okienkoFazaOdbicia.innerText = get_angle(u,v,0,0),toString()
     let precision = 3;
     let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
     okienkoModulOdbicia.innerText = modulOdbicia
@@ -549,19 +571,22 @@ function mouseDownHandler(e) {
 
 function drawSmithChart() {
     ctx.strokeStyle = "green";
-    for (let i=0; i<wartosciSiatki.length; i++) {
-        let r = wartosciSiatki[i];
-        let circle = okragIzorezystancji(r);
-        drawCircle(circle.u, circle.v, circle.radius)
-    }
-    for (let i=0; i<wartosciSiatki.length; i++) {
-        var x = wartosciSiatki[i];
-        let circle = okragIzoreaktancji(x)
-        drawCircle(circle.u,circle.v, circle.radius)
-        circle = okragIzoreaktancji(-1*x)
-        drawCircle(circle.u,circle.v, circle.radius)
+    if (wybranoImpedancyjny) {
+        for (let i=0; i<wartosciSiatki.length; i++) {
+            let r = wartosciSiatki[i];
+            let circle = okragIzorezystancji(r);
+            drawCircle(circle.u, circle.v, circle.radius)
+        }
+        for (let i=0; i<wartosciSiatki.length; i++) {
+            var x = wartosciSiatki[i];
+            let circle = okragIzoreaktancji(x)
+            drawCircle(circle.u,circle.v, circle.radius)
+            circle = okragIzoreaktancji(-1*x)
+            drawCircle(circle.u,circle.v, circle.radius)
 
+        }
     }
+
 }
 function rysujOsie() {
     //osie pomocnicze, do sprawdzenia czy wykres jest wycentrowany

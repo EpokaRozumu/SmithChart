@@ -103,15 +103,24 @@
       <p id="debugInfo">debug info</p>
     </div>
     <div id="button-container" class="col-md-3">
-    <div class="checkbox" id="Impedancyjny">
-      <label><input type="checkbox" value="">Impedancyjny</label>
-    </div>
-    <div class="checkbox" id="Admitancyjny">
-      <label><input type="checkbox" value="">Admitancyjny</label>
-    </div>
-    <div class="checkbox" id="Snap">
-      <label><input type="checkbox" value="">Przyciągaj do siatki</label>
-    </div>
+
+      <div class="form-check" id="Impedancyjny">
+          <input class="form-check-input" type="checkbox" id="impedancyjny">
+          <label class="form-check-label" for="impedancyjny">Impedancyjny</label>
+      </div>
+
+      <div class="form-check" id="Admitancyjny">
+          <input class="form-check-input" type="checkbox" id="admitancyjny">
+          <label class="form-check-label" for="admitancyjny">Admitancyjny</label>
+      </div>
+
+      <div class="form-check" id="Snap">
+          <input class="form-check-input" type="checkbox" id="snap">
+          <label class="form-check-label" for="snap">Przyciągaj do siatki</label>
+      </div>
+
+
+
       <button type="button" class="btn" id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
       <button type="button" class="btn" id="Punkt" onclick="ustawNarzedzieEdycji('punkt')">Punkt</button>
       <button type="button" class="btn" id="Odbicie względem środka"
