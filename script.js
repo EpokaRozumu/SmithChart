@@ -5,6 +5,16 @@ const przyciskIzorezystancji = document.getElementById("Izorezystancja");
 const przyciskIzoreaktancji = document.getElementById("Izoreaktancja");
 const przyciskWydluzenia = document.getElementById("Wydłużenie");
 const przyciskOdczyt = document.getElementById("Odczyt");
+
+const checkboxImpedancyjny = document.getElementById("Impedancyjny")
+const checkboxAdmitancyjny = document.getElementById("Admitancyjny")
+const checkboxSnap = document.getElementById("Snap")
+
+const okienkoFazaOdbicia = document.getElementById("faza")
+const okienkoModulOdbicia = document.getElementById("modul")
+const okienkoImpedancja = document.getElementById("z")
+const okienkoAdmitancja = document.getElementById("y")
+
 const ctx = canvas.getContext("2d");
 canvas.addEventListener("mousemove",mouseMoveHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
