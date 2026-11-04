@@ -179,19 +179,64 @@ class Dot extends Shape {
     }
 }
 
-function drawArc(a, lineWidth=3) {
+function drawArc(a, lineWidth=3, arrow=true) {
     //draws and arc given in u and v coordinates
     let relativeX = (a.centerU+1)*canvasHeight/2
     let relativeY = (-1*a.centerV+1)*canvasHeight/2    //Chyba odbija Y lustrzanie
     let relativeRadius = a.radius*canvasHeight/2
     ctx.lineWidth = lineWidth;
-    ctx.beginPath();
-    ctx.arc(relativeX, relativeY, relativeRadius,
-        a.start_angle,a.end_angle, !a.isClockwise);
-    ctx.stroke();
-    ctx.closePath();
+    // ctx.beginPath();
+    drawArcWithArrow(relativeX, relativeY, relativeRadius,
+        a.start_angle,a.end_angle, !a.isClockwise, arrow);
+    // ctx.stroke();
+    // ctx.closePath();
     ctx.lineWidth = 1;
     //todo: somehow indicate beginning and end of the angle
+}
+
+function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=true) {
+            //napisane przez chatgpt
+            // Rysowanie łuku
+            ctx.beginPath();
+            if (clockwise) {
+                [startAngle,endAngle] = [endAngle,startAngle]
+            }
+            ctx.arc(cx, cy, radius, startAngle, endAngle);
+            ctx.stroke();
+            if (!arrow) {
+                return
+            }
+            previous_fillstyle = ctx.fillStyle
+            ctx.fillStyle = ctx.strokeStyle
+            // Pozycja środka łuku
+            const middleAngle = (startAngle + endAngle) / 2;
+            const x = cx + radius * Math.cos(middleAngle);
+            const y = cy + radius * Math.sin(middleAngle);
+
+            // Kierunek styczny do łuku
+            const direction = endAngle >= startAngle ? 1 : -1;
+            var tangentAngle = middleAngle + direction * Math.PI / 2;
+
+            // Rysowanie strzałki
+            const arrowLength = 12;
+            const arrowWidth = 6;
+
+            ctx.save();
+            ctx.translate(x, y);
+            if (clockwise) {
+                tangentAngle += Math.PI
+            }
+            ctx.rotate(tangentAngle);
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(-arrowLength, -arrowWidth);
+            ctx.lineTo(-arrowLength, arrowWidth);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+            ctx.fillStyle = previous_fillstyle
 }
 var mouseArc = new Arc(0,0,0.5,Math.PI*2,0,true);//temporary arc that changes on every mouse move
 //TODO: przydałaby się zmienna circleGuide klasy arc, żeby co chwile tego nie definiować i rysować.
@@ -375,7 +420,7 @@ function angleIndicator(x,y) {
 }
 function DrawGuideArc(arc) {
     guideArc = new Arc(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,0, 2 * Math.PI,false);//rózni się tylko początkiem i końcem
-    drawArc(guideArc, 0.5)
+    drawArc(guideArc, 0.5, false)
 }
 function drawCurrentMouseArc(mu,mv) {
     //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
