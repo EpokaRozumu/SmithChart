@@ -99,12 +99,15 @@ function updateInfoBoxes(u,v) {
     //todo: Y = 0 + 0i powinno dać Z = infinity + infinity i
     //zamiast bardzo dużych wartości dla u - 1, v = 0 powinno być Infinity.
     let precision = 3;
-    okienkoFazaOdbicia.innerText = "∠Γ = " +roundTo(angle(u,v,0,0)*180/Math.PI,precision) 
-    let modulOdbicia = "|Γ| = " + roundTo(Math.sqrt(u**2 + v**2),precision)
-    okienkoModulOdbicia.innerText = modulOdbicia 
+    okienkoFazaOdbicia.innerText = "∠Γ = " +roundTo(-1*angle(0,0,u,v)*180/Math.PI,precision) //sus -1
+    let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
+    okienkoModulOdbicia.innerText = "|Γ| = " + modulOdbicia 
     okienkoImpedancja.innerText = "Z = " +roundTo(znajdzIzorezystancje(u,v),precision) + " + " + roundTo(znajdzIzoreaktancje(u,v),precision) +"i"
     okienkoAdmitancja.innerText = "Y = "+ roundTo(znajdzIzokonduktancje(u,v),precision) + " + " + roundTo(znajdzIzosusceptancje(u,v),precision) + "i"
     okienkoWFS.innerText = "WFS:  " + roundTo((1+modulOdbicia)/(1-modulOdbicia),precision)
+
+
+
 }
 function ustawNarzedzieEdycji(narzedzie) {
     //FIXME: duża część tej funkcji jest niepotrzebna
@@ -489,8 +492,12 @@ function circleIntersections(u1, v1, r1, u2, v2, r2) {
     //źródło: chatgpt
     //Przypadek poziomej linii y = 0 zamiast okręgu
     //działa tylko dla PIERWSZEGO okręgu
+
+    if (v2===-Infinity) {//okrąg o nieskończenie wysokim środku i promieniu ma taki sam skutek jak ten o nieskończenie niskim
+        v2 = Infinity
+    }
     if (v1 === Infinity && r1 === Infinity) {
-        if (v2 === Infinity && r2 === Infinity) return [];
+        if (v2 === Infinity && r2 === Infinity) return [];//sus
         const h = Math.sqrt(Math.max(0, r2 * r2 - v2 * v2));
         if (Math.abs(v2) > r2) return [];
         if (h === 0) return [{ u: u2, v: 0 }];
@@ -527,7 +534,7 @@ function snapUVToGrid(u,v) {
     let x = znajdzIzoreaktancje(u,v)
     let snapped_r = findClosestListValue(r,wartosciSiatki)
     let snapped_x
-    if (x > 0) {
+    if (x >= 0) {
         snapped_x = findClosestListValue(x,wartosciSiatki)
     } else {
         snapped_x = -1*findClosestListValue(-1*x,wartosciSiatki)
@@ -538,6 +545,7 @@ function snapUVToGrid(u,v) {
     let r_circle = okragIzorezystancji(snapped_r)
     let x_circle = okragIzoreaktancji(snapped_x)
     intersections = circleIntersections(r_circle.u, r_circle.v, r_circle.radius, x_circle.u, x_circle.v,x_circle.radius)
+    
     if (dist(intersections[0].u, intersections[0].v,u,v) < dist(intersections[1].u, intersections[1].v,u,v) ) {
         return intersections[0]
     } else {
