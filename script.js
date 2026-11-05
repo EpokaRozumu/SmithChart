@@ -98,13 +98,11 @@ function updateInfoBoxes(u,v) {
     //todo: Z = 0 + 0i powinno dać Y = infinity + infinity i
     //todo: Y = 0 + 0i powinno dać Z = infinity + infinity i
     //zamiast bardzo dużych wartości dla u - 1, v = 0 powinno być Infinity.
-    round = 3
-    roundNum = 10**round
-    okienkoFazaOdbicia.innerText = get_angle(u,v,0,0),toString()
     let precision = 3;
-    let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
-    okienkoModulOdbicia.innerText = modulOdbicia
-    okienkoImpedancja.innerText = "Z = " +roundTo(znajdzIzoreaktancje(u,v),precision) + " + " + roundTo(znajdzIzoreaktancje(u,v),precision) +"i"
+    okienkoFazaOdbicia.innerText = "∠Γ = " +roundTo(angle(u,v,0,0)*180/Math.PI,precision) 
+    let modulOdbicia = "|Γ| = " + roundTo(Math.sqrt(u**2 + v**2),precision)
+    okienkoModulOdbicia.innerText = modulOdbicia 
+    okienkoImpedancja.innerText = "Z = " +roundTo(znajdzIzorezystancje(u,v),precision) + " + " + roundTo(znajdzIzoreaktancje(u,v),precision) +"i"
     okienkoAdmitancja.innerText = "Y = "+ roundTo(znajdzIzokonduktancje(u,v),precision) + " + " + roundTo(znajdzIzosusceptancje(u,v),precision) + "i"
     okienkoWFS.innerText = "WFS:  " + roundTo((1+modulOdbicia)/(1-modulOdbicia),precision)
 }
