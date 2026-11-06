@@ -493,7 +493,7 @@ function circleIntersections(u1, v1, r1, u2, v2, r2) {
     //Przypadek poziomej linii y = 0 zamiast okręgu
     //działa tylko dla PIERWSZEGO okręgu
 
-    if (v2===-Infinity) {//okrąg o nieskończenie wysokim środku i promieniu ma taki sam skutek jak ten o nieskończenie niskim
+    if (v2===-Infinity) {//okrąg o nieskończenie wysokim środku i promieniu ma taki sam skutek jak ten o nieskończenie
         v2 = Infinity
     }
     if (v1 === Infinity && r1 === Infinity) {
