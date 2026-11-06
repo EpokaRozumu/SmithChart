@@ -673,8 +673,8 @@ function znajdzIzoreaktancje(u,v) {
     return (2*v)/((u-1)**2+v**2);
 }
 function znajdzIzosusceptancje(u,v) {
-    x = znajdzIzoreaktancje(-1*u,-1*v)
-    return -1/x
+    b = znajdzIzoreaktancje(-1*u,-1*v)
+    return b
 }
 function znajdzIzokonduktancje(u,v) {
     let g = znajdzIzorezystancje(-1*u,v)
@@ -698,11 +698,8 @@ function okragIzokonduktancji(g) {
 }
 
 function okragIzosusceptancji(b) {
-    //znak dobry
-    var u = -1;
-    var v = b;
-    var radius = Math.abs(b);
-    return {u:u, v:v, radius:radius}
+    let ok = okragIzoreaktancji(b)
+    return {u:-1*ok.u, v:-1*ok.v, radius:ok.radius}
 }
 
 
