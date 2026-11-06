@@ -430,30 +430,34 @@ function drawCurrentMouseArc(mu,mv) {
     if (narzedzie_edycji==ODCZYT || narzedzie_edycji==DODAWANIE_PUNKTU) {
         return;
     }
+    let okrag = {}
     if (narzedzie_edycji==ODBICIE) {
         draw_dot(mu,mv)
         draw_dot(-mu,-mv)
         return
-    }
-    else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
+    } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
+        okrag = okragIzorezystancji(r)
 
-        mouseArc = new Arc(r/(r+1),0,1/(r+1),beginning, ending,clockwise);
+        // mouseArc = new Arc(r/(r+1),0,1/(r+1),beginning, ending,clockwise);
 
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
+        okrag = okragIzoreaktancji(reactance)
 
-        mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
+        // mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
 
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
-
-        let r = 1/g
-        mouseArc = new Arc(-r/(r+1),0,1/(r+1),beginning,ending,clockwise)
+        okrag = okragIzokonduktancji(g)
+        // let r = 1/g
+        // mouseArc = new Arc(-r/(r+1),0,1/(r+1),beginning,ending,clockwise)
 
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
-
-        mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
+        okrag = okragIzosusceptancji(b)
+        // mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
     } else if (narzedzie_edycji==EDYCJA_WYDLUZANIA) {
-        mouseArc = new Arc(0,0,radius,beginning,ending,clockwise)
+        okrag = {u:0, v:0, radius:radius}
+        // mouseArc = new Arc(0,0,radius,beginning,ending,clockwise)
     }
+    mouseArc = new Arc(okrag.u, okrag.v, okrag.radius,beginning,ending,clockwise)
     DrawGuideArc(mouseArc)
     mouseArcDot(mu,mv)
     if (drawing_state != CHOOSING_BEGINNING) {
@@ -493,7 +497,7 @@ function circleIntersections(u1, v1, r1, u2, v2, r2) {
     //Przypadek poziomej linii y = 0 zamiast okręgu
     //działa tylko dla PIERWSZEGO okręgu
 
-    if (v2===-Infinity) {//okrąg o nieskończenie wysokim środku i promieniu ma taki sam skutek jak ten o nieskończenie
+    if (v2===-Infinity) {//okrąg o nieskończenie wysokim środku i promieniu ma taki sam skutek
         v2 = Infinity
     }
     if (v1 === Infinity && r1 === Infinity) {
