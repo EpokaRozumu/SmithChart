@@ -437,25 +437,14 @@ function drawCurrentMouseArc(mu,mv) {
         return
     } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
         okrag = okragIzorezystancji(r)
-
-        // mouseArc = new Arc(r/(r+1),0,1/(r+1),beginning, ending,clockwise);
-
     } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
         okrag = okragIzoreaktancji(reactance)
-
-        // mouseArc = new Arc(1,1/reactance,1/Math.abs(reactance),beginning, ending,clockwise);
-
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
         okrag = okragIzokonduktancji(g)
-        // let r = 1/g
-        // mouseArc = new Arc(-r/(r+1),0,1/(r+1),beginning,ending,clockwise)
-
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
         okrag = okragIzosusceptancji(b)
-        // mouseArc = new Arc(-1,b,Math.abs(b),beginning,ending,clockwise)
     } else if (narzedzie_edycji==EDYCJA_WYDLUZANIA) {
         okrag = {u:0, v:0, radius:radius}
-        // mouseArc = new Arc(0,0,radius,beginning,ending,clockwise)
     }
     mouseArc = new Arc(okrag.u, okrag.v, okrag.radius,beginning,ending,clockwise)
     DrawGuideArc(mouseArc)
@@ -688,8 +677,8 @@ function znajdzIzosusceptancje(u,v) {
     return -1/x
 }
 function znajdzIzokonduktancje(u,v) {
-    let r = znajdzIzorezystancje(-1*u,v)
-    return 1/r;
+    let g = znajdzIzorezystancje(-1*u,v)
+    return g;
 }
 function okragIzorezystancji(r) {//rysuje jedną izorezystancję
     var u = r/(r+1)
@@ -704,11 +693,8 @@ function okragIzoreaktancji(x) {
     return {u:u, v:v, radius:radius}
 }
 function okragIzokonduktancji(g) {
-    let r = 1/g
-    var u = -r/(r+1)
-    var v = 0
-    var radius = 1/(r+1)
-    return {u:u, v:v, radius:radius}
+    let ok = okragIzorezystancji(g)
+    return {u:-1*ok.u, v:ok.v, radius:ok.radius}
 }
 
 function okragIzosusceptancji(b) {
