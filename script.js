@@ -614,7 +614,7 @@ function mouseDownHandler(e) {
 
 
 function drawSmithChart() {
-    ctx.strokeStyle = "green";
+    ctx.strokeStyle = "lightgreen";
     if (wybranoImpedancyjny) {
         for (let i=0; i<wartosciSiatki.length; i++) {
             let r = wartosciSiatki[i];
@@ -630,14 +630,15 @@ function drawSmithChart() {
 
         }
     }
+    ctx.strokeStyle = "orange"
     if (wybranoAdmitancyjny) {
         for (let i=0; i<wartosciSiatki.length; i++) {
-            let g = 1/wartosciSiatki[i];
+            let g = wartosciSiatki[i];
             let circle = okragIzokonduktancji(g);
             drawCircle(circle.u, circle.v, circle.radius)
         }
         for (let i=0; i<wartosciSiatki.length; i++) {
-            var b = 1/wartosciSiatki[i];
+            let  b = wartosciSiatki[i];
             let circle = okragIzosusceptancji(b)
             drawCircle(circle.u,circle.v, circle.radius)
             circle = okragIzosusceptancji(-1*b)
