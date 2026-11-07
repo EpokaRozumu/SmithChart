@@ -665,6 +665,7 @@ function rysujOsie() {
     ctx.closePath();
     ctx.stroke();
 }
+//todo: przetestuj dla różnych punktów czy te funkcje zawsze dają dobre odpowiedzi
 function znajdzIzorezystancje(u,v) {
     let ans = -(u**2+v**2-1)/(u**2-2*u+v**2+1)//chyba działa
     return ans;
