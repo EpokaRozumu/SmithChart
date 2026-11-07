@@ -1,3 +1,4 @@
+//Geometria, konwersja (u,v) <=> (x,y) i trochę ogólnej matmy
 class Shape {
     constructor(centerU,centerV) {
         this.centerU = centerU
@@ -40,6 +41,7 @@ function arcDot(centerU,centerV, radius, angle) {
 
 
 function roundTo(number,precision) {
+    //czy nie lepiej to przenieść do innego pliku?
     if (Math.abs(number) > 297485479973096 ) {
         number = Infinity
     }
