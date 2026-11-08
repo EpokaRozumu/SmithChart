@@ -410,10 +410,29 @@ function mouseMoveHandler(e) {
     var u = UfromX(mx)
     var v = VfromY(my)
     if (wybranoSnapping) {
-        let snapped = snapUVToGrid(u,v)//Snappuje do gridu izorezystancji i izoreaktancji
+        let snapped_ad = snapUVToGrid(-u,v)
+        snapped_ad.u = -1*snapped_ad.u
+        let snapped_im = snapUVToGrid(u,v)
+        
+        if (wybranoImpedancyjny && !wybranoAdmitancyjny) {
+            u = snapped_im.u
+            v = snapped_im.v
+        } else if (wybranoAdmitancyjny && !wybranoImpedancyjny)  {
+            u = snapped_ad.u
+            v = snapped_ad.v
+        } else if (wybranoAdmitancyjny && wybranoImpedancyjny) {
+            if (dist(u,v,snapped_im.u,snapped_im.v) < dist(u,v,snapped_ad.u,snapped_ad.v)) {
+                u = snapped_im.u
+                v = snapped_im.v
+            } else {
+                u = snapped_ad.u
+                v = snapped_ad.v
+            }
+        }
+
+        //Snappuje do gridu izorezystancji i izoreaktancji
         //TODO: przyciąganie do siatki wykresu admitancyjnego
-        u = snapped.u
-        v = snapped.v
+
     }
 
     var x = XfromU(u);

@@ -58,6 +58,7 @@ function findClosestListValue(value, list) {
 function snapUVToGrid(u,v) {
     let r = znajdzIzorezystancje(u,v)
     let x = znajdzIzoreaktancje(u,v)
+    
     let snapped_r = findClosestListValue(r,wartosciSiatki)
     let snapped_x
     if (x >= 0) {
