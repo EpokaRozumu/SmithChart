@@ -177,7 +177,8 @@ function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=
             }
             const direction = clockwise ? -1 : 1;
             let distance = ((endAngle-startAngle)+2*Math.PI)%(2*Math.PI)
-            const middleAngle = startAngle + 0.5*distance -0.02*direction*Math.PI;
+            let korekta_strzalki = 10*direction/radius;
+            const middleAngle = startAngle + 0.5*distance +korekta_strzalki
 
             const x = cx + radius * Math.cos(middleAngle);
             const y = cy + radius * Math.sin(middleAngle);
