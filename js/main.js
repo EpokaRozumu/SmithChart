@@ -161,7 +161,7 @@ function angle_from_0_to_360(angle) {
     return (angle+2*Math.PI)%(2*Math.PI)
 }
 function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=true) {
-            //napisane przez chatgpt
+            //napisane razem z chatgpt
             // Rysowanie łuku
             ctx.beginPath();
             ctx.arc(cx, cy, radius, startAngle, endAngle, clockwise);
@@ -175,14 +175,15 @@ function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=
             if (clockwise) {
                 [startAngle, endAngle] = [endAngle,startAngle]
             }
+            const direction = clockwise ? -1 : 1;
             let distance = ((endAngle-startAngle)+2*Math.PI)%(2*Math.PI)
-            const middleAngle = startAngle + 0.5*distance;//jak dodać 360 jeśli jest ujemne? może coś z modułem?
+            const middleAngle = startAngle + 0.5*distance -0.02*direction*Math.PI;
 
             const x = cx + radius * Math.cos(middleAngle);
             const y = cy + radius * Math.sin(middleAngle);
 
             // Kierunek styczny do łuku
-            const direction = clockwise ? -1 : 1;
+
             var tangentAngle = middleAngle + direction * Math.PI / 2;
 
             // Rysowanie strzałki
@@ -408,12 +409,13 @@ function mouseMoveHandler(e) {
     //coordinates scaling and rescaling test
     var u = UfromX(mx)
     var v = VfromY(my)
-    let snapped = snapUVToGrid(u,v)//Snappuje do gridu izorezystancji i izoreaktancji
-    //TODO: przyciąganie do siatki wykresu admitancyjnego
-    //TODO:wyświetlanie wykresu admitancyjnego
-    //TODO: przycisk SNAP_TO_GRID on/off
-    u = snapped.u
-    v = snapped.v
+    if (wybranoSnapping) {
+        let snapped = snapUVToGrid(u,v)//Snappuje do gridu izorezystancji i izoreaktancji
+        //TODO: przyciąganie do siatki wykresu admitancyjnego
+        u = snapped.u
+        v = snapped.v
+    }
+
     var x = XfromU(u);
     var y = YfromV(v);
     //#####DRAWING######
