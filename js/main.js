@@ -157,28 +157,32 @@ function drawArc(a, lineWidth=3, arrow=true) {
     ctx.lineWidth = 1;
     //todo: somehow indicate beginning and end of the angle
 }
-
+function angle_from_0_to_360(angle) {
+    return (angle+2*Math.PI)%(2*Math.PI)
+}
 function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=true) {
             //napisane przez chatgpt
             // Rysowanie łuku
             ctx.beginPath();
-            if (clockwise) {
-                [startAngle,endAngle] = [endAngle,startAngle]
-            }
-            ctx.arc(cx, cy, radius, startAngle, endAngle);
+            ctx.arc(cx, cy, radius, startAngle, endAngle, clockwise);
             ctx.stroke();
             if (!arrow) {
                 return
             }
             previous_fillstyle = ctx.fillStyle
             ctx.fillStyle = ctx.strokeStyle
-            // Pozycja środka łuku
-            const middleAngle = (startAngle + endAngle) / 2;
+            // Pozycja środka łuku!!!
+            if (clockwise) {
+                [startAngle, endAngle] = [endAngle,startAngle]
+            }
+            let distance = ((endAngle-startAngle)+2*Math.PI)%(2*Math.PI)
+            const middleAngle = startAngle + 0.5*distance;//jak dodać 360 jeśli jest ujemne? może coś z modułem?
+
             const x = cx + radius * Math.cos(middleAngle);
             const y = cy + radius * Math.sin(middleAngle);
 
             // Kierunek styczny do łuku
-            const direction = endAngle >= startAngle ? 1 : -1;
+            const direction = clockwise ? -1 : 1;
             var tangentAngle = middleAngle + direction * Math.PI / 2;
 
             // Rysowanie strzałki
@@ -187,9 +191,6 @@ function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=
 
             ctx.save();
             ctx.translate(x, y);
-            if (clockwise) {
-                tangentAngle += Math.PI
-            }
             ctx.rotate(tangentAngle);
 
             ctx.beginPath();
