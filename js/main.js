@@ -241,8 +241,9 @@ function get_angle(mu,mv,narzedzie_edycji){
         let r =1/g
         return angle(-r/(r+1),0,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
-        let reactance = 1/b
-        return angle(-1, 1/reactance,mu,mv)
+        // let reactance = 1/b
+        let okrag = okragIzosusceptancji(b)
+        return angle(okrag.centerU, okrag.centerV,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_WYDLUZANIA) {
         return angle(0,0,mu,mv)
     }
@@ -258,7 +259,7 @@ function setAllImpedanceVariables(u,v) {
     b = znajdzIzosusceptancje(u,v)
 }
 function handleArcDrawingUI(mu, mv) {
-
+    //funkcja odpowiadające za kolejne etapy rysowania łuku
     if (narzedzie_edycji==ODCZYT) {
         drawing_state = ""
         return 0;
