@@ -137,7 +137,6 @@ function ustawNarzedzieEdycji(narzedzie) {
     }
     if (narzedzie == EDYCJA_WYDLUZANIA) {
         drawing_state= CHOOSING_RADIUS
-        console.log("radius")
     }
     
 
@@ -302,8 +301,7 @@ function handleArcDrawingUI(mu, mv) {
 
     if (drawing_state == CHOOSING_DIRECTION) {
         ending = get_angle(mu,mv,narzedzie_edycji)
-        //fixme: zawijanie inne dla każdego
-        //ups - jednak każdy ma słaby punkt zawijania...
+        //fixme: każdy ma słaby punkt zawijania...
         //na pewno działa beginning=0, ending=0, getAngleDirection(beginning,ending)
         if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI ) {
             clockwise = getAngleDirection(beginning, ending)
