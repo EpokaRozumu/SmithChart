@@ -243,9 +243,12 @@ function get_angle(mu,mv,narzedzie_edycji){
     } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
         // let reactance = 1/b
         let okrag = okragIzosusceptancji(b)
-        return angle(okrag.centerU, okrag.centerV,mu,mv)
+        //dlaczego x1 oraz y1 to undefined???
+        return angle(okrag.u, okrag.v,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_WYDLUZANIA) {
         return angle(0,0,mu,mv)
+    } else {
+        console.log("ZŁA NAZWA STANU!!!!")
     }
 }
 function dotIsSelected() {
@@ -279,7 +282,12 @@ function handleArcDrawingUI(mu, mv) {
             //po wybraniu punktu automatycznie dobierany jest początek i promień łuku, zależnie od wybranego narzędzia edycji
             if (dotIsSelected()) {
                 setAllImpedanceVariables(chosen_point_u,chosen_point_v)
+                //TODO: dla izosusceptancji begining może być równy nan
                 beginning = get_angle(chosen_point_u,chosen_point_v,narzedzie_edycji)
+                if (narzedzie_edycji == ODBICIE) {
+                    arrayOfArcs.push(new Dot(-chosen_point_u, -chosen_point_v))
+                    return
+                }
                 if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI){
                         drawing_state = CHOOSING_END
                     } else {
@@ -399,18 +407,7 @@ function drawAllArcs(u,v) {
         arrayOfArcs[i].draw();
     }
 }
-
-function mouseMoveHandler(e) {
-
-    //user input
-    const rect = canvas.getBoundingClientRect();
-
-    mx = e.clientX - rect.left;
-    my = e.clientY - rect.top;
-
-    //coordinates scaling and rescaling test
-    var u = UfromX(mx)
-    var v = VfromY(my)
+function handleSnapping() {
     if (wybranoSnapping) {
         let snapped_ad = snapUVToGrid(-u,v)
         snapped_ad.u = -1*snapped_ad.u
@@ -431,12 +428,22 @@ function mouseMoveHandler(e) {
                 v = snapped_ad.v
             }
         }
-
         //Snappuje do gridu izorezystancji i izoreaktancji
         //TODO: przyciąganie do siatki wykresu admitancyjnego
-
     }
+}
 
+function mouseMoveHandler(e) {
+    //user input
+    const rect = canvas.getBoundingClientRect();
+
+    mx = e.clientX - rect.left;
+    my = e.clientY - rect.top;
+
+    //coordinates scaling and rescaling test
+    u = UfromX(mx)
+    v = VfromY(my)
+    handleSnapping()
     var x = XfromU(u);
     var y = YfromV(v);
     //#####DRAWING######
