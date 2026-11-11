@@ -148,13 +148,9 @@ function drawArc(a, lineWidth=3, arrow=true) {
     let relativeY = (-1*a.centerV+1)*canvasHeight/2    //Chyba odbija Y lustrzanie
     let relativeRadius = a.radius*canvasHeight/2
     ctx.lineWidth = lineWidth;
-    // ctx.beginPath();
     drawArcWithArrow(relativeX, relativeY, relativeRadius,
         a.start_angle,a.end_angle, !a.isClockwise, arrow);
-    // ctx.stroke();
-    // ctx.closePath();
     ctx.lineWidth = 1;
-    //todo: somehow indicate beginning and end of the angle
 }
 function angle_from_0_to_360(angle) {
     return (angle+2*Math.PI)%(2*Math.PI)
@@ -260,93 +256,6 @@ function setAllImpedanceVariables(u,v) {
     g = znajdzIzokonduktancje(u,v)
     b = znajdzIzosusceptancje(u,v)
 }
-function handleArcDrawingUI(mu, mv) {
-    //funkcja odpowiadające za kolejne etapy rysowania łuku
-    if (narzedzie_edycji==ODCZYT) {
-        drawing_state = ""
-        return 0;
-    }
-    if (narzedzie_edycji==DODAWANIE_PUNKTU) {
-        drawing_state = ""
-        if (mouseDown) {
-            arrayOfArcs.push(new Dot(mu,mv))
-            mouseDown = false
-        }
-    }
-    //wybieranie punktu - możliwe gdy nie wybieramy czegoś innego
-    if (drawing_state!=CHOOSING_DIRECTION && drawing_state != CHOOSING_END ) {
-        if (mouseDown) {
-            mouseDown = false
-            selectDot(mu,mv)
-            //po wybraniu punktu automatycznie dobierany jest początek i promień łuku, zależnie od wybranego narzędzia edycji
-            if (dotIsSelected()) {
-                setAllImpedanceVariables(chosen_point_u,chosen_point_v)
-                //TODO: dla izosusceptancji begining może być równy nan
-                beginning = get_angle(chosen_point_u,chosen_point_v,narzedzie_edycji)
-                if (narzedzie_edycji == ODBICIE) {
-                    arrayOfArcs.push(new Dot(-chosen_point_u, -chosen_point_v))
-                    return
-                }
-                if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI){
-                        drawing_state = CHOOSING_END
-                    } else {
-                        drawing_state = CHOOSING_DIRECTION
-                }
-            }
-        }
-        if (!dotIsSelected()) {
-            setAllImpedanceVariables(mu,mv)
-        }
-    }
-
-    if (drawing_state == CHOOSING_DIRECTION) {
-        ending = get_angle(mu,mv,narzedzie_edycji)
-        //fixme: każdy ma słaby punkt zawijania...
-        //na pewno działa beginning=0, ending=0, getAngleDirection(beginning,ending)
-        if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI ) {
-            clockwise = getAngleDirection(beginning, ending)
-        } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI || narzedzie_edycji == EDYCJA_WYDLUZANIA) {
-            clockwise = getAngleDirection(beginning+Math.PI, ending+Math.PI)
-        }
-        if (mouseDown) {
-            drawing_state = CHOOSING_END;
-            mouseDown = false;
-        }
-    }
-    if (drawing_state == CHOOSING_END) {
-        //UWAGA, dla izoREAktancji nie ma etapu wybierania kierunku
-        ending = get_angle(mu,mv, narzedzie_edycji);
-        if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
-            clockwise = getAngleDirection(beginning,ending)
-        } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
-            clockwise = getAngleDirection(beginning+Math.PI,ending+Math.PI)
-        }
-        if (mouseDown) {
-            arrayOfArcs.push(mouseArc);
-            arrayOfArcs.push(mouseArcDot(mu,mv))
-            r = 0;
-            reactance = 0;
-            g = 0;
-            b = 0;
-            beginning = Math.PI*2;
-            ending = 0;
-            chosen_point_u = null
-            chosen_point_v = null
-            if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
-                drawing_state = CHOOSING_R
-            } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
-                drawing_state = CHOOSING_X
-            }else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
-                drawing_state = CHOOSING_G
-            }else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
-                drawing_state = CHOOSING_B
-            } else if (narzedzie_edycji==EDYCJA_WYDLUZANIA) {
-                drawing_state = CHOOSING_RADIUS
-            }
-            mouseDown = false;
-        }
-    }
-}
 
 function angleIndicator(x,y) {
     //an angle indicator to help with debugging:
@@ -362,36 +271,7 @@ function DrawGuideArc(arc) {
     guideArc = new Arc(mouseArc.centerU,mouseArc.centerV,mouseArc.radius,0, 2 * Math.PI,false);//rózni się tylko początkiem i końcem
     drawArc(guideArc, 0.5, false)
 }
-function drawCurrentMouseArc(mu,mv) {
-    //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
-    //TODO: błąd - możliwe jest narysowanie końca łuku w nieprecyzyjnym miejscu
-    ctx.strokeStyle = "red";
-    if (narzedzie_edycji==ODCZYT || narzedzie_edycji==DODAWANIE_PUNKTU) {
-        return;
-    }
-    let okrag = {}
-    if (narzedzie_edycji==ODBICIE) {
-        draw_dot(mu,mv)
-        draw_dot(-mu,-mv)
-        return
-    } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI ) {
-        okrag = okragIzorezystancji(r)
-    } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
-        okrag = okragIzoreaktancji(reactance)
-    } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
-        okrag = okragIzokonduktancji(g)
-    } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
-        okrag = okragIzosusceptancji(b)
-    } else if (narzedzie_edycji==EDYCJA_WYDLUZANIA) {
-        okrag = {u:0, v:0, radius:radius}
-    }
-    mouseArc = new Arc(okrag.u, okrag.v, okrag.radius,beginning,ending,clockwise)
-    DrawGuideArc(mouseArc)
-    mouseArcDot(mu,mv)
-    if (drawing_state != CHOOSING_BEGINNING) {
-        drawArc(mouseArc)
-    }
-}
+
 function isMouseOutsideCanvas() {
     let isX = (mx < 0 || mx > canvasWidth);
     let isY = (my < 0 || my > canvasHeight);

@@ -18,7 +18,7 @@ function znajdzIzosusceptancje(u,v) {
     return b
 }
 function znajdzIzokonduktancje(u,v) {
-    let g = znajdzIzorezystancje(-1*u,v)
+    let g = znajdzIzorezystancje(-1*u,v)//dla elegancji dać -1v
     return g;
 }
 function okragIzorezystancji(r) {//rysuje jedną izorezystancję
@@ -35,6 +35,7 @@ function okragIzoreaktancji(x) {
 }
 function okragIzokonduktancji(g) {
     let ok = okragIzorezystancji(g)
+    //v zawsze jest równe 0... Ale żeby wzór był analogiczny do izosusceptanji, może lepiej pomnożyć v * -1 ?
     return {u:-1*ok.u, v:ok.v, radius:ok.radius}
 }
 
