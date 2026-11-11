@@ -1,3 +1,5 @@
+
+//tej funkcji teraz nie muszę zmieniać
 function drawCurrentMouseArc(mu,mv) {
     //rysuje właśnie edytowaną krzywą na podstawie dostępnych danych
     //TODO: błąd - możliwe jest narysowanie końca łuku w nieprecyzyjnym miejscu
@@ -27,7 +29,8 @@ function drawCurrentMouseArc(mu,mv) {
     if (drawing_state != CHOOSING_BEGINNING) {
         drawArc(mouseArc)
     }
-}function handleArcDrawingUI(mu, mv) {
+}
+function handleArcDrawingUI(mu, mv) {
     //funkcja odpowiadające za kolejne etapy rysowania łuku
     if (narzedzie_edycji==ODCZYT) {
         drawing_state = ""
@@ -37,32 +40,25 @@ function drawCurrentMouseArc(mu,mv) {
         drawing_state = ""
         if (mouseDown) {
             arrayOfArcs.push(new Dot(mu,mv))
+            drawing_state = CHOOSING_TOOL;
+            narzedzie_edycji = NIE_WYBRANO_NARZEDZIA;
+            selectDot(mu,mv)
+            setAllImpedanceVariables(chosen_point_u,chosen_point_v)
             mouseDown = false
         }
     }
-    //wybieranie punktu - możliwe gdy nie wybieramy czegoś innego
-    if (drawing_state!=CHOOSING_DIRECTION && drawing_state != CHOOSING_END ) {
-        if (mouseDown) {
-            mouseDown = false
-            selectDot(mu,mv)
-            //po wybraniu punktu automatycznie dobierany jest początek i promień łuku, zależnie od wybranego narzędzia edycji
-            if (dotIsSelected()) {
-                setAllImpedanceVariables(chosen_point_u,chosen_point_v)
-                //TODO: dla izosusceptancji begining może być równy nan
-                beginning = get_angle(chosen_point_u,chosen_point_v,narzedzie_edycji)
-                if (narzedzie_edycji == ODBICIE) {
-                    arrayOfArcs.push(new Dot(-chosen_point_u, -chosen_point_v))
-                    return
-                }
-                if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI || narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI){
-                        drawing_state = CHOOSING_END
-                    } else {
-                        drawing_state = CHOOSING_DIRECTION
-                }
+    if (drawing_state==CHOOSING_TOOL) {
+        if (narzedzie_edycji != NIE_WYBRANO_NARZEDZIA) {
+            beginning = get_angle(chosen_point_u,chosen_point_v,narzedzie_edycji)
+            if (narzedzie_edycji == ODBICIE) {
+                arrayOfArcs.push(new Dot(-chosen_point_u, -chosen_point_v))
+                return
             }
-        }
-        if (!dotIsSelected()) {
-            setAllImpedanceVariables(mu,mv)
+            if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI || narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
+                drawing_state = CHOOSING_DIRECTION
+            } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI || narzedzie_edycji==EDYCJA_IZOREAKTANCJI){
+                drawing_state = CHOOSING_END
+            }
         }
     }
 

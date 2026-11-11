@@ -57,17 +57,19 @@ const EDYCJA_IZOSUSCEPTANCJI = "edycja izosusceptancji";
 const EDYCJA_WYDLUZANIA = "edycja wydluzania";
 const ODCZYT = "odczyt";
 const ODBICIE = "odbicie"
+const NIE_WYBRANO_NARZEDZIA = "nie wybrano narzędzia";
 var narzedzie_edycji = ODCZYT;
 
-const CHOOSING_R = "choosing r";
-const CHOOSING_X = "choosing x"
-const CHOOSING_G = "choosing g"
-const CHOOSING_B = "choosing b"
+// const CHOOSING_R = "choosing r";
+// const CHOOSING_X = "choosing x"
+// const CHOOSING_G = "choosing g"
+// const CHOOSING_B = "choosing b"
+const CHOOSING_TOOL = "wybieranie narzędzia"
 const CHOOSING_BEGINNING = "choosing beginning";
 const CHOOSING_DIRECTION = "choosing direction";
 const CHOOSING_END = "choosing end";
-const CHOOSING_RADIUS = "choosing radius" //chodzi o promień okręgu dla wydłużenia
-var drawing_state = CHOOSING_R ;//"choosing beginning", "choosing end";
+// const CHOOSING_RADIUS = "choosing radius" //chodzi o promień okręgu dla wydłużenia
+var drawing_state = CHOOSING_BEGINNING ;//"choosing beginning", "choosing end";
 
 var r = 0.5; //wartość zmieniena przy ruchu myszą
 var reactance = 0.5; //wartość zmieniana podczas ruchu myszą
@@ -116,7 +118,6 @@ function ustawNarzedzieEdycji(narzedzie) {
         r = 0.5;
         beginning = 0;
         ending = 0;
-        drawing_state = CHOOSING_R
         clockwise = false;
         mouesedown = false;
     }
@@ -124,20 +125,13 @@ function ustawNarzedzieEdycji(narzedzie) {
         x = 0.1;
         beginning = 0.05;
         ending = 0;
-        drawing_state = CHOOSING_X
-    }
-    if (narzedzie == EDYCJA_IZOSUSCEPTANCJI) {
-        drawing_state = CHOOSING_B        
     }
     if (narzedzie == EDYCJA_IZOKONDUKTANCJI) {
         g = 0.1;
         beginning = 0.05;
-        ending = 0;
-        drawing_state = CHOOSING_G        
+        ending = 0;     
     }
-    if (narzedzie == EDYCJA_WYDLUZANIA) {
-        drawing_state= CHOOSING_RADIUS
-    }
+
     
 
 }
