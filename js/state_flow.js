@@ -86,27 +86,15 @@ function handleArcDrawingUI(mu, mv) {
         }
         if (mouseDown) {
             arrayOfArcs.push(mouseArc);
-            arrayOfArcs.push(mouseArcDot(mu,mv))
-            r = 0;
-            reactance = 0;
-            g = 0;
-            b = 0;
-            beginning = Math.PI*2;
-            ending = 0;
-            chosen_point_u = null
-            chosen_point_v = null
-            if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
-                drawing_state = CHOOSING_R
-            } else if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
-                drawing_state = CHOOSING_X
-            }else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
-                drawing_state = CHOOSING_G
-            }else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
-                drawing_state = CHOOSING_B
-            } else if (narzedzie_edycji==EDYCJA_WYDLUZANIA) {
-                drawing_state = CHOOSING_RADIUS
-            }
-            mouseDown = false;
+            end_dot = mouseArcDot(mu,mv)
+            arrayOfArcs.push(end_dot)
+            drawing_state = CHOOSING_TOOL;
+            narzedzie_edycji = NIE_WYBRANO_NARZEDZIA;
+            chosen_point_u = arrayOfArcs[arrayOfArcs.length-1].centerU
+            chosen_point_v = arrayOfArcs[arrayOfArcs.length-1].centerV
+            setAllImpedanceVariables(chosen_point_u,chosen_point_v)
+            mouseDown = false
+            
         }
     }
 }

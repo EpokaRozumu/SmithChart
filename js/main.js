@@ -111,28 +111,6 @@ function ustawNarzedzieEdycji(narzedzie) {
     //Przypisania beginning, ending powinny być w innym miejscu
     narzedzie_edycji = narzedzie;
     mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop});//to naprawiło błąd. Nie wiem czemu.
-    if (narzedzie == DODAWANIE_PUNKTU) {
-      //chyba nic nie trzeba  
-    }
-    if (narzedzie == EDYCJA_IZOREZYSTANCJI) {
-        r = 0.5;
-        beginning = 0;
-        ending = 0;
-        clockwise = false;
-        mouesedown = false;
-    }
-    if (narzedzie == EDYCJA_IZOREAKTANCJI) {
-        x = 0.1;
-        beginning = 0.05;
-        ending = 0;
-    }
-    if (narzedzie == EDYCJA_IZOKONDUKTANCJI) {
-        g = 0.1;
-        beginning = 0.05;
-        ending = 0;     
-    }
-
-    
 
 }
 
