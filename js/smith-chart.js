@@ -14,8 +14,8 @@ function znajdzIzoreaktancje(u,v) {
     return (2*v)/((u-1)**2+v**2);
 }
 function znajdzIzosusceptancje(u,v) {
-    b = znajdzIzoreaktancje(-1*u,-1*v)
-    return b
+    let susceptance = znajdzIzoreaktancje(-1*u,-1*v)
+    return susceptance
 }
 function znajdzIzokonduktancje(u,v) {
     let g = znajdzIzorezystancje(-1*u,v)//dla elegancji dać -1v

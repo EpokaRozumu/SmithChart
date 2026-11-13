@@ -74,7 +74,7 @@ var drawing_state = CHOOSING_BEGINNING ;//"choosing beginning", "choosing end";
 var r = 0.5; //wartość zmieniena przy ruchu myszą
 var reactance = 0.5; //wartość zmieniana podczas ruchu myszą
 var g = 0.5;
-var b = 0.5;
+var susceptance = 0.5;
 var radius = 0.5;
 
 var ending = 0.5;
@@ -208,9 +208,7 @@ function get_angle(mu,mv,narzedzie_edycji){
         let ok = okragIzokonduktancji(g)
         return angle(ok.u, ok.v,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
-        // let reactance = 1/b
-        let okrag = okragIzosusceptancji(b)
-        //dlaczego x1 oraz y1 to undefined???
+        let okrag = okragIzosusceptancji(susceptance)
         return angle(okrag.u, okrag.v,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_WYDLUZANIA) {
         return angle(0,0,mu,mv)
@@ -226,7 +224,7 @@ function setAllImpedanceVariables(u,v) {
     r = znajdzIzorezystancje(u,v)
     reactance = znajdzIzoreaktancje(u,v);
     g = znajdzIzokonduktancje(u,v)
-    b = znajdzIzosusceptancje(u,v)
+    susceptance = znajdzIzosusceptancje(u,v)
 }
 
 function angleIndicator(x,y) {
@@ -249,12 +247,7 @@ function isMouseOutsideCanvas() {
     let isY = (my < 0 || my > canvasHeight);
     return isX || isY;
 }
-function drawAllArcs(u,v) {
-    drawCurrentMouseArc(u,v);   //drawing
-    for (let i=0; i<arrayOfArcs.length; i++) {
-        arrayOfArcs[i].draw();
-    }
-}
+
 function handleSnapping() {
     if (wybranoSnapping) {
         let snapped_ad = snapUVToGrid(-u,v)
@@ -303,7 +296,7 @@ function mouseMoveHandler(e) {
     ctx.fill();
     rysujOsie();
     drawSmithChart();
-
+    //todo: uporządkuj kod
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     drawLittleSquare(mx,my,"red")      //show original mouse position
@@ -311,15 +304,16 @@ function mouseMoveHandler(e) {
     uiText.innerText = drawing_state;
     handleArcDrawingUI(u,v);    // editing
     updateInfoBoxes(u,v)
-    drawAllArcs(u,v)//sus - ta funkcja zmienia u oraz v - dlaczego??
+    drawCurrentMouseArc(u,v);   //drawing
+    for (let i=0; i<arrayOfArcs.length; i++) {
+        arrayOfArcs[i].draw();
+    }
     debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
 function selectDot(mu,mv) {
-
     let smallest_distance = 99
     let u = null
     let v = null
-
     for (let shape of arrayOfArcs) {
         let distance = dist(shape.centerU, shape.centerV, mu, mv)
         if (shape instanceof Dot &&  distance<= SELECTION_DISTANCE && distance < smallest_distance) {
