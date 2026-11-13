@@ -27,6 +27,8 @@ const okienkoModulOdbicia = document.getElementById("modul")
 const okienkoImpedancja = document.getElementById("z")
 const okienkoAdmitancja = document.getElementById("y")
 const okienkoWFS = document.getElementById("WFS")
+const okienkoTekstuWyjsciowego = document.getElementById("outputtext")
+okienkoTekstuWyjsciowego.innerText = "jestem tu"
 
 const ctx = canvas.getContext("2d");
 canvas.addEventListener("mousemove",mouseMoveHandler);
