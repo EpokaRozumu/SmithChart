@@ -7,9 +7,9 @@ const przyciskWydluzenia = document.getElementById("Wydłużenie");
 const przyciskOdczyt = document.getElementById("Odczyt");
 
 
-var wybranoImpedancyjny =true
-var wybranoAdmitancyjny =false
-var wybranoSnapping =false
+var wybranoImpedancyjny = true;
+var wybranoAdmitancyjny 
+var wybranoSnapping
 
 document.querySelector("#Impedancyjny input").addEventListener("change", function() {
     wybranoImpedancyjny = this.checked;
@@ -48,10 +48,12 @@ ctx.strokeStyle = "green";
 const SELECTION_DISTANCE = 0.06 //odległość od której można zaznaczyć punkt
 var mx = 0;
 var my = 0;
+var mouseDown = false;
 
 var chosen_point_u = null
 var chosen_point_v = null
 
+//możliwe stany narzędzia edycji
 const DODAWANIE_PUNKTU = "punkt"
 const EDYCJA_IZOREZYSTANCJI = "edycja izorezystancji";
 const EDYCJA_IZOREAKTANCJI = "edycja izoreaktancji";
@@ -63,41 +65,37 @@ const ODBICIE = "odbicie"
 const NIE_WYBRANO_NARZEDZIA = "nie wybrano narzędzia";
 var narzedzie_edycji = ODCZYT;
 
-// const CHOOSING_R = "choosing r";
-// const CHOOSING_X = "choosing x"
-// const CHOOSING_G = "choosing g"
-// const CHOOSING_B = "choosing b"
+//możliwe stany drawing state
 const CHOOSING_TOOL = "wybieranie narzędzia"
 const CHOOSING_BEGINNING = "choosing beginning";
 const CHOOSING_DIRECTION = "choosing direction";
 const CHOOSING_END = "choosing end";
-// const CHOOSING_RADIUS = "choosing radius" //chodzi o promień okręgu dla wydłużenia
-var drawing_state = CHOOSING_BEGINNING ;//"choosing beginning", "choosing end";
+var drawing_state = CHOOSING_BEGINNING ;
 
-var r = 0.5; //wartość zmieniena przy ruchu myszą
-var reactance = 0.5; //wartość zmieniana podczas ruchu myszą
+//rezystancja, reaktancja, konduktancja, susceptancja, moduł współczynnika odbicia
+var r = 0.5;
+var reactance = 0.5;
 var g = 0.5;
 var b = 0.5;
 var radius = 0.5;
 
+//wartości charakteryzujące właśnie rysowany łuk
 var ending = 0.5;
 var beginning = 0;
-var clockwise = false; //or counterclockwise
-var mouseDown = false;
+var clockwise = false;
+
+var mouseArc = new Arc(0,0,0.5,Math.PI*2,0,true);
+//when only the first point is chosen, start angle will be equal to end angle;
+var arrayOfArcs = [];
+
+
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
 drawSmithChart();
 rysujOsie();
-console.log("to dobra wersja")
 
 function updateInfoBoxes(u,v) {
     //todo: upewnij się czy dobrze działa
-    //todo: nie wiem czy admitancja dobrze się liczy dla najbardziej prawego punktu
-    //nie wiem czy Y nie jest odbite w pionie
-    //todo: przyciąganie nie działa tuż pod poziomą linią
-    //todo: Z = 0 + 0i powinno dać Y = infinity + infinity i
-    //todo: Y = 0 + 0i powinno dać Z = infinity + infinity i
-    //zamiast bardzo dużych wartości dla u - 1, v = 0 powinno być Infinity.
     let precision = 3;
     okienkoFazaOdbicia.innerText = "∠Γ = " +roundTo(-1*angle(0,0,u,v)*180/Math.PI,precision) //sus -1
     let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
@@ -110,8 +108,6 @@ function updateInfoBoxes(u,v) {
 
 }
 function ustawNarzedzieEdycji(narzedzie) {
-    //FIXME: duża część tej funkcji jest niepotrzebna
-    //Przypisania beginning, ending powinny być w innym miejscu
     narzedzie_edycji = narzedzie;
     mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop});//to naprawiło błąd. Nie wiem czemu.
 
@@ -120,14 +116,14 @@ function ustawNarzedzieEdycji(narzedzie) {
 function drawArc(a, lineWidth=3, arrow=true) {
     //draws and arc given in u and v coordinates
     let relativeX = (a.centerU+1)*canvasHeight/2
-    let relativeY = (-1*a.centerV+1)*canvasHeight/2    //Chyba odbija Y lustrzanie
+    let relativeY = (-1*a.centerV+1)*canvasHeight/2
     let relativeRadius = a.radius*canvasHeight/2
     ctx.lineWidth = lineWidth;
     drawArcWithArrow(relativeX, relativeY, relativeRadius,
         a.start_angle,a.end_angle, !a.isClockwise, arrow);
     ctx.lineWidth = 1;
 }
-function angle_from_0_to_360(angle) {
+function angle_from_0_to_360(angle) {//powinno zamieniać za duży lub ujemny kąt na kąt z zakresu od 0 do 360 stopni.
     return (angle+2*Math.PI)%(2*Math.PI)
 }
 function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=true) {
@@ -154,7 +150,6 @@ function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=
             const y = cy + radius * Math.sin(middleAngle);
 
             // Kierunek styczny do łuku
-
             var tangentAngle = middleAngle + direction * Math.PI / 2;
 
             // Rysowanie strzałki
@@ -175,9 +170,7 @@ function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=
             ctx.restore();
             ctx.fillStyle = previous_fillstyle
 }
-var mouseArc = new Arc(0,0,0.5,Math.PI*2,0,true);
-//when only the first point is chosen, start angle will be equal to end angle;
-var arrayOfArcs = [];
+
 
 function drawLittleSquare(x, y, color) {
     ctx.strokeStyle =color;
@@ -268,8 +261,6 @@ function handleSnapping() {
                 v = snapped_ad.v
             }
         }
-        //Snappuje do gridu izorezystancji i izoreaktancji
-        //TODO: przyciąganie do siatki wykresu admitancyjnego
     }
 }
 
@@ -299,7 +290,7 @@ function mouseMoveHandler(e) {
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     drawLittleSquare(mx,my,"red")      //show original mouse position
-    //drawCoords(u,v);
+    drawCoords(u,v);
     uiText.innerText = drawing_state;
     handleArcDrawingUI(u,v);    // editing
     updateInfoBoxes(u,v)
