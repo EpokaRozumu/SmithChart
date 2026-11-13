@@ -52,6 +52,11 @@ function handleArcDrawingUI(mu, mv) {
             beginning = get_angle(chosen_point_u,chosen_point_v,narzedzie_edycji)
             if (narzedzie_edycji == ODBICIE) {
                 arrayOfArcs.push(new Dot(-chosen_point_u, -chosen_point_v))
+                chosen_point_u =-chosen_point_u
+                chosen_point_v = -chosen_point_v
+                setAllImpedanceVariables(chosen_point_u,chosen_point_v)
+                drawing_state = CHOOSING_TOOL;
+                narzedzie_edycji = NIE_WYBRANO_NARZEDZIA
                 return
             }
             if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI || narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
