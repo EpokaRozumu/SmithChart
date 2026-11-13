@@ -35,6 +35,9 @@ document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.key.toLowerCase() === "z") {
         event.preventDefault();
         arrayOfArcs.pop()
+        if (arrayOfArcs[arrayOfArcs.length-1] instanceof Arc) {
+            arrayOfArcs.pop()
+        }
         mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop})
     }
 });
@@ -172,13 +175,9 @@ function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=
             ctx.restore();
             ctx.fillStyle = previous_fillstyle
 }
-var mouseArc = new Arc(0,0,0.5,Math.PI*2,0,true);//temporary arc that changes on every mouse move
-//TODO: przydałaby się zmienna circleGuide klasy arc, żeby co chwile tego nie definiować i rysować.
+var mouseArc = new Arc(0,0,0.5,Math.PI*2,0,true);
 //when only the first point is chosen, start angle will be equal to end angle;
 var arrayOfArcs = [];
-//analitycal geometry functions
-
-//Functions for scaling coordinates
 
 function drawLittleSquare(x, y, color) {
     ctx.strokeStyle =color;
@@ -300,7 +299,7 @@ function mouseMoveHandler(e) {
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     drawLittleSquare(mx,my,"red")      //show original mouse position
-    drawCoords(u,v);
+    //drawCoords(u,v);
     uiText.innerText = drawing_state;
     handleArcDrawingUI(u,v);    // editing
     updateInfoBoxes(u,v)
