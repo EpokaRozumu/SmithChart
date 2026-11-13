@@ -22,6 +22,7 @@ class Arc extends Shape{
 class Dot extends Shape {
     constructor(u,v) {
         super(u,v)
+        this.name = "A";
     }
     draw() {
         let r = 4
@@ -29,6 +30,14 @@ class Dot extends Shape {
             r = 10
         }
         draw_dot(this.centerU,this.centerV, r)
+    }
+    draw_name() {
+        let prevFillstyle = ctx.fillStyle
+        ctx.fillStyle = "black"
+        let dy = -5
+        let dx = 5
+        ctx.fillText(this.name, XfromU(this.centerU)+dx, YfromV(this.centerV)+dy)
+        ctx.fillStyle = prevFillstyle
     }
 }
 

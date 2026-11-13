@@ -45,6 +45,7 @@ var canvasWidth = canvas.getAttribute("width");
 var canvasHeight = canvas.getAttribute("height");
 ctx.fillStyle = "white";
 ctx.strokeStyle = "green";
+ctx.font = "16px sans-serif"
 const SELECTION_DISTANCE = 0.06 //odległość od której można zaznaczyć punkt
 var mx = 0;
 var my = 0;
@@ -298,6 +299,12 @@ function mouseMoveHandler(e) {
     for (let i=0; i<arrayOfArcs.length; i++) {
         arrayOfArcs[i].draw();
     }
+    for (let i=0; i<arrayOfArcs.length; i++) {
+        if (arrayOfArcs[i] instanceof Dot) {
+             arrayOfArcs[i].draw_name();
+
+        }
+    }
     debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
 function selectDot(mu,mv) {
@@ -323,7 +330,6 @@ function mouseDownHandler(e) {
     if (canvas.matches(':hover')) {
         mouseDown = true;
     }
-    //debugInfo.innerHTML = ` u:${u} v:${v} \n x:${x} y:${y}`;
 }
 function drawSmithChart() {
     ctx.strokeStyle = "lightgreen";
