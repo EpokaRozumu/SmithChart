@@ -22,7 +22,13 @@ class Arc extends Shape{
 class Dot extends Shape {
     constructor(u,v) {
         super(u,v)
-        this.name = "A";
+        let numberOfDrawnDots = 0
+        for (let i=0; i< arrayOfArcs.length;i++) {
+            if (arrayOfArcs[i] instanceof Dot) {
+                numberOfDrawnDots += 1
+            }
+        }
+        this.name = numberOfDrawnDots + ""
     }
     draw() {
         let r = 4

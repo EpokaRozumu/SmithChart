@@ -180,17 +180,17 @@ function drawLittleSquare(x, y, color) {
     ctx.closePath();
     ctx.stroke();
 }
-function drawCoords(u,v) {
-    //draws a little rectangle labeling specific coords on screem
-    let x = XfromU(u);
-    let y = YfromV(v);
-    let dx = 100;
-    let dy = 20;
-    ctx.clearRect(x-dx,y-dy,dx,dy);
-    ctx.fillStyle = "black";
-    ctx.fillText("u: " + u.toFixed(3) + " v: " + v.toFixed(3) ,x-dx+5,y-dy+10);
-    ctx.fillStyle = "white";
-}
+// function drawCoords(u,v) {
+//     //draws a little rectangle labeling specific coords on screem
+//     let x = XfromU(u);
+//     let y = YfromV(v);
+//     let dx = 100;
+//     let dy = 20;
+//     ctx.clearRect(x-dx,y-dy,dx,dy);
+//     ctx.fillStyle = "black";
+//     ctx.fillText("u: " + u.toFixed(3) + " v: " + v.toFixed(3) ,x-dx+5,y-dy+10);
+//     ctx.fillStyle = "white";
+// }
 
 function get_angle(mu,mv,narzedzie_edycji){
     if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
@@ -291,7 +291,7 @@ function mouseMoveHandler(e) {
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     drawLittleSquare(mx,my,"red")      //show original mouse position
-    drawCoords(u,v);
+    // drawCoords(u,v);
     uiText.innerText = drawing_state;
     handleArcDrawingUI(u,v);    // editing
     updateInfoBoxes(u,v)
