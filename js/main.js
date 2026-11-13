@@ -28,7 +28,25 @@ const okienkoImpedancja = document.getElementById("z")
 const okienkoAdmitancja = document.getElementById("y")
 const okienkoWFS = document.getElementById("WFS")
 const okienkoTekstuWyjsciowego = document.getElementById("outputtext")
-okienkoTekstuWyjsciowego.innerText = "jestem tu"
+let placeholdertxt = `(A)  [ Y = 0.2  + 0.2 i]
+ |
+ |    ( izorezystancja )
+ v
+(B)  [ Y = 0.2 + 0.2 i]
+ |
+ |    ( izoreaktacja )
+ v
+(C)  [ Y = 0.2  + 0.2 i]
+ |
+ |    ( izorezystancja )
+ v
+(D)  [ Y = 0.2 + 0.2 i]
+ |
+ |    ( izoreaktacja )
+ v
+(E) [ Z = 0  + 0i  ]`
+console.log(placeholdertxt)
+okienkoTekstuWyjsciowego.value = placeholdertxt
 
 const ctx = canvas.getContext("2d");
 canvas.addEventListener("mousemove",mouseMoveHandler);
