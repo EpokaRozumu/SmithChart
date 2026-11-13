@@ -19,7 +19,7 @@ function drawCurrentMouseArc(mu,mv) {
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
         okrag = okragIzokonduktancji(g)
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
-        okrag = okragIzosusceptancji(susceptance)
+        okrag = okragIzosusceptancji(b)
     } else if (narzedzie_edycji==EDYCJA_WYDLUZANIA) {
         okrag = {u:0, v:0, radius:radius}
     }

@@ -74,7 +74,7 @@ var drawing_state = CHOOSING_BEGINNING ;//"choosing beginning", "choosing end";
 var r = 0.5; //wartość zmieniena przy ruchu myszą
 var reactance = 0.5; //wartość zmieniana podczas ruchu myszą
 var g = 0.5;
-var susceptance = 0.5;
+var b = 0.5;
 var radius = 0.5;
 
 var ending = 0.5;
@@ -208,7 +208,7 @@ function get_angle(mu,mv,narzedzie_edycji){
         let ok = okragIzokonduktancji(g)
         return angle(ok.u, ok.v,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
-        let okrag = okragIzosusceptancji(susceptance)
+        let okrag = okragIzosusceptancji(b)
         return angle(okrag.u, okrag.v,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_WYDLUZANIA) {
         return angle(0,0,mu,mv)
@@ -224,7 +224,7 @@ function setAllImpedanceVariables(u,v) {
     r = znajdzIzorezystancje(u,v)
     reactance = znajdzIzoreaktancje(u,v);
     g = znajdzIzokonduktancje(u,v)
-    susceptance = znajdzIzosusceptancje(u,v)
+    b = znajdzIzosusceptancje(u,v)
 }
 
 function angleIndicator(x,y) {
