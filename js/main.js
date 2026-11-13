@@ -205,8 +205,8 @@ function get_angle(mu,mv,narzedzie_edycji){
     } else if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI) {
         return angle(r/(r+1),0,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_IZOKONDUKTANCJI) {
-        let r =1/g
-        return angle(-r/(r+1),0,mu,mv)
+        let ok = okragIzokonduktancji(g)
+        return angle(ok.u, ok.v,mu,mv)
     } else if (narzedzie_edycji == EDYCJA_IZOSUSCEPTANCJI) {
         // let reactance = 1/b
         let okrag = okragIzosusceptancji(b)
@@ -251,9 +251,7 @@ function isMouseOutsideCanvas() {
 }
 function drawAllArcs(u,v) {
     drawCurrentMouseArc(u,v);   //drawing
-
     for (let i=0; i<arrayOfArcs.length; i++) {
-        
         arrayOfArcs[i].draw();
     }
 }
@@ -312,8 +310,8 @@ function mouseMoveHandler(e) {
     drawCoords(u,v);
     uiText.innerText = drawing_state;
     handleArcDrawingUI(u,v);    // editing
-    drawAllArcs(u,v)
     updateInfoBoxes(u,v)
+    drawAllArcs(u,v)//sus - ta funkcja zmienia u oraz v - dlaczego??
     debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
 function selectDot(mu,mv) {
@@ -329,7 +327,7 @@ function selectDot(mu,mv) {
             v = shape.centerV
         }
     }
-    if (u !== null && v!==null) {
+    if (u !== null && v!==null) {//sus
         chosen_point_u = u
         chosen_point_v = v
         return true
