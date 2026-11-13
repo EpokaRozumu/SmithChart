@@ -59,7 +59,7 @@ function handleArcDrawingUI(mu, mv) {
                 narzedzie_edycji = NIE_WYBRANO_NARZEDZIA
                 return
             }
-            if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI || narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
+            if (narzedzie_edycji==EDYCJA_IZOREZYSTANCJI || narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI || narzedzie_edycji==EDYCJA_WYDLUZANIA) {
                 drawing_state = CHOOSING_DIRECTION
             } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI || narzedzie_edycji==EDYCJA_IZOREAKTANCJI){
                 drawing_state = CHOOSING_END
