@@ -34,7 +34,8 @@ function handleArcDrawingUI(mu, mv) {
     //funkcja odpowiadające za kolejne etapy rysowania łuku
     if (narzedzie_edycji==ODCZYT) {
         drawing_state = CHOOSING_TOOL
-        narzedzie_edycji = NIE_WYBRANO_NARZEDZIA
+        narzedzie_edycji = NIE_WYBRANO_NARZEDZIA;
+        if (mouseDown) mouseDown = false;
         return 0;
     }
     if (narzedzie_edycji==DODAWANIE_PUNKTU) {
@@ -49,7 +50,7 @@ function handleArcDrawingUI(mu, mv) {
         }
     }
     if (drawing_state==CHOOSING_TOOL) {
-        if (narzedzie_edycji != NIE_WYBRANO_NARZEDZIA) {
+        if (narzedzie_edycji != NIE_WYBRANO_NARZEDZIA) {//jeśli wciśnięto jakiś przycik który ustawił stan narzędzia
             beginning = get_angle(chosen_point_u,chosen_point_v,narzedzie_edycji)
             if (narzedzie_edycji == ODBICIE) {
                 arrayOfArcs.push(new Dot(-chosen_point_u, -chosen_point_v))
@@ -66,6 +67,7 @@ function handleArcDrawingUI(mu, mv) {
                 drawing_state = CHOOSING_END
             }
         }
+        if (mouseDown) mouseDown = false;
     }
 
     if (drawing_state == CHOOSING_DIRECTION) {
