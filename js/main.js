@@ -11,6 +11,12 @@ var wybranoImpedancyjny = true;
 var wybranoAdmitancyjny 
 var wybranoSnapping
 
+window.addEventListener('pageshow', () => {//reset checkboxes on page refresh by chatgpt
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = checkbox.defaultChecked;
+    });
+});
+
 document.querySelector("#Impedancyjny input").addEventListener("change", function() {
     wybranoImpedancyjny = this.checked;
 });
@@ -43,6 +49,9 @@ document.addEventListener("keydown", function(event) {
         chosen_point_u = arrayOfArcs[arrayOfArcs.length-1].centerU
         chosen_point_v = arrayOfArcs[arrayOfArcs.length-1].centerV
         mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop})
+        setAllImpedanceVariables(chosen_point_u,chosen_point_v)
+        narzedzie_edycji = NIE_WYBRANO_NARZEDZIA
+        drawing_state = CHOOSING_TOOL
     }
 });
 var canvasWidth = canvas.getAttribute("width");
