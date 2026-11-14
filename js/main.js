@@ -1,10 +1,11 @@
 
 //git commit -am "commit test 2"
 const canvas = document.getElementById("myCanvas");
-const przyciskIzorezystancji = document.getElementById("Izorezystancja");
-const przyciskIzoreaktancji = document.getElementById("Izoreaktancja");
-const przyciskWydluzenia = document.getElementById("Wydłużenie");
-const przyciskOdczyt = document.getElementById("Odczyt");
+var przyciski = {}
+przyciski["Izorezystancja"] = document.getElementById("Izorezystancja");
+przyciski["Izoreaktancja"] = document.getElementById("Izoreaktancja");
+przyciski["Transformacja"] = document.getElementById("Wydłużenie");
+przyciski["Odczyt"] = document.getElementById("Odczyt");
 
 
 var wybranoImpedancyjny = true;
@@ -107,6 +108,21 @@ var arrayOfArcs = [];
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
 drawSmithChart();
 rysujOsie();
+function mouseInSmithChart() {
+    return (Math.sqrt(u**2 + v**2) <=  1)
+}
+function highlightButtons() {
+    for (var [name, przycisk] of Object.entries(przyciski)) {
+        name = name.substring(0, name.length - 1).toLowerCase()//np izoreaktancja -> izoreaktancj
+        console.log(name)
+        if (narzedzie_edycji.includes(name)) {
+            przycisk.classList.add("btn-success")
+        } else {
+            przycisk.classList.remove("btn-success")
+        }
+        
+    }
+}
 
 function updateInfoBoxes(u,v) {
     //todo: upewnij się czy dobrze działa
@@ -136,7 +152,7 @@ function updateOutputTextbox() {
                     txt += " | \n"
                     txt +=" | " + nextshape.izolinia + "\n"
                     txt += " V \n"
-                } else {//kropka za kropką jest tylko w przypadku odbicia
+                } else if ((shape.centerU = -nextshape.centerU)&&(shape.centerV = -nextshape.centerV)){//kropka za kropką jest tylko w przypadku odbicia
                     txt += " | \n"
                     txt +=" | " + "odbicie" + "\n"
                     txt += " V \n"
@@ -333,6 +349,7 @@ function mouseMoveHandler(e) {
     uiText.innerText = drawing_state;
     handleArcDrawingUI(u,v);    // editing
     updateInfoBoxes(u,v)
+    highlightButtons()
     updateOutputTextbox()
     drawCurrentMouseArc(u,v);   //drawing
     for (let i=0; i<arrayOfArcs.length; i++) {
