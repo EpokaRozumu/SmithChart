@@ -14,6 +14,7 @@ class Arc extends Shape{
         this.start_angle = start_angle;
         this.end_angle = end_angle;
         this.isClockwise = isClockwise;
+        this.izolinia = narzedzie_edycji;
     }
     draw(lineWidth=3) {
         drawArc(this,lineWidth)
@@ -28,7 +29,8 @@ class Dot extends Shape {
                 numberOfDrawnDots += 1
             }
         }
-        this.name = numberOfDrawnDots + ""
+        this.name = (numberOfDrawnDots + 1) + ""
+        // czy dodać informację o impedancji??
     }
     draw() {
         let r = 4

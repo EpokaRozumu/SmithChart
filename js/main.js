@@ -28,25 +28,7 @@ const okienkoImpedancja = document.getElementById("z")
 const okienkoAdmitancja = document.getElementById("y")
 const okienkoWFS = document.getElementById("WFS")
 const okienkoTekstuWyjsciowego = document.getElementById("outputtext")
-let placeholdertxt = `(A)  [ Y = 0.2  + 0.2 i]
- |
- |    ( izorezystancja )
- v
-(B)  [ Y = 0.2 + 0.2 i]
- |
- |    ( izoreaktacja )
- v
-(C)  [ Y = 0.2  + 0.2 i]
- |
- |    ( izorezystancja )
- v
-(D)  [ Y = 0.2 + 0.2 i]
- |
- |    ( izoreaktacja )
- v
-(E) [ Z = 0  + 0i  ]`
-console.log(placeholdertxt)
-okienkoTekstuWyjsciowego.value = placeholdertxt
+
 
 const ctx = canvas.getContext("2d");
 canvas.addEventListener("mousemove",mouseMoveHandler);
@@ -80,7 +62,7 @@ const EDYCJA_IZOREZYSTANCJI = "edycja izorezystancji";
 const EDYCJA_IZOREAKTANCJI = "edycja izoreaktancji";
 const EDYCJA_IZOKONDUKTANCJI = "edycja izokonduktancji";
 const EDYCJA_IZOSUSCEPTANCJI = "edycja izosusceptancji";
-const EDYCJA_WYDLUZANIA = "edycja wydluzania";
+const EDYCJA_WYDLUZANIA = "transformacja linii";//z jakiegoś powodu zmiana wartości tej stałej powoduje problemy
 const ODCZYT = "odczyt";
 const ODBICIE = "odbicie"
 const NIE_WYBRANO_NARZEDZIA = "nie wybrano narzędzia";
@@ -137,7 +119,18 @@ function updateOutputTextbox() {
             let v = shape.centerV
             txt += ("Z = " +roundTo(znajdzIzorezystancje(u,v),precision) + " + " + roundTo(znajdzIzoreaktancje(u,v),precision) +"i")
             txt += "\n"
-
+            if ((i+1)<arrayOfArcs.length) {
+                let nextshape = arrayOfArcs[i+1]
+                if (nextshape instanceof Arc) {
+                    txt += " | \n"
+                    txt +=" | " + nextshape.izolinia + "\n"
+                    txt += " V \n"
+                } else {//kropka za kropką jest tylko w przypadku odbicia
+                    txt += " | \n"
+                    txt +=" | " + "odbicie" + "\n"
+                    txt += " V \n"
+                }
+            }
         }
     }
     okienkoTekstuWyjsciowego.value = txt
