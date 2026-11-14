@@ -125,8 +125,22 @@ function updateInfoBoxes(u,v) {
     okienkoAdmitancja.innerText = "Y = "+ roundTo(znajdzIzokonduktancje(u,v),precision) + " + " + roundTo(znajdzIzosusceptancje(u,v),precision) + "i"
     okienkoWFS.innerText = "WFS:  " + roundTo((1+modulOdbicia)/(1-modulOdbicia),precision)
 
+}
+function updateOutputTextbox() {
+    let txt = ``
+    let precision = 2
+    for (i=0; i<arrayOfArcs.length; i++) {
+        let shape = arrayOfArcs[i]
+        if (shape instanceof Dot) {
+            txt += "(" + shape.name + ") "
+            let u = shape.centerU
+            let v = shape.centerV
+            txt += ("Z = " +roundTo(znajdzIzorezystancje(u,v),precision) + " + " + roundTo(znajdzIzoreaktancje(u,v),precision) +"i")
+            txt += "\n"
 
-
+        }
+    }
+    okienkoTekstuWyjsciowego.value = txt
 }
 function ustawNarzedzieEdycji(narzedzie) {
     narzedzie_edycji = narzedzie;
@@ -315,6 +329,7 @@ function mouseMoveHandler(e) {
     uiText.innerText = drawing_state;
     handleArcDrawingUI(u,v);    // editing
     updateInfoBoxes(u,v)
+    updateOutputTextbox()
     drawCurrentMouseArc(u,v);   //drawing
     for (let i=0; i<arrayOfArcs.length; i++) {
         arrayOfArcs[i].draw();
