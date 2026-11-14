@@ -33,11 +33,12 @@ function drawCurrentMouseArc(mu,mv) {
 function handleArcDrawingUI(mu, mv) {
     //funkcja odpowiadające za kolejne etapy rysowania łuku
     if (narzedzie_edycji==ODCZYT) {
-        drawing_state = ""
+        drawing_state = CHOOSING_TOOL
+        narzedzie_edycji = NIE_WYBRANO_NARZEDZIA
         return 0;
     }
     if (narzedzie_edycji==DODAWANIE_PUNKTU) {
-        drawing_state = ""
+        drawing_state = NIE_WYBRANO_NARZEDZIA
         if (mouseDown) {
             arrayOfArcs.push(new Dot(mu,mv))
             drawing_state = CHOOSING_TOOL;

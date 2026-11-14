@@ -40,6 +40,8 @@ document.addEventListener("keydown", function(event) {
         if (arrayOfArcs[arrayOfArcs.length-1] instanceof Arc) {
             arrayOfArcs.pop()
         }
+        chosen_point_u = arrayOfArcs[arrayOfArcs.length-1].centerU
+        chosen_point_v = arrayOfArcs[arrayOfArcs.length-1].centerV
         mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop})
     }
 });
