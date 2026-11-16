@@ -5,6 +5,14 @@ var przyciski = {}
 przyciski["Izorezystancja"] = document.getElementById("Izorezystancja");
 przyciski["Izoreaktancja"] = document.getElementById("Izoreaktancja");
 przyciski["Transformacja"] = document.getElementById("Wydłużenie");
+
+przyciski["Izokonduktancja"] = document.getElementById("Izokonduktancja");
+przyciski["Izosusceptancja"] = document.getElementById("Izosusceptancja");
+przyciski["Odbicie"] = document.getElementById("Odbicie");
+przyciski["Punkt"] = document.getElementById("Punkt");
+
+
+
 przyciski["Odczyt"] = document.getElementById("Odczyt");
 
 
@@ -87,16 +95,7 @@ const CHOOSING_DIRECTION = "Kliknij, by wybrać kierunek krzywej";
 const CHOOSING_END = "Kliknij, by zaznaczyć koniec krzywej";
 var drawing_state = CHOOSING_BEGINNING ;
 
-// function getUiText(state) {
-//     if (state == DODAWANIE_PUNKTU) {
-//         return "Kliknij aby dodać punkt początkowy"
-//     } else if (state == ) {
 
-//     } else {
-//         return state
-//     }
-// }
-//rezystancja, reaktancja, konduktancja, susceptancja, moduł współczynnika odbicia
 var r = 0.5;
 var reactance = 0.5;
 var g = 0.5;
@@ -121,16 +120,34 @@ function mouseInSmithChart() {
     return (Math.sqrt(u**2 + v**2) <=  1)
 }
 function highlightButtons() {
+
     for (var [name, przycisk] of Object.entries(przyciski)) {
-        name = name.substring(0, name.length - 1).toLowerCase()//np izoreaktancja -> izoreaktancj
-        console.log(name)
-        if (narzedzie_edycji.includes(name)) {
+        name_cropped = name.substring(0, name.length - 1).toLowerCase()//np izoreaktancja -> izoreaktancj
+        
+        if (narzedzie_edycji.includes(name_cropped)) {
             przycisk.classList.add("btn-success")
         } else {
             przycisk.classList.remove("btn-success")
         }
+        if (name == "Punkt") {
+            przycisk.classList.disabled = Boolean(arrayOfArcs.length == 0)
+            if (arrayOfArcs.length == 0) {
+                przycisk.classList.remove("disabled")
+            } else {
+                przycisk.classList.add("disabled")
+            }
+        } else {
+            if (arrayOfArcs.length == 0) {
+                przycisk.classList.add("disabled")
+            } else {
+                przycisk.classList.remove("disabled")
+
+            }
+        }
+
         
     }
+
 }
 
 function updateInfoBoxes(u,v) {
@@ -440,7 +457,8 @@ function drawSmithChart() {
 function rysujOsie() {
     //osie pomocnicze, do sprawdzenia czy wykres jest wycentrowany
     //oś pozioma
-    ctx.strokeStyle = "green";
+    ctx.strokeStyle = "limegreen";
+    ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(0, canvasHeight/2);
     ctx.lineTo(canvasWidth,canvasHeight/2);
