@@ -55,12 +55,20 @@ document.addEventListener("keydown", function(event) {
         if (arrayOfArcs[arrayOfArcs.length-1] instanceof Arc) {
             arrayOfArcs.pop()
         }
+
+        if (arrayOfArcs.length == 0) {
+            narzedzie_edycji = DODAWANIE_PUNKTU
+        } else {
+            narzedzie_edycji = NIE_WYBRANO_NARZEDZIA
+            drawing_state = CHOOSING_TOOL
+        }
+
         chosen_point_u = arrayOfArcs[arrayOfArcs.length-1].centerU
         chosen_point_v = arrayOfArcs[arrayOfArcs.length-1].centerV
         mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop})
         setAllImpedanceVariables(chosen_point_u,chosen_point_v)
-        narzedzie_edycji = NIE_WYBRANO_NARZEDZIA
-        drawing_state = CHOOSING_TOOL
+
+
     }
 });
 var canvasWidth = canvas.getAttribute("width");
@@ -86,7 +94,7 @@ const EDYCJA_WYDLUZANIA = "transformacja linii";//z jakiegoś powodu zmiana wart
 const ODCZYT = "odczyt";
 const ODBICIE = "odbicie"
 const NIE_WYBRANO_NARZEDZIA = "nie wybrano narzędzia";
-var narzedzie_edycji = ODCZYT;
+var narzedzie_edycji = DODAWANIE_PUNKTU;
 
 //możliwe stany drawing state
 const CHOOSING_TOOL = "Wybierz, po jakiej linii przesunąć punkt"
@@ -161,6 +169,7 @@ function updateInfoBoxes(u,v) {
     okienkoFazaOdbicia.innerText = "∠Γ = " +roundTo(-1*angle(0,0,u,v)*180/Math.PI,precision) //sus -1
     let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
     okienkoModulOdbicia.innerText = "|Γ| = " + modulOdbicia 
+    //fixme: może się tu pojawić + -
     okienkoImpedancja.innerText = "Z = " +roundTo(znajdzIzorezystancje(u,v),precision) + " + " + roundTo(znajdzIzoreaktancje(u,v),precision) +"i"
     okienkoAdmitancja.innerText = "Y = "+ roundTo(znajdzIzokonduktancje(u,v),precision) + " + " + roundTo(znajdzIzosusceptancje(u,v),precision) + "i"
     okienkoWFS.innerText = "WFS:  " + roundTo((1+modulOdbicia)/(1-modulOdbicia),precision)
@@ -398,7 +407,7 @@ function mouseMoveHandler(e) {
 
         }
     }
-    debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
+    // debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
 }
 function selectDot(mu,mv) {
     let smallest_distance = 99
