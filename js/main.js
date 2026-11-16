@@ -69,7 +69,7 @@ var chosen_point_u = null
 var chosen_point_v = null
 
 //możliwe stany narzędzia edycji
-const DODAWANIE_PUNKTU = "punkt"
+const DODAWANIE_PUNKTU = "Dodawanie punktu"
 const EDYCJA_IZOREZYSTANCJI = "edycja izorezystancji";
 const EDYCJA_IZOREAKTANCJI = "edycja izoreaktancji";
 const EDYCJA_IZOKONDUKTANCJI = "edycja izokonduktancji";
@@ -81,12 +81,21 @@ const NIE_WYBRANO_NARZEDZIA = "nie wybrano narzędzia";
 var narzedzie_edycji = ODCZYT;
 
 //możliwe stany drawing state
-const CHOOSING_TOOL = "wybieranie narzędzia"
-const CHOOSING_BEGINNING = "choosing beginning";
-const CHOOSING_DIRECTION = "choosing direction";
-const CHOOSING_END = "choosing end";
+const CHOOSING_TOOL = "Wybierz, po jakiej linii przesunąć punkt"
+const CHOOSING_BEGINNING = "Wybierz początek krzywej";
+const CHOOSING_DIRECTION = "Kliknij, by wybrać kierunek krzywej";
+const CHOOSING_END = "Kliknij, by zaznaczyć koniec krzywej";
 var drawing_state = CHOOSING_BEGINNING ;
 
+// function getUiText(state) {
+//     if (state == DODAWANIE_PUNKTU) {
+//         return "Kliknij aby dodać punkt początkowy"
+//     } else if (state == ) {
+
+//     } else {
+//         return state
+//     }
+// }
 //rezystancja, reaktancja, konduktancja, susceptancja, moduł współczynnika odbicia
 var r = 0.5;
 var reactance = 0.5;
@@ -319,6 +328,7 @@ function handleSnapping() {
     }
 }
 
+
 function mouseMoveHandler(e) {
     //user input
     const rect = canvas.getBoundingClientRect();
@@ -333,7 +343,7 @@ function mouseMoveHandler(e) {
     var x = XfromU(u);
     var y = YfromV(v);
     //#####DRAWING######
-    uiText2.innerText = narzedzie_edycji;
+    // uiText2.innerText = narzedzie_edycji;
     //clear canvas
     ctx.beginPath()
     ctx.rect(0,0,canvasWidth,canvasHeight);
@@ -346,7 +356,12 @@ function mouseMoveHandler(e) {
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     drawLittleSquare(mx,my,"red")      //show original mouse position
     // drawCoords(u,v);
-    uiText.innerText = drawing_state;
+    if (narzedzie_edycji==DODAWANIE_PUNKTU) {
+        uiText.innerText = "Kliknij, aby wybrać punkt początkowy"
+    } else {
+         uiText.innerText = drawing_state;
+
+    }
     handleArcDrawingUI(u,v);    // editing
     updateInfoBoxes(u,v)
     highlightButtons()
