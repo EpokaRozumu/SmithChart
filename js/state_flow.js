@@ -41,6 +41,8 @@ function handleArcDrawingUI(mu, mv) {
     if (narzedzie_edycji==DODAWANIE_PUNKTU) {
         drawing_state = NIE_WYBRANO_NARZEDZIA
         if (mouseDown) {
+            //Usuń wszystko co było w arrayOfArcs
+            arrayOfArcs = []
             arrayOfArcs.push(new Dot(mu,mv))
             drawing_state = CHOOSING_TOOL;
             narzedzie_edycji = NIE_WYBRANO_NARZEDZIA;
