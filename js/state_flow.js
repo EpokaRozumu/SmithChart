@@ -73,6 +73,7 @@ function handleArcDrawingUI(mu, mv) {
     }
 
     if (drawing_state == CHOOSING_DIRECTION) {
+        beginning = get_angle(chosen_point_u,chosen_point_v,narzedzie_edycji)
         ending = get_angle(mu,mv,narzedzie_edycji)
         //fixme: każdy ma słaby punkt zawijania...
         //na pewno działa beginning=0, ending=0, getAngleDirection(beginning,ending)
@@ -88,6 +89,7 @@ function handleArcDrawingUI(mu, mv) {
     }
     if (drawing_state == CHOOSING_END) {
         //UWAGA, dla izoREAktancji nie ma etapu wybierania kierunku
+        beginning = get_angle(chosen_point_u,chosen_point_v,narzedzie_edycji)
         ending = get_angle(mu,mv, narzedzie_edycji);
         if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
             clockwise = getAngleDirection(beginning,ending)
