@@ -129,19 +129,24 @@ function highlightButtons() {
         } else {
             przycisk.classList.remove("btn-success")
         }
+
+        //fixme: przyciski mają być nieklikalne a nie tylko szare
         if (name == "Punkt") {
             przycisk.classList.disabled = Boolean(arrayOfArcs.length == 0)
             if (arrayOfArcs.length == 0) {
                 przycisk.classList.remove("disabled")
+                przycisk.disabled = false
             } else {
                 przycisk.classList.add("disabled")
+                przycisk.disabled = true
             }
         } else {
             if (arrayOfArcs.length == 0) {
                 przycisk.classList.add("disabled")
+                przycisk.disabled = true
             } else {
                 przycisk.classList.remove("disabled")
-
+                przycisk.disabled = false
             }
         }
 
