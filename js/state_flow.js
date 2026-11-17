@@ -42,8 +42,8 @@ function handleArcDrawingUI(mu, mv) {
         drawing_state = NIE_WYBRANO_NARZEDZIA
         if (mouseDown) {
             //Usuń wszystko co było w arrayOfArcs
-            arrayOfArcs = []
-            arrayOfArcs.push(new Dot(mu,mv))
+            shapes = []
+            shapes.push(new Dot(mu,mv))
             drawing_state = CHOOSING_TOOL;
             narzedzie_edycji = NIE_WYBRANO_NARZEDZIA;
             selectDot(mu,mv)
@@ -55,7 +55,7 @@ function handleArcDrawingUI(mu, mv) {
         if (narzedzie_edycji != NIE_WYBRANO_NARZEDZIA) {//jeśli wciśnięto jakiś przycik który ustawił stan narzędzia
             beginning = get_angle(chosen_point_u,chosen_point_v,narzedzie_edycji)
             if (narzedzie_edycji == ODBICIE) {
-                arrayOfArcs.push(new Dot(-chosen_point_u, -chosen_point_v))
+                shapes.push(new Dot(-chosen_point_u, -chosen_point_v))
                 chosen_point_u =-chosen_point_u
                 chosen_point_v = -chosen_point_v
                 setAllImpedanceVariables(chosen_point_u,chosen_point_v)
@@ -97,13 +97,13 @@ function handleArcDrawingUI(mu, mv) {
             clockwise = getAngleDirection(beginning+Math.PI,ending+Math.PI)
         }
         if (mouseDown) {
-            arrayOfArcs.push(mouseArc);
+            shapes.push(mouseArc);
             end_dot = mouseArcDot(mu,mv)
-            arrayOfArcs.push(end_dot)
+            shapes.push(end_dot)
             drawing_state = CHOOSING_TOOL;
             narzedzie_edycji = NIE_WYBRANO_NARZEDZIA;
-            chosen_point_u = arrayOfArcs[arrayOfArcs.length-1].centerU
-            chosen_point_v = arrayOfArcs[arrayOfArcs.length-1].centerV
+            chosen_point_u = shapes[shapes.length-1].centerU
+            chosen_point_v = shapes[shapes.length-1].centerV
             setAllImpedanceVariables(chosen_point_u,chosen_point_v)
             mouseDown = false
             

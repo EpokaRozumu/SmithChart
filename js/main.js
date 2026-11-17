@@ -51,20 +51,20 @@ canvas.addEventListener("mousedown", mouseDownHandler);
 document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.key.toLowerCase() === "z") {
         event.preventDefault();
-        arrayOfArcs.pop()
-        if (arrayOfArcs[arrayOfArcs.length-1] instanceof Arc) {
-            arrayOfArcs.pop()
+        shapes.pop()
+        if (shapes[shapes.length-1] instanceof Arc) {
+            shapes.pop()
         }
 
-        if (arrayOfArcs.length == 0) {
+        if (shapes.length == 0) {
             narzedzie_edycji = DODAWANIE_PUNKTU
         } else {
             narzedzie_edycji = NIE_WYBRANO_NARZEDZIA
             drawing_state = CHOOSING_TOOL
         }
 
-        chosen_point_u = arrayOfArcs[arrayOfArcs.length-1].centerU
-        chosen_point_v = arrayOfArcs[arrayOfArcs.length-1].centerV
+        chosen_point_u = shapes[shapes.length-1].centerU
+        chosen_point_v = shapes[shapes.length-1].centerV
         mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop})
         setAllImpedanceVariables(chosen_point_u,chosen_point_v)
 
@@ -117,7 +117,7 @@ var clockwise = false;
 
 var mouseArc = new Arc(0,0,0.5,Math.PI*2,0,true);
 //when only the first point is chosen, start angle will be equal to end angle;
-var arrayOfArcs = [];
+var shapes = [];
 
 
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
@@ -140,8 +140,8 @@ function highlightButtons() {
 
         //fixme: przyciski mają być nieklikalne a nie tylko szare
         if (name == "Punkt") {
-            przycisk.classList.disabled = Boolean(arrayOfArcs.length == 0)
-            if (arrayOfArcs.length == 0) {
+            przycisk.classList.disabled = Boolean(shapes.length == 0)
+            if (shapes.length == 0) {
                 przycisk.classList.remove("disabled")
                 przycisk.disabled = false
             } else {
@@ -149,7 +149,7 @@ function highlightButtons() {
                 przycisk.disabled = true
             }
         } else {
-            if (arrayOfArcs.length == 0) {
+            if (shapes.length == 0) {
                 przycisk.classList.add("disabled")
                 przycisk.disabled = true
             } else {
@@ -178,16 +178,16 @@ function updateInfoBoxes(u,v) {
 function updateOutputTextbox() {
     let txt = ``
     let precision = 2
-    for (i=0; i<arrayOfArcs.length; i++) {
-        let shape = arrayOfArcs[i]
+    for (i=0; i<shapes.length; i++) {
+        let shape = shapes[i]
         if (shape instanceof Dot) {
             txt += "(" + shape.name + ") "
             let u = shape.centerU
             let v = shape.centerV
             txt += ("Z = " +roundTo(znajdzIzorezystancje(u,v),precision) + " + " + roundTo(znajdzIzoreaktancje(u,v),precision) +"i")
             txt += "\n"
-            if ((i+1)<arrayOfArcs.length) {
-                let nextshape = arrayOfArcs[i+1]
+            if ((i+1)<shapes.length) {
+                let nextshape = shapes[i+1]
                 if (nextshape instanceof Arc) {
                     txt += " | \n"
                     txt +=" | " + nextshape.izolinia + "\n"
@@ -398,12 +398,12 @@ function mouseMoveHandler(e) {
     highlightButtons()
     updateOutputTextbox()
     drawCurrentMouseArc(u,v);   //drawing
-    for (let i=0; i<arrayOfArcs.length; i++) {
-        arrayOfArcs[i].draw();
+    for (let i=0; i<shapes.length; i++) {
+        shapes[i].draw();
     }
-    for (let i=0; i<arrayOfArcs.length; i++) {
-        if (arrayOfArcs[i] instanceof Dot) {
-             arrayOfArcs[i].draw_name();
+    for (let i=0; i<shapes.length; i++) {
+        if (shapes[i] instanceof Dot) {
+             shapes[i].draw_name();
 
         }
     }
@@ -413,7 +413,7 @@ function selectDot(mu,mv) {
     let smallest_distance = 99
     let u = null
     let v = null
-    for (let shape of arrayOfArcs) {
+    for (let shape of shapes) {
         let distance = dist(shape.centerU, shape.centerV, mu, mv)
         if (shape instanceof Dot &&  distance<= SELECTION_DISTANCE && distance < smallest_distance) {
             u = shape.centerU //HINT: - może być to równe null!

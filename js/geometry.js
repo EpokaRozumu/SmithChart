@@ -4,28 +4,30 @@ class Shape {
         this.centerU = centerU
         this.centerV = centerV
     }
-}
-class Arc extends Shape{
-    //complex arc class
-    //todo: add information about meaning
-    constructor(centerU,centerV,radius,start_angle,end_angle,isClockwise) {
-        super(centerU,centerV)
-        this.radius = radius;
-        this.start_angle = start_angle;
-        this.end_angle = end_angle;
-        this.isClockwise = isClockwise;
-        this.izolinia = narzedzie_edycji;
-    }
-    draw(lineWidth=3) {
-        drawArc(this,lineWidth)
+    draw() {
+        console.log("Próba narysowania obiektu klasy Shape");
     }
 }
+        class Arc extends Shape{
+            //complex arc class
+            constructor(centerU,centerV,radius,start_angle,end_angle,isClockwise) {
+                super(centerU,centerV)
+                this.radius = radius;
+                this.start_angle = start_angle;
+                this.end_angle = end_angle;
+                this.isClockwise = isClockwise;
+                this.izolinia = narzedzie_edycji;
+            }
+            draw(lineWidth=3) {
+                drawArc(this,lineWidth)
+            }
+        }
 class Dot extends Shape {
     constructor(u,v) {
         super(u,v)
         let numberOfDrawnDots = 0
-        for (let i=0; i< arrayOfArcs.length;i++) {
-            if (arrayOfArcs[i] instanceof Dot) {
+        for (let i=0; i< shapes.length;i++) {
+            if (shapes[i] instanceof Dot) {
                 numberOfDrawnDots += 1
             }
         }
