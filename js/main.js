@@ -433,41 +433,7 @@ function mouseDownHandler(e) {
         mouseDown = true;
     }
 }
-function drawSmithChart() {
-    ctx.strokeStyle = "lightgreen";
-    if (wybranoImpedancyjny) {
-        for (let i=0; i<wartosciSiatki.length; i++) {
-            let r = wartosciSiatki[i];
-            let circle = okragIzorezystancji(r);
-            drawCircle(circle.u, circle.v, circle.radius)
-        }
-        for (let i=0; i<wartosciSiatki.length; i++) {
-            var x = wartosciSiatki[i];
-            let circle = okragIzoreaktancji(x)
-            drawCircle(circle.u,circle.v, circle.radius)
-            circle = okragIzoreaktancji(-1*x)
-            drawCircle(circle.u,circle.v, circle.radius)
 
-        }
-    }
-    ctx.strokeStyle = "orange"
-    if (wybranoAdmitancyjny) {
-        for (let i=0; i<wartosciSiatki.length; i++) {
-            let g = wartosciSiatki[i];
-            let circle = okragIzokonduktancji(g);
-            drawCircle(circle.u, circle.v, circle.radius)
-        }
-        for (let i=0; i<wartosciSiatki.length; i++) {
-            let  b = wartosciSiatki[i];
-            let circle = okragIzosusceptancji(b)
-            drawCircle(circle.u,circle.v, circle.radius)
-            circle = okragIzosusceptancji(-1*b)
-            drawCircle(circle.u,circle.v, circle.radius)
-
-        }
-    }
-
-}
 function rysujOsie() {
     //osie pomocnicze, do sprawdzenia czy wykres jest wycentrowany
     //oś pozioma
