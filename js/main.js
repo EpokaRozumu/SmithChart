@@ -170,8 +170,12 @@ function updateInfoBoxes(u,v) {
     let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
     okienkoModulOdbicia.innerText = "|Γ| = " + modulOdbicia 
     //fixme: może się tu pojawić + -
-    okienkoImpedancja.innerText = "Z = " +roundTo(znajdzIzorezystancje(u,v),precision) + " + " + roundTo(znajdzIzoreaktancje(u,v),precision) +"i"
-    okienkoAdmitancja.innerText = "Y = "+ roundTo(znajdzIzokonduktancje(u,v),precision) + " + " + roundTo(znajdzIzosusceptancje(u,v),precision) + "i"
+    let r = roundTo(znajdzIzorezystancje(u,v),precision)
+    let x = roundTo(znajdzIzoreaktancje(u,v),precision)
+    let g = roundTo(znajdzIzokonduktancje(u,v),precision)
+    let b = roundTo(znajdzIzosusceptancje(u,v),precision)
+    okienkoImpedancja.innerText = "Z = " +r + " + " + x +"i"
+    okienkoAdmitancja.innerText = "Y = "+ g + " + " + b + "i"
     okienkoWFS.innerText = "WFS:  " + roundTo((1+modulOdbicia)/(1-modulOdbicia),precision)
 
 }
@@ -192,7 +196,7 @@ function updateOutputTextbox() {
 
                 if (nextshape instanceof Arc && ((i+1)<shapes.length)) {
                     let nextdot = shapes[i+2]
-
+                    //todo: zmień podpis na inny. np. krzywa izorezystancji
                     txt += " | \n"
                     txt +=" | " + nextshape.izolinia +" "+ howMuchChanges(shape,nextdot, nextshape.izolinia) + "\n"
                     txt += " V \n"
@@ -214,28 +218,23 @@ function znak(liczba) {
     }
 }
 function howMuchChanges(dot, nextdot, narzedzie_edycji) {
-    let change = 0
+
     dr =   znajdzIzorezystancje(nextdot.centerU,nextdot.centerV) -znajdzIzorezystancje(dot.centerU, dot.centerV)
     dx = znajdzIzoreaktancje(nextdot.centerU,nextdot.centerV) -znajdzIzoreaktancje(dot.centerU, dot.centerV)
     dg = znajdzIzokonduktancje(nextdot.centerU, nextdot.centerV) - znajdzIzokonduktancje(dot.centerU, dot.centerV) 
     db =  znajdzIzosusceptancje(nextdot.centerU, nextdot.centerV)-znajdzIzosusceptancje(dot.centerU, dot.centerV) //z tym może być problem
     //todo: sprawdź czy dobrze się liczy
-    //sprawdź dlaczego kreślenie po izokonduktancji daje zawsze 0
-
-    
-
-
-
     if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
-        return "R" + znak(dr) + "= " + roundTo(dr,2)
+        return "R" + znak(dr) + "= " + Math.abs(roundTo(dr,2))
     } else if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
-        return "X "+ znak(dx) + "= " + roundTo(dx,2)
+        return "X "+ znak(dx) + "= " + Math.abs(roundTo(dx,2))
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
-        return "G "+ znak(dg) + "= " + roundTo(dg,2)
+        return "G "+ znak(dg) + "= " + Math.abs(roundTo(dg,2))
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
         
-        return "B "+ znak(db) + "= " + roundTo(db,2)
+        return "B "+ znak(db) + "= " + Math.abs(roundTo(db,2))
     } else {
+        //todo: dodaj informację o zmianie współczynnika odbicia dla transformacji linii
         return "?"
     }
     
