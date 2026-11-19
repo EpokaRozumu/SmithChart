@@ -190,9 +190,10 @@ function updateOutputTextbox() {
                 //linia między punktami
                 let nextshape = shapes[i+1]
 
-                if (nextshape instanceof Arc) {
+                if (nextshape instanceof Arc && ((i+1)<shapes.length)) {
+                    let nextdot = shapes[i+2]
                     txt += " | \n"
-                    txt +=" | " + nextshape.izolinia + "\n"
+                    txt +=" | " + nextshape.izolinia +" "+ howMuchChanges(shape,nextdot, nextshape.izolinia) + "\n"
                     txt += " V \n"
                 } else if ((shape.centerU = -nextshape.centerU)&&(shape.centerV = -nextshape.centerV)){//kropka za kropką jest tylko w przypadku odbicia
                     txt += " | \n"
@@ -204,8 +205,33 @@ function updateOutputTextbox() {
     }
     okienkoTekstuWyjsciowego.value = txt
 }
-function howMuchChanges(dot, nextdot) {
-    //todo: napisz co i o ile zmienia się między punktami np: R += 0.1 
+
+function howMuchChanges(dot, nextdot, narzedzie_edycji) {
+    let change = 0
+    dr =   znajdzIzorezystancje(nextdot.centerU,nextdot.centerV) -znajdzIzorezystancje(dot.centerU, dot.centerV)
+    dx = znajdzIzoreaktancje(nextdot.centerU,nextdot.centerV) -znajdzIzoreaktancje(dot.centerU, dot.centerV)
+    dg = znajdzIzokonduktancje(nextdot.centerU, nextdot.centerV) - znajdzIzokonduktancje(dot.centerU, dot.centerV) 
+    db =  znajdzIzosusceptancje(nextdot.centerU, nextdot.centerV)-znajdzIzosusceptancje(dot.centerU, dot.centerV) //z tym może być problem
+    //todo: sprawdź czy dobrze się liczy
+    //sprawdź dlaczego kreślenie po izokonduktancji daje zawsze 0
+
+    
+
+
+
+    if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
+        return "R += " + roundTo(dr,2)
+    } else if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
+        return "X += " + roundTo(dx,2)
+    } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
+        return "G += " + roundTo(dg,2)
+    } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
+        
+        return "B += " + roundTo(db,2)
+    } else {
+        return "?"
+    }
+    
 }
 function ustawNarzedzieEdycji(narzedzie) {
     narzedzie_edycji = narzedzie;
