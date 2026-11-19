@@ -187,7 +187,9 @@ function updateOutputTextbox() {
             txt += ("Z = " +roundTo(znajdzIzorezystancje(u,v),precision) + " + " + roundTo(znajdzIzoreaktancje(u,v),precision) +"i")
             txt += "\n"
             if ((i+1)<shapes.length) {
+                //linia między punktami
                 let nextshape = shapes[i+1]
+
                 if (nextshape instanceof Arc) {
                     txt += " | \n"
                     txt +=" | " + nextshape.izolinia + "\n"
@@ -201,6 +203,9 @@ function updateOutputTextbox() {
         }
     }
     okienkoTekstuWyjsciowego.value = txt
+}
+function howMuchChanges(dot, nextdot) {
+    //todo: napisz co i o ile zmienia się między punktami np: R += 0.1 
 }
 function ustawNarzedzieEdycji(narzedzie) {
     narzedzie_edycji = narzedzie;

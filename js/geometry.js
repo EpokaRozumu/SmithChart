@@ -81,16 +81,17 @@ function degrees(angle) {
     angle_from_0_to_360 = (angle+360)%360
     return angle_from_0_to_360
 }
-function getAngleDirection(alpha_radians, beta_radians) {
-    alpha = degrees(alpha_radians)
-    beta = degrees(beta_radians)
-    // z jakiegoś powodu pierwszy kąt jest ujemny???
-    if ((alpha - beta) < (360 - (alpha-beta))) {
-        console.log("clockwise is " + (beta > alpha) +" " +alpha + " " +beta)
-        return (beta > alpha)
+function getAngleDirection(alpha_rad, beta_rad) {
+    alpha = rad2degrees(alpha_rad)
+    beta = rad2degrees(beta_rad)
+    //przekręcam początek i koniec tak, aby początek znalazł się na 0 stopni ale relacja między początkiem a końcem była zachowana.
+    beta -= alpha
+    alpha -= alpha
+    beta = (beta + 360)%360
+    if (beta <= 180) {
+        return true
     } else {
-        console.log("clockwise is " + (alpha > beta)+ " " +alpha + " " +beta)
-        return  (alpha > beta)
+        return false
     }
 }
 
