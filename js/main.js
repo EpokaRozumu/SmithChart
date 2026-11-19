@@ -192,6 +192,7 @@ function updateOutputTextbox() {
 
                 if (nextshape instanceof Arc && ((i+1)<shapes.length)) {
                     let nextdot = shapes[i+2]
+
                     txt += " | \n"
                     txt +=" | " + nextshape.izolinia +" "+ howMuchChanges(shape,nextdot, nextshape.izolinia) + "\n"
                     txt += " V \n"
@@ -205,7 +206,13 @@ function updateOutputTextbox() {
     }
     okienkoTekstuWyjsciowego.value = txt
 }
-
+function znak(liczba) {
+    if (liczba > 0) {
+        return "+"
+    } else {
+        return "-"
+    }
+}
 function howMuchChanges(dot, nextdot, narzedzie_edycji) {
     let change = 0
     dr =   znajdzIzorezystancje(nextdot.centerU,nextdot.centerV) -znajdzIzorezystancje(dot.centerU, dot.centerV)
@@ -220,14 +227,14 @@ function howMuchChanges(dot, nextdot, narzedzie_edycji) {
 
 
     if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
-        return "R += " + roundTo(dr,2)
+        return "R" + znak(dr) + "= " + roundTo(dr,2)
     } else if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
-        return "X += " + roundTo(dx,2)
+        return "X "+ znak(dx) + "= " + roundTo(dx,2)
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
-        return "G += " + roundTo(dg,2)
+        return "G "+ znak(dg) + "= " + roundTo(dg,2)
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
         
-        return "B += " + roundTo(db,2)
+        return "B "+ znak(db) + "= " + roundTo(db,2)
     } else {
         return "?"
     }
