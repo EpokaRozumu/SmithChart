@@ -378,6 +378,10 @@ function isMouseOutsideCanvas() {
 }
 
 function handleSnapping() {
+    // nie pozwól kursorowi wyjśść poza okrąg
+    // if (distance(u,v) > 1) { //z jakiegoś powodu to mi rozwalało...
+    //     let a = angle(u,v)
+    // }
     if (wybranoSnapping) {
         let snapped_ad = snapUVToGrid(-u,v)
         snapped_ad.u = -1*snapped_ad.u
@@ -427,7 +431,7 @@ function mouseMoveHandler(e) {
     draw_circular_frame();
     //todo: uporządkuj kod
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
-    // drawLittleSquare(x,y,"blue")    //show rescaled mouse position
+    drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     // drawLittleSquare(mx,my,"red")      //show original mouse position
     // drawCoords(u,v);
     if (narzedzie_edycji==DODAWANIE_PUNKTU) {
