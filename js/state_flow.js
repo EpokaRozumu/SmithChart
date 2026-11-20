@@ -26,9 +26,8 @@ function drawCurrentMouseArc(mu,mv) {
     mouseArc = new Arc(okrag.u, okrag.v, okrag.radius,beginning,ending,clockwise)
     DrawGuideArc(mouseArc)
     mouseArcDot(mu,mv)
-    if (drawing_state != CHOOSING_BEGINNING) {
-        drawArc(mouseArc)
-    }
+    drawArc(mouseArc)
+    
 }
 function handleArcDrawingUI(mu, mv) {
     //funkcja odpowiadające za kolejne etapy rysowania łuku

@@ -98,10 +98,9 @@ var narzedzie_edycji = DODAWANIE_PUNKTU;
 
 //możliwe stany drawing state
 const CHOOSING_TOOL = "Wybierz, po jakiej linii przesunąć punkt"
-const CHOOSING_BEGINNING = "Wybierz początek krzywej";
 const CHOOSING_DIRECTION = "Kliknij, by wybrać kierunek krzywej";
 const CHOOSING_END = "Kliknij, by zaznaczyć koniec krzywej";
-var drawing_state = CHOOSING_BEGINNING ;
+var drawing_state = CHOOSING_TOOL ;
 
 
 var r = 0.5;
@@ -236,8 +235,7 @@ function howMuchChanges(dot, nextdot, narzedzie_edycji) {
     } else {
         //todo: dodaj informację o zmianie współczynnika odbicia dla transformacji linii
         return "?"
-    }
-    
+    } 
 }
 function ustawNarzedzieEdycji(narzedzie) {
     narzedzie_edycji = narzedzie;
@@ -421,8 +419,8 @@ function mouseMoveHandler(e) {
     drawSmithChart();
     //todo: uporządkuj kod
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
-    drawLittleSquare(x,y,"blue")    //show rescaled mouse position
-    drawLittleSquare(mx,my,"red")      //show original mouse position
+    // drawLittleSquare(x,y,"blue")    //show rescaled mouse position
+    // drawLittleSquare(mx,my,"red")      //show original mouse position
     // drawCoords(u,v);
     if (narzedzie_edycji==DODAWANIE_PUNKTU) {
         uiText.innerText = "Kliknij, aby wybrać punkt początkowy"
