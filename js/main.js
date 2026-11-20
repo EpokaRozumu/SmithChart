@@ -253,6 +253,13 @@ function drawArc(a, lineWidth=3, arrow=true) {
         a.start_angle,a.end_angle, !a.isClockwise, arrow);
     ctx.lineWidth = 1;
 }
+function draw_circular_frame() {
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(canvasWidth/2, canvasWidth/2, canvasWidth/2, 0, 2 * Math.PI);
+    ctx.rect(canvasWidth, 0, -canvasWidth, canvasWidth);//ten minus jest ważny
+    ctx.fill();
+}
 function angle_from_0_to_360(angle) {//powinno zamieniać za duży lub ujemny kąt na kąt z zakresu od 0 do 360 stopni.
     return (angle+2*Math.PI)%(2*Math.PI)
 }
@@ -417,6 +424,7 @@ function mouseMoveHandler(e) {
     ctx.fill();
     rysujOsie();
     drawSmithChart();
+    draw_circular_frame();
     //todo: uporządkuj kod
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
     // drawLittleSquare(x,y,"blue")    //show rescaled mouse position
