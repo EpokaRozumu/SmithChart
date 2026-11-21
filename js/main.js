@@ -1,6 +1,7 @@
 
 //git commit -am "commit test 2"
 const canvas = document.getElementById("myCanvas");
+const cursorImg = document.getElementById("cursorimg")
 var przyciski = {}
 przyciski["Izorezystancja"] = document.getElementById("Izorezystancja");
 przyciski["Izoreaktancja"] = document.getElementById("Izoreaktancja");
@@ -432,6 +433,7 @@ function mouseMoveHandler(e) {
     //todo: uporządkuj kod
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
     drawLittleSquare(x,y,"blue")    //show rescaled mouse position
+    ctx.drawImage(cursorImg,x,y)
     // drawLittleSquare(mx,my,"red")      //show original mouse position
     // drawCoords(u,v);
     if (narzedzie_edycji==DODAWANIE_PUNKTU) {
