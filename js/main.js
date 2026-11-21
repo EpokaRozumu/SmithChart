@@ -432,8 +432,8 @@ function mouseMoveHandler(e) {
     draw_circular_frame();
     //todo: uporządkuj kod
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
-    drawLittleSquare(x,y,"blue")    //show rescaled mouse position
-    ctx.drawImage(cursorImg,x,y)
+    // drawLittleSquare(x,y,"blue")    //show rescaled mouse position
+    ctx.drawImage(cursorImg,x,y,10,15)
     // drawLittleSquare(mx,my,"red")      //show original mouse position
     // drawCoords(u,v);
     if (narzedzie_edycji==DODAWANIE_PUNKTU) {
