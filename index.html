@@ -1,35 +1,160 @@
 <!doctype html>
 <html lang="en-US">
-  <head>
-    <meta charset="utf-8" />
-    <title>Smith Chart prototype</title>
-    <style>
-      * {
-        padding: 0;
-        margin: 0;
-      }
-      canvas {
-        background: #eeeeee;
-        display: block;
-        margin: 0 auto;
-      }
-    </style>
-  </head>
-  <body>
-  <h3 id="uiText2" style="text-align: center;">NARZĘDZIE EDYCJI:</h3>
-  <h3 id="uiText" style="text-align: center;">BEGIN ARC</h3>
 
-  <br/>
-  <button id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
-  <button id="Izorezystancja" onclick="ustawNarzedzieEdycji('edycja izorezystancji')">Izorezystancja</button>
-  <button id="Izoreaktancja" onclick="ustawNarzedzieEdycji('edycja izoreaktancji')">Izoreaktancja</button>
-  <button id="Wydłużenie" onclick="ustawNarzedzieEdycji('edycja wydluzenia')">Wydłużenie</button>
-  <br/>
-    
-    <canvas id="myCanvas" width="600" height="600" ></canvas>
-    <p id="debugInfo">debug info</p>
-    <script src="script.js">
-      
-    </script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <title>Smith Chart prototype</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    * {
+      text-align: center;
+    }
+
+    canvas {
+      background: #eeeeee;
+      display: block;
+      margin: 0 auto;
+      cursor: none;
+    }
+
+    button {
+      margin: 10px;
+      align-self: center;
+    }
+
+    #outputtext {
+      resize: none;
+      height: 400px;
+      text-align: left;
+      font-family: monospace;
+    }
+    .checkbox {
+      text-align: left;
+    }
+    .col-md-3, .col-md-2 {
+      background-color:whitesmoke;
+      display: flex;
+      flex-direction: column;
+      padding: 50px;
+    }
+
+    .row {
+      display:flex;
+    }
+
+    .tight-row {
+      padding: 0;
+      display: flex;
+      height:60px;
+    }
+    .well {
+      overflow: hidden;
+      height: 60px;
+    }
+  </style>
+</head>
+
+<body>
+  <img id="cursorimg" src="js\cursor2.png" alt="cursorimg" width="15" height="20" />
+  <div class="row">
+    <div class="col-md-3">
+      <div class="row">
+
+        <div class="col-xs-6" style="padding:0;">
+          <div class="well well-sm text-center">
+            <h5 id="faza">∠Γ : 90°</h5>
+          </div>
+        </div>
+        <div class="col-xs-6" style="padding:0; margin-left:1%;">
+          <div class="well well-sm text-center">
+            <h5 id="modul">|Γ| : 0.388</h5>
+          </div>
+        
+        </div>
+      </div>
+      <br>
+        <div class="row">
+        <div class="col-xs-12" style="padding:0;">
+          <div class="well well-sm text-center">
+            <h5 id="z">Z = 0.5 + 0.5i</h5>
+          </div>
+        </div>
+      </div>
+            <br>
+        <div class="row">
+        <div class="col-xs-12" style="padding:0;">
+          <div class="well well-sm text-center">
+            <h5 id="y">Y = 0.5 + 0.5i</h5>
+          </div>
+        </div>
+      </div>
+      <br>
+        <div class="row">
+        <div class="col-xs-12" style="padding:0;">
+          <div class="well well-sm text-center">
+            <h5 id="WFS">WFS = ???</h5>
+          </div>
+        </div>
+      </div>
+      <textarea id="outputtext" readonly>oto tekst</textarea>
+    </div>
+    <div class="col-md-6">
+      <!-- <h3 id="uiText2" style="text-align: center;">NARZĘDZIE EDYCJI:</h3> -->
+      <h3 id="uiText" style="text-align: center;">Wykres Smitha</h3>
+
+      <canvas id="myCanvas" width="600" height="600"></canvas>
+      <p id="debugInfo"></p>
+    </div>
+    <div id="button-container" class="col-md-3">
+
+      <div class="form-check" id="Impedancyjny">
+          <input class="form-check-input" type="checkbox" id="impedancyjny" checked>
+          <label class="form-check-label" for="impedancyjny">Impedancyjny</label>
+      </div>
+
+      <div class="form-check" id="Admitancyjny">
+          <input class="form-check-input" type="checkbox" id="admitancyjny" >
+          <label class="form-check-label" for="admitancyjny">Admitancyjny</label>
+      </div>
+
+      <div class="form-check" id="Snap">
+          <input class="form-check-input" type="checkbox" id="snap">
+          <label class="form-check-label" for="snap">Przyciągaj do siatki</label>
+      </div>
+
+
+
+      <button type="button" class="btn" id="Odczyt" onclick="ustawNarzedzieEdycji('odczyt')">Odczyt</button>
+      <button type="button" class="btn" id="Punkt" onclick="ustawNarzedzieEdycji('Dodawanie punktu')">Punkt początkowy</button>
+      <button type="button" class="btn" id="Odbicie"
+        onclick="ustawNarzedzieEdycji('odbicie')">Odbicie</button>
+      <button type="button" class="btn btn-success" id="Izorezystancja"
+        onclick="ustawNarzedzieEdycji('edycja izorezystancji')">Izorezystancja</button>
+      <button type="button" class="btn" id="Izoreaktancja"
+        onclick="ustawNarzedzieEdycji('edycja izoreaktancji')">Izoreaktancja</button>
+      <button type="button" class="btn" id="Wydłużenie"
+        onclick="ustawNarzedzieEdycji('transformacja linii')">Transformacja</button>
+      <button type="button" class="btn" id="Izokonduktancja"
+        onclick="ustawNarzedzieEdycji('edycja izokonduktancji')">Izokonduktancja</button>
+      <button type="button" class="btn" id="Izosusceptancja"
+        onclick="ustawNarzedzieEdycji('edycja izosusceptancji')">Izosusceptancja</button>
+    </div>
+
+  </div>
+
+  <script defer src="js/geometry.js"></script>
+  <script defer src="js/smith-chart.js"></script>
+  <script defer src="js/state_flow.js"></script>
+  <!-- <script defer src="js/interaction.js"></script> -->
+  <script defer src="js/main.js"></script>
+  </script>
+</body>
+
 </html>
