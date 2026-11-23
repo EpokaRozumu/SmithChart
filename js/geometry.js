@@ -20,6 +20,7 @@ class Shape {
             }
             draw(lineWidth=3) {
                 drawArc(this,lineWidth)
+
             }
         }
 class Dot extends Shape {
@@ -49,6 +50,18 @@ class Dot extends Shape {
         ctx.fillText(this.name, XfromU(this.centerU)+dx, YfromV(this.centerV)+dy)
         ctx.fillStyle = prevFillstyle
     }
+}
+function line(u1,v1,u2,v2, lineWidth=2) {
+    ctx.lineWidth = lineWidth
+    x1 = XfromU(u1)
+    y1 = YfromV(v1)
+    x2 = XfromU(u2)
+    y2 = YfromV(v2)
+    ctx.beginPath()
+    ctx.moveTo(x1,y1)
+    ctx.lineTo(x2,y2)
+    ctx.stroke()
+
 }
 
 function arcDot(centerU,centerV, radius, angle) {

@@ -254,16 +254,6 @@ function drawArc(a, lineWidth=3, arrow=true) {
         a.start_angle,a.end_angle, !a.isClockwise, arrow);
     ctx.lineWidth = 1;
 }
-function draw_circular_frame() {
-    ctx.fillStyle = "white";
-    ctx.beginPath();
-    ctx.arc(canvasWidth/2, canvasWidth/2, canvasWidth/2, 0, 2 * Math.PI);
-    ctx.rect(canvasWidth, 0, -canvasWidth, canvasWidth);//ten minus jest ważny
-    ctx.fill();
-}
-function angle_from_0_to_360(angle) {//powinno zamieniać za duży lub ujemny kąt na kąt z zakresu od 0 do 360 stopni.
-    return (angle+2*Math.PI)%(2*Math.PI)
-}
 function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=true) {
             //napisane razem z chatgpt
             // Rysowanie łuku
@@ -308,6 +298,17 @@ function drawArcWithArrow(cx, cy, radius, startAngle, endAngle,clockwise, arrow=
             ctx.restore();
             ctx.fillStyle = previous_fillstyle
 }
+function draw_circular_frame() {
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(canvasWidth/2, canvasWidth/2, canvasWidth/2, 0, 2 * Math.PI);
+    ctx.rect(canvasWidth, 0, -canvasWidth, canvasWidth);//ten minus jest ważny
+    ctx.fill();
+}
+function angle_from_0_to_360(angle) {//powinno zamieniać za duży lub ujemny kąt na kąt z zakresu od 0 do 360 stopni.
+    return (angle+2*Math.PI)%(2*Math.PI)
+}
+
 
 
 function drawLittleSquare(x, y, color) {
@@ -380,9 +381,13 @@ function isMouseOutsideCanvas() {
 
 function handleSnapping() {
     // nie pozwól kursorowi wyjśść poza okrąg
-    // if (distance(u,v) > 1) { //z jakiegoś powodu to mi rozwalało...
-    //     let a = angle(u,v)
-    // }
+    if (dist(u,v) > 1) { //z jakiegoś powodu to mi rozwalało...
+        let alpha = angle(u,v)
+        let d = Math.sqrt(u**2 + v**2)
+        u = Math.cos(alpha)*d
+        v = Math.sin(alpha)*d
+        
+    }
     if (wybranoSnapping) {
         let snapped_ad = snapUVToGrid(-u,v)
         snapped_ad.u = -1*snapped_ad.u
@@ -432,7 +437,7 @@ function mouseMoveHandler(e) {
     draw_circular_frame();
     //todo: uporządkuj kod
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
-    // drawLittleSquare(x,y,"blue")    //show rescaled mouse position
+    drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     ctx.drawImage(cursorImg,x,y,10,15)
     // drawLittleSquare(mx,my,"red")      //show original mouse position
     // drawCoords(u,v);
