@@ -66,7 +66,6 @@ document.addEventListener("keydown", function(event) {
 
         chosen_point_u = shapes[shapes.length-1].centerU
         chosen_point_v = shapes[shapes.length-1].centerV
-        mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop})
         setAllImpedanceVariables(chosen_point_u,chosen_point_v)
 
 
@@ -254,7 +253,6 @@ function howMuchChanges(dot, nextdot, narzedzie_edycji) {
 }
 function ustawNarzedzieEdycji(narzedzie) {
     narzedzie_edycji = narzedzie;
-    mouseMoveHandler({clientX:mx+canvas.offsetLeft, clientY:my+canvas.offsetTop});//to naprawiło błąd. Nie wiem czemu.
 
 }
 
@@ -433,6 +431,7 @@ function mouseMoveHandler(e) {
     //coordinates scaling and rescaling test
     u = UfromX(mx)
     v = VfromY(my)
+    //dlaczego wychodzi nan?
     handleSnapping()
     x = XfromU(u);
     y = YfromV(v);
