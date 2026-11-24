@@ -80,6 +80,7 @@ ctx.font = "16px sans-serif"
 const SELECTION_DISTANCE = 0.06 //odległość od której można zaznaczyć punkt
 var mx = 0;
 var my = 0;
+var x, y, u, v = 0;
 var mouseDown = false;
 
 var chosen_point_u = null
@@ -166,19 +167,29 @@ function faza_stopnie(u,v) {
     return -1*angle(0,0,u,v)*180/Math.PI //sus -1
 }
 function updateInfoBoxes(u,v) {
-    //todo: upewnij się czy dobrze działa
-    let precision = 3;
-    okienkoFazaOdbicia.innerText = "∠Γ = " + roundTo( faza_stopnie(u,v), precision) + "°" 
-    let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
-    okienkoModulOdbicia.innerText = "|Γ| = " + modulOdbicia 
-    //fixme: może się tu pojawić + -
-    let r = roundTo(znajdzIzorezystancje(u,v),precision)
-    let x = roundTo(znajdzIzoreaktancje(u,v),precision)
-    let g = roundTo(znajdzIzokonduktancje(u,v),precision)
-    let b = roundTo(znajdzIzosusceptancje(u,v),precision)
-    okienkoImpedancja.innerText = "Z = " + r + " "+ znak(x)+ " " + Math.abs(x) +"i"
-    okienkoAdmitancja.innerText = "Y = "+ g + " "+ znak(x)+ " " + Math.abs(b) + "i"
-    okienkoWFS.innerText = "WFS:  " + roundTo((1+modulOdbicia)/(1-modulOdbicia),precision)
+    
+    //TODO: jeśli za szybko wyjdę z wykresu, program nie ogarnie że mysz jest poza wykresem
+    if (mouseInSmithChart()) {
+        let precision = 3;
+        okienkoFazaOdbicia.innerText = "∠Γ = " + roundTo( faza_stopnie(u,v), precision) + "°" 
+        let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
+        okienkoModulOdbicia.innerText = "|Γ| = " + modulOdbicia 
+        //fixme: może się tu pojawić + -
+        let r = roundTo(znajdzIzorezystancje(u,v),precision)
+        let x = roundTo(znajdzIzoreaktancje(u,v),precision)
+        let g = roundTo(znajdzIzokonduktancje(u,v),precision)
+        let b = roundTo(znajdzIzosusceptancje(u,v),precision)
+        okienkoImpedancja.innerText = "Z = " + r + " "+ znak(x)+ " " + Math.abs(x) +"i"
+        okienkoAdmitancja.innerText = "Y = "+ g + " "+ znak(x)+ " " + Math.abs(b) + "i"
+        okienkoWFS.innerText = "WFS:  " + roundTo((1+modulOdbicia)/(1-modulOdbicia),precision)
+    } else {
+        okienkoFazaOdbicia.innerText = ""
+        okienkoModulOdbicia.innerText = ""
+        okienkoImpedancja.innerText = ""
+        okienkoAdmitancja.innerText = ""
+        okienkoWFS.innerText = ""
+    }
+
 
 }
 function updateOutputTextbox() {
@@ -238,7 +249,7 @@ function howMuchChanges(dot, nextdot, narzedzie_edycji) {
         return "ΔB = "+ roundTo(db,2)
     } else {
         //todo: dodaj informację o zmianie współczynnika odbicia dla transformacji linii
-        return " Δ(∠Γ) = " 
+        return " Δ(∠Γ) = " + roundTo(dfaza,2) + "°"
     } 
 }
 function ustawNarzedzieEdycji(narzedzie) {
@@ -414,11 +425,8 @@ function handleSnapping() {
     }
 }
 
-
 function mouseMoveHandler(e) {
-    //user input
     const rect = canvas.getBoundingClientRect();
-
     mx = e.clientX - rect.left;
     my = e.clientY - rect.top;
 
@@ -426,8 +434,14 @@ function mouseMoveHandler(e) {
     u = UfromX(mx)
     v = VfromY(my)
     handleSnapping()
-    var x = XfromU(u);
-    var y = YfromV(v);
+    x = XfromU(u);
+    y = YfromV(v);
+}
+requestAnimationFrame(update)
+function update() {
+    //user input
+
+
     //#####DRAWING######
     // uiText2.innerText = narzedzie_edycji;
     //clear canvas
@@ -465,6 +479,7 @@ function mouseMoveHandler(e) {
         }
     }
     // debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
+    requestAnimationFrame(update)
 }
 function selectDot(mu,mv) {
     let smallest_distance = 99
