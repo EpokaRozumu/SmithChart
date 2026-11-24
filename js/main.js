@@ -162,11 +162,13 @@ function highlightButtons() {
     }
 
 }
-
+function faza_stopnie(u,v) {
+    return -1*angle(0,0,u,v)*180/Math.PI //sus -1
+}
 function updateInfoBoxes(u,v) {
     //todo: upewnij się czy dobrze działa
     let precision = 3;
-    okienkoFazaOdbicia.innerText = "∠Γ = " +roundTo(-1*angle(0,0,u,v)*180/Math.PI,precision) //sus -1
+    okienkoFazaOdbicia.innerText = "∠Γ = " + roundTo( faza_stopnie(u,v), precision) + "°" 
     let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
     okienkoModulOdbicia.innerText = "|Γ| = " + modulOdbicia 
     //fixme: może się tu pojawić + -
@@ -174,8 +176,8 @@ function updateInfoBoxes(u,v) {
     let x = roundTo(znajdzIzoreaktancje(u,v),precision)
     let g = roundTo(znajdzIzokonduktancje(u,v),precision)
     let b = roundTo(znajdzIzosusceptancje(u,v),precision)
-    okienkoImpedancja.innerText = "Z = " +r + " + " + x +"i"
-    okienkoAdmitancja.innerText = "Y = "+ g + " + " + b + "i"
+    okienkoImpedancja.innerText = "Z = " + r + " "+ znak(x)+ " " + Math.abs(x) +"i"
+    okienkoAdmitancja.innerText = "Y = "+ g + " "+ znak(x)+ " " + Math.abs(b) + "i"
     okienkoWFS.innerText = "WFS:  " + roundTo((1+modulOdbicia)/(1-modulOdbicia),precision)
 
 }
