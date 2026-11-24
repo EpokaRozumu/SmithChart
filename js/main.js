@@ -225,19 +225,20 @@ function howMuchChanges(dot, nextdot, narzedzie_edycji) {
     dx = znajdzIzoreaktancje(nextdot.centerU,nextdot.centerV) -znajdzIzoreaktancje(dot.centerU, dot.centerV)
     dg = znajdzIzokonduktancje(nextdot.centerU, nextdot.centerV) - znajdzIzokonduktancje(dot.centerU, dot.centerV) 
     db =  znajdzIzosusceptancje(nextdot.centerU, nextdot.centerV)-znajdzIzosusceptancje(dot.centerU, dot.centerV) //z tym może być problem
+    dfaza = faza_stopnie(nextdot.centerU, nextdot.centerV) - faza_stopnie(dot.centerU, dot.centerV)
     //todo: sprawdź czy dobrze się liczy
     if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
-        return "R" + znak(dr) + "= " + Math.abs(roundTo(dr,2))
+        return "ΔR = " + roundTo(dr,2)
     } else if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
-        return "X "+ znak(dx) + "= " + Math.abs(roundTo(dx,2))
+        return "ΔX = "+roundTo(dx,2)
     } else if (narzedzie_edycji==EDYCJA_IZOSUSCEPTANCJI) {
-        return "G "+ znak(dg) + "= " + Math.abs(roundTo(dg,2))
+        return "ΔG = "+  roundTo(dg,2)
     } else if (narzedzie_edycji==EDYCJA_IZOKONDUKTANCJI) {
         
-        return "B "+ znak(db) + "= " + Math.abs(roundTo(db,2))
+        return "ΔB = "+ roundTo(db,2)
     } else {
         //todo: dodaj informację o zmianie współczynnika odbicia dla transformacji linii
-        return "?"
+        return " Δ(∠Γ) = " 
     } 
 }
 function ustawNarzedzieEdycji(narzedzie) {
