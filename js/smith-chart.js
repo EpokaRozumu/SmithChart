@@ -94,8 +94,9 @@ function drawSmithChart() {
 
         }
     }
-    ctx.strokeStyle = "orange"
+    
     if (wybranoAdmitancyjny) {
+        ctx.strokeStyle = "orange"
         for (let i=0; i<wartosciSiatki.length; i++) {
             let g = wartosciSiatki[i];
             let circle = okragIzokonduktancji(g);
@@ -110,5 +111,11 @@ function drawSmithChart() {
 
         }
     }
+    //pozioma linia
+    ctx.beginPath();
+    ctx.moveTo(0, canvasHeight/2);
+    ctx.lineTo(canvasWidth,canvasHeight/2);
+    ctx.closePath();
+    ctx.stroke();
 
 }

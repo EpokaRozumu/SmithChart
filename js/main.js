@@ -123,7 +123,7 @@ var shapes = [];
 //wartości izorezystancji i izoreaktancji - tą listę wzięłam z wykresu wykorzystywanego na zajęciach
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
 drawSmithChart();
-rysujOsie();
+// rysujOsie();
 function mouseInSmithChart() {
     return (Math.sqrt(u**2 + v**2) <=  1)
 }
@@ -432,7 +432,7 @@ function mouseMoveHandler(e) {
     ctx.rect(0,0,canvasWidth,canvasHeight);
     ctx.closePath();
     ctx.fill();
-    rysujOsie();
+    // rysujOsie();
     drawSmithChart();
     draw_circular_frame();
     //todo: uporządkuj kod
