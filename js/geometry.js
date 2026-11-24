@@ -89,9 +89,9 @@ function angle(x1,y1,x2,y2) {
     
     return Math.atan2(y1-y2,x2-x1);
 }
-function degrees(angle) {
-    angle = angle * 180/Math.PI
-    angle_from_0_to_360 = (angle+360)%360
+function degrees(alpha) {
+    alpha = alpha * 180/Math.PI
+    angle_from_0_to_360 = (alpha+360)%360
     return angle_from_0_to_360
 }
 function getAngleDirection(alpha_rad, beta_rad) {

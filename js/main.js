@@ -47,7 +47,7 @@ const okienkoTekstuWyjsciowego = document.getElementById("outputtext")
 
 
 const ctx = canvas.getContext("2d");
-canvas.addEventListener("mousemove",mouseMoveHandler);
+document.addEventListener("mousemove",mouseMoveHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
 document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.key.toLowerCase() === "z") {
@@ -124,9 +124,7 @@ var shapes = [];
 var wartosciSiatki = [50,20,10,5,4,3,2,1.8,1.6,1.4,1.2,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0];
 drawSmithChart();
 // rysujOsie();
-function mouseInSmithChart() {
-    return (Math.sqrt(u**2 + v**2) <=  1)
-}
+
 function highlightButtons() {
 
     for (var [name, przycisk] of Object.entries(przyciski)) {
@@ -166,9 +164,9 @@ function faza_stopnie(u,v) {
     return -1*angle(0,0,u,v)*180/Math.PI //sus -1
 }
 function updateInfoBoxes(u,v) {
-    
     //TODO: jeśli za szybko wyjdę z wykresu, program nie ogarnie że mysz jest poza wykresem
-    if (mouseInSmithChart()) {
+    let isMouseNearSMithChart = (dist(UfromX(mx),VfromY(my),0,0) < 1.1)
+    if (isMouseNearSMithChart) {
         let precision = 3;
         okienkoFazaOdbicia.innerText = "∠Γ = " + roundTo( faza_stopnie(u,v), precision) + "°" 
         let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
@@ -393,13 +391,6 @@ function isMouseOutsideCanvas() {
 
 function handleSnapping() {
     // nie pozwól kursorowi wyjśść poza okrąg
-    if (dist(u,v) > 1) { //z jakiegoś powodu to mi rozwalało...
-        let alpha = angle(u,v)
-        let d = Math.sqrt(u**2 + v**2)
-        u = Math.cos(alpha)*d
-        v = Math.sin(alpha)*d
-        
-    }
     if (wybranoSnapping) {
         let snapped_ad = snapUVToGrid(-u,v)
         snapped_ad.u = -1*snapped_ad.u
@@ -432,6 +423,18 @@ function mouseMoveHandler(e) {
     u = UfromX(mx)
     v = VfromY(my)
     //dlaczego wychodzi nan?
+    if (dist(u,v, 0, 0) > 1) { //z jakiegoś powodu to mi rozwalało...
+        console.log("JESTEŚMY POZA KOŁEM")
+        console.log("new_u " + u + "new v " + v )
+
+        let alpha = Math.atan2(u,v)
+        let d = Math.sqrt(u**2 + v**2)
+        u = Math.sin(alpha)
+        v = Math.cos(alpha)
+
+        console.log("new_u " + u + "new v " + v + "alpha " + alpha)
+    }
+
     handleSnapping()
     x = XfromU(u);
     y = YfromV(v);
