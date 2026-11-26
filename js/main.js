@@ -20,6 +20,7 @@ przyciski["Odczyt"] = document.getElementById("Odczyt");
 var wybranoImpedancyjny = true;
 var wybranoAdmitancyjny 
 var wybranoSnapping
+var wybranoOkrag
 
 window.addEventListener('pageshow', () => {//reset checkboxes on page refresh by chatgpt
     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
@@ -37,6 +38,9 @@ document.querySelector("#Admitancyjny input").addEventListener("change", functio
 
 document.querySelector("#Snap input").addEventListener("change", function() {
     wybranoSnapping = this.checked;
+});
+document.querySelector("#Okrag input").addEventListener("change", function() {
+    wybranoOkrag = this.checked;
 });
 const okienkoFazaOdbicia = document.getElementById("faza")
 const okienkoModulOdbicia = document.getElementById("modul")

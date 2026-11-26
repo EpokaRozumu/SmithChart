@@ -117,5 +117,11 @@ function drawSmithChart() {
     ctx.lineTo(canvasWidth,canvasHeight/2);
     ctx.closePath();
     ctx.stroke();
+    if (wybranoOkrag) {
+        ctx.strokeStyle = "hotpink"
+        let ok = okragIzokonduktancji(1)
+        drawCircle(ok.u, ok.v, ok.radius)
+    }
+
 
 }
