@@ -48,7 +48,7 @@ const okienkoTekstuWyjsciowego = document.getElementById("outputtext")
 
 const ctx = canvas.getContext("2d");
 document.addEventListener("mousemove",mouseMoveHandler);
-canvas.addEventListener("mousedown", mouseDownHandler);
+canvas.addEventListener("mousedown", mouseDownHandler);//TODO: BUG, klikanie poza
 document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.key.toLowerCase() === "z") {
         event.preventDefault();
@@ -166,7 +166,8 @@ function faza_stopnie(u,v) {
 function updateInfoBoxes(u,v) {
     //TODO: jeśli za szybko wyjdę z wykresu, program nie ogarnie że mysz jest poza wykresem
     let isMouseNearSMithChart = (dist(UfromX(mx),VfromY(my),0,0) < 1.1)
-    if (isMouseNearSMithChart) {
+    console.log(isMouseNearSMithChart)
+    if (isMouseNearSMithChart || (!isMouseOutsideCanvas)) {
         let precision = 3;
         okienkoFazaOdbicia.innerText = "∠Γ = " + roundTo( faza_stopnie(u,v), precision) + "°" 
         let modulOdbicia = roundTo(Math.sqrt(u**2 + v**2),precision)
