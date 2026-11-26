@@ -419,12 +419,15 @@ function mouseMoveHandler(e) {
     const rect = canvas.getBoundingClientRect();
     mx = e.clientX - rect.left;
     my = e.clientY - rect.top;
-
+}
+requestAnimationFrame(update)
+function update() {
+    //user input
     //coordinates scaling and rescaling test
     u = UfromX(mx)
     v = VfromY(my)
     //dlaczego wychodzi nan?
-    if (dist(u,v, 0, 0) > 1) { //z jakiegoś powodu to mi rozwalało...
+    if (dist(u,v, 0, 0) > 1) { //nie ufaj globalnym zmiennym u oraz v
         console.log("JESTEŚMY POZA KOŁEM")
         console.log("new_u " + u + "new v " + v )
 
@@ -439,11 +442,6 @@ function mouseMoveHandler(e) {
     handleSnapping()
     x = XfromU(u);
     y = YfromV(v);
-}
-requestAnimationFrame(update)
-function update() {
-    //user input
-
 
     //#####DRAWING######
     // uiText2.innerText = narzedzie_edycji;
