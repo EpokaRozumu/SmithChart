@@ -194,9 +194,21 @@ function updateInfoBoxes(u,v) {
 
 
 }
+function nazwaPrzesuniecia(narzedzie_edycji) {
+    if (narzedzie_edycji in [DODAWANIE_PUNKTU, EDYCJA_WYDLUZANIA, ODCZYT]) {
+        return narzedzie_edycji
+    } else if (narzedzie_edycji==ODBICIE){
+        return "Z → Y"
+    } else if (narzedzie_edycji==EDYCJA_WYDLUZANIA) {
+        return "transformacja"
+    } {
+        return "(po " + narzedzie_edycji.substring(7) + ")"
+    }
+}
 function updateOutputTextbox() {
     let txt = ``
     let precision = 2
+
     for (i=0; i<shapes.length; i++) {
         let shape = shapes[i]
         if (shape instanceof Dot) {
@@ -213,7 +225,7 @@ function updateOutputTextbox() {
                     let nextdot = shapes[i+2]
                     //todo: zmień podpis na inny. np. krzywa izorezystancji
                     txt += " | \n"
-                    txt +=" | " + nextshape.izolinia +" "+ howMuchChanges(shape,nextdot, nextshape.izolinia) + "\n"
+                    txt +=" | " + nazwaPrzesuniecia(nextshape.izolinia) +" "+ howMuchChanges(shape,nextdot, nextshape.izolinia, nextshape.clockwise) + "\n"
                     txt += " V \n"
                 } else if ((shape.centerU = -nextshape.centerU)&&(shape.centerV = -nextshape.centerV)){//kropka za kropką jest tylko w przypadku odbicia
                     txt += " | \n"
@@ -223,7 +235,17 @@ function updateOutputTextbox() {
             }
         }
     }
-    okienkoTekstuWyjsciowego.value = txt
+    //fixme: wartość ostatniego zapisanego łuku zawsze wynosi 0 
+    if ((shapes.length > 0) & (shapes[shapes.length-1] instanceof Dot) & (narzedzie_edycji != NIE_WYBRANO_NARZEDZIA)) {
+        txt += " | \n"
+        nowDot = arcDot(mouseArc.centerU,mouseArc.centerV, mouseArc.radius,mouseArc.end_angle)
+        lastDot = shapes[shapes.length - 1]
+        txt +=" | " + nazwaPrzesuniecia(narzedzie_edycji) +" "+ howMuchChanges(lastDot,nowDot, narzedzie_edycji) + "\n"
+        txt += " V \n"
+        okienkoTekstuWyjsciowego.value = txt
+    }
+
+
 }
 function znak(liczba) {
     if (liczba > 0) {
@@ -232,14 +254,16 @@ function znak(liczba) {
         return "-"
     }
 }
-function howMuchChanges(dot, nextdot, narzedzie_edycji) {
+function howMuchChanges(dot, nextdot, narzedzie_edycji, clockwise=true) {
 
     dr =   znajdzIzorezystancje(nextdot.centerU,nextdot.centerV) -znajdzIzorezystancje(dot.centerU, dot.centerV)
     dx = znajdzIzoreaktancje(nextdot.centerU,nextdot.centerV) -znajdzIzoreaktancje(dot.centerU, dot.centerV)
     dg = znajdzIzokonduktancje(nextdot.centerU, nextdot.centerV) - znajdzIzokonduktancje(dot.centerU, dot.centerV) 
     db =  znajdzIzosusceptancje(nextdot.centerU, nextdot.centerV)-znajdzIzosusceptancje(dot.centerU, dot.centerV) //z tym może być problem
     dfaza = faza_stopnie(nextdot.centerU, nextdot.centerV) - faza_stopnie(dot.centerU, dot.centerV)
-    //todo: sprawdź czy dobrze się liczy
+
+    ilosc_lambda = dfaza * (0.5/360)
+    //todo: napraw zawijanie fazy... ech....
     if (narzedzie_edycji==EDYCJA_IZOREAKTANCJI) {
         return "ΔR = " + roundTo(dr,2)
     } else if (narzedzie_edycji == EDYCJA_IZOREZYSTANCJI) {
@@ -251,7 +275,8 @@ function howMuchChanges(dot, nextdot, narzedzie_edycji) {
         return "ΔB = "+ roundTo(db,2)
     } else {
         //todo: dodaj informację o zmianie współczynnika odbicia dla transformacji linii
-        return " Δ(∠Γ) = " + roundTo(dfaza,2) + "°"
+        //TODO: NAPRAW
+        return " Δ(∠Γ) = " + roundTo(ilosc_lambda,2) + " λ" //+ roundTo(dfaza,2) + "°"
     } 
 }
 function ustawNarzedzieEdycji(narzedzie) {
@@ -459,8 +484,7 @@ function update() {
     draw_circular_frame();
     //todo: uporządkuj kod
     //TODO: skalowanie wskaźnika myszy dla większego canvas - ale jak?
-    drawLittleSquare(x,y,"blue")    //show rescaled mouse position
-    ctx.drawImage(cursorImg,x,y,10,15)
+    // drawLittleSquare(x,y,"blue")    //show rescaled mouse position
     // drawLittleSquare(mx,my,"red")      //show original mouse position
     // drawCoords(u,v);
     if (narzedzie_edycji==DODAWANIE_PUNKTU) {
@@ -483,6 +507,8 @@ function update() {
 
         }
     }
+    ctx.drawImage(cursorImg,x-8,y-8)
+
     // debugInfo.innerText = "clockwise: " + mouseArc.isClockwise + "beginning: " +Math.floor(mouseArc.start_angle*180/Math.PI) + "end: " + Math.floor(mouseArc.end_angle*180/Math.PI);
     requestAnimationFrame(update)
 }
